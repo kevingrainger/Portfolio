@@ -1,0 +1,376 @@
+{
+ "schema_version": 1,
+ "diagram_type": "dataflow",
+ "meta": {
+  "title": "Coral Reef Tipping Points: Model and Experiment Pipeline",
+  "output": ".archify/001-coral-reef-tipping-points/001-coral-reef-tipping-points.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1080,
+   520
+  ],
+  "legend": {
+   "entries": {
+    "emphasis": {
+     "label": "main path"
+    },
+    "default": {
+     "label": "supporting input"
+    },
+    "dashed": {
+     "label": "feedback"
+    },
+    "security": {
+     "label": "caveat"
+    },
+    "database": {
+     "label": "stored result"
+    }
+   }
+  }
+ },
+ "stages": [
+  {
+   "label": "Inputs"
+  },
+  {
+   "label": "Model"
+  },
+  {
+   "label": "Sweeps"
+  },
+  {
+   "label": "Indicators"
+  },
+  {
+   "label": "Findings"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "survey",
+   "type": "external",
+   "label": "Coral surveys",
+   "sublabel": "Scott Reef, 23 years",
+   "stage": 0,
+   "row": 0
+  },
+  {
+   "id": "dhw",
+   "type": "external",
+   "label": "Heat stress",
+   "sublabel": "satellite DHW",
+   "stage": 0,
+   "row": 1
+  },
+  {
+   "id": "mumby",
+   "type": "external",
+   "label": "Mean-field model",
+   "sublabel": "Mumby et al. 2007",
+   "stage": 0,
+   "row": 2
+  },
+  {
+   "id": "abc",
+   "type": "backend",
+   "label": "ABC calibration",
+   "sublabel": "nudge switched off",
+   "stage": 1,
+   "row": 0
+  },
+  {
+   "id": "potts",
+   "type": "backend",
+   "label": "Potts lattice",
+   "sublabel": "Metropolis, J / z",
+   "stage": 1,
+   "row": 1
+  },
+  {
+   "id": "range",
+   "type": "backend",
+   "label": "Range switch",
+   "sublabel": "z = 0, 4, 8, 12, N",
+   "stage": 1,
+   "row": 2
+  },
+  {
+   "id": "hyst",
+   "type": "backend",
+   "label": "Hysteresis ramp",
+   "sublabel": "dT up, then down",
+   "stage": 2,
+   "row": 0
+  },
+  {
+   "id": "cusp",
+   "type": "backend",
+   "label": "Cusp sweep",
+   "sublabel": "dT x g, order tests",
+   "stage": 2,
+   "row": 1
+  },
+  {
+   "id": "rate",
+   "type": "backend",
+   "label": "Ramp-rate test",
+   "sublabel": "sub-threshold end",
+   "stage": 2,
+   "row": 2
+  },
+  {
+   "id": "width",
+   "type": "database",
+   "label": "Width W(z)",
+   "sublabel": "collapse vs recovery",
+   "stage": 3,
+   "row": 0
+  },
+  {
+   "id": "ews",
+   "type": "database",
+   "label": "Early warnings",
+   "sublabel": "temporal, spatial",
+   "stage": 3,
+   "row": 1
+  },
+  {
+   "id": "crit",
+   "type": "database",
+   "label": "Critical rate",
+   "sublabel": "r_c across seeds",
+   "stage": 3,
+   "row": 2
+  },
+  {
+   "id": "f1",
+   "type": "frontend",
+   "label": "Range effect",
+   "sublabel": "vs mean field",
+   "stage": 4,
+   "row": 0
+  },
+  {
+   "id": "f2",
+   "type": "frontend",
+   "label": "Lead times",
+   "sublabel": "by transition order",
+   "stage": 4,
+   "row": 1
+  },
+  {
+   "id": "f3",
+   "type": "frontend",
+   "label": "Blind-spot test",
+   "sublabel": "warnings at R-tip",
+   "stage": 4,
+   "row": 2
+  }
+ ],
+ "flows": [
+  {
+   "from": "survey",
+   "to": "abc",
+   "label": "cover record",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f0"
+  },
+  {
+   "from": "dhw",
+   "to": "potts",
+   "label": "thermal forcing",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f1"
+  },
+  {
+   "from": "mumby",
+   "to": "range",
+   "label": "state structure",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f2"
+  },
+  {
+   "from": "abc",
+   "to": "potts",
+   "label": "parameters",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    315,
+    214
+   ],
+   "id": "f3"
+  },
+  {
+   "from": "range",
+   "to": "potts",
+   "label": "neighbourhood",
+   "route": "straight",
+   "fromSide": "top",
+   "toSide": "bottom",
+   "labelAt": [
+    315,
+    328
+   ],
+   "id": "f4"
+  },
+  {
+   "from": "potts",
+   "to": "cusp",
+   "label": "dT, g grid",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "labelAt": [
+    426,
+    259
+   ],
+   "id": "f5"
+  },
+  {
+   "from": "potts",
+   "to": "hyst",
+   "label": "dT ramps",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     387,
+     271
+    ],
+    [
+     387,
+     157
+    ]
+   ],
+   "labelAt": [
+    400,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f6"
+  },
+  {
+   "from": "potts",
+   "to": "rate",
+   "label": "ramp rates",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     387,
+     271
+    ],
+    [
+     387,
+     385
+    ]
+   ],
+   "labelAt": [
+    404,
+    328
+   ],
+   "variant": "emphasis",
+   "id": "f7"
+  },
+  {
+   "from": "hyst",
+   "to": "width",
+   "label": "loops",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f8"
+  },
+  {
+   "from": "cusp",
+   "to": "ews",
+   "label": "snapshots",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f9"
+  },
+  {
+   "from": "rate",
+   "to": "crit",
+   "label": "tip or survive",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f10"
+  },
+  {
+   "from": "width",
+   "to": "f1",
+   "label": "W at each z",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f11"
+  },
+  {
+   "from": "ews",
+   "to": "f2",
+   "label": "trend onset",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f12"
+  },
+  {
+   "from": "crit",
+   "to": "f3",
+   "label": "R-tip runs",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f13"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "Question",
+   "items": [
+    "Mumby, Hastings and Edwards (2007) found an irreversible grazing threshold in a model where every reef patch interacts with every other",
+    "A Potts lattice is the same state structure with interactions restricted to neighbours",
+    "The interaction range z is the experimental variable: how much hysteresis survives at short range, and does space give earlier warning"
+   ]
+  },
+  {
+   "dot": "violet",
+   "title": "Controls",
+   "items": [
+    "Coupling is divided by z, so range varies while total coupling is held fixed",
+    "z = 0 (independent sites) must show no hysteresis",
+    "All free-running results have the data-assimilation nudge switched off"
+   ]
+  },
+  {
+   "dot": "slate",
+   "title": "Methods and credit",
+   "items": [
+    "Survey data: Gilmour, Cook and Ryan (2021)",
+    "Transition order from bimodality, the Binder cumulant and finite-size scaling",
+    "Patch-size exponents by maximum likelihood (Clauset, Shalizi and Newman 2009); rate-induced tipping after Ashwin et al. (2012)"
+   ]
+  }
+ ]
+}

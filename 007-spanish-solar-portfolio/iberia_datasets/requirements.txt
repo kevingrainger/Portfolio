@@ -1,0 +1,8 @@
+anemoi-datasets>=0.5.36,<0.6
+earthkit-data
+eccodes
+cdsapi
+pvlib
+numpy
+pandas
+pytest

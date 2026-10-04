@@ -1,0 +1,298 @@
+{
+ "schema_version": 1,
+ "diagram_type": "dataflow",
+ "meta": {
+  "title": "Seismic Denoiser: Method Comparison Pipeline",
+  "output": ".archify/004-seismic-denoiser/004-seismic-denoiser.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1080,
+   520
+  ],
+  "legend": {
+   "entries": {
+    "emphasis": {
+     "label": "main path"
+    },
+    "default": {
+     "label": "supporting input"
+    },
+    "dashed": {
+     "label": "feedback"
+    },
+    "security": {
+     "label": "caveat"
+    },
+    "database": {
+     "label": "stored result"
+    }
+   }
+  }
+ },
+ "stages": [
+  {
+   "label": "Data"
+  },
+  {
+   "label": "Methods"
+  },
+  {
+   "label": "Detector"
+  },
+  {
+   "label": "Scoreboard"
+  },
+  {
+   "label": "Results"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "wave",
+   "type": "external",
+   "label": "SCEDC waveforms",
+   "sublabel": "noisy station-days",
+   "stage": 0,
+   "row": 0
+  },
+  {
+   "id": "corr",
+   "type": "external",
+   "label": "corrlib",
+   "sublabel": "stacking, cleaning",
+   "stage": 0,
+   "row": 1
+  },
+  {
+   "id": "cat",
+   "type": "external",
+   "label": "SCEDC catalogue",
+   "sublabel": "events and picks",
+   "stage": 0,
+   "row": 2
+  },
+  {
+   "id": "single",
+   "type": "backend",
+   "label": "Single trace",
+   "sublabel": "raw and denoised",
+   "stage": 1,
+   "row": 0
+  },
+  {
+   "id": "array",
+   "type": "backend",
+   "label": "Array stack",
+   "sublabel": "sum, MVDR, cleaned",
+   "stage": 1,
+   "row": 1
+  },
+  {
+   "id": "pick",
+   "type": "backend",
+   "label": "STA/LTA picker",
+   "sublabel": "same threshold",
+   "stage": 2,
+   "row": 0
+  },
+  {
+   "id": "score",
+   "type": "database",
+   "label": "Scoreboard",
+   "sublabel": "5 methods, one test",
+   "stage": 3,
+   "row": 0
+  },
+  {
+   "id": "mc",
+   "type": "frontend",
+   "label": "Completeness Mc",
+   "sublabel": "Gutenberg-Richter",
+   "stage": 4,
+   "row": 0
+  },
+  {
+   "id": "bias",
+   "type": "frontend",
+   "label": "Pick bias",
+   "sublabel": "early or late",
+   "stage": 4,
+   "row": 1
+  },
+  {
+   "id": "cross",
+   "type": "frontend",
+   "label": "Crossover",
+   "sublabel": "by window length",
+   "stage": 4,
+   "row": 2
+  }
+ ],
+ "flows": [
+  {
+   "from": "wave",
+   "to": "single",
+   "label": "traces",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f0"
+  },
+  {
+   "from": "corr",
+   "to": "array",
+   "label": "weights",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f1"
+  },
+  {
+   "from": "single",
+   "to": "pick",
+   "label": "M1, M2",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f2"
+  },
+  {
+   "from": "array",
+   "to": "pick",
+   "label": "M3, M4, M5",
+   "fromSide": "right",
+   "toSide": "bottom",
+   "via": [
+    [
+     530,
+     271
+    ]
+   ],
+   "labelAt": [
+    450,
+    259
+   ],
+   "variant": "emphasis",
+   "id": "f3"
+  },
+  {
+   "from": "pick",
+   "to": "score",
+   "label": "picks",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f4"
+  },
+  {
+   "from": "cat",
+   "to": "score",
+   "label": "analyst picks, magnitudes",
+   "fromSide": "right",
+   "toSide": "bottom",
+   "via": [
+    [
+     745,
+     385
+    ]
+   ],
+   "labelAt": [
+    430,
+    373
+   ],
+   "id": "f5"
+  },
+  {
+   "from": "score",
+   "to": "mc",
+   "label": "detections",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "labelAt": [
+    856,
+    145
+   ],
+   "id": "f6"
+  },
+  {
+   "from": "score",
+   "to": "bias",
+   "label": "pick errors",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     817,
+     157
+    ],
+    [
+     817,
+     271
+    ]
+   ],
+   "labelAt": [
+    862,
+    259
+   ],
+   "variant": "emphasis",
+   "id": "f7"
+  },
+  {
+   "from": "score",
+   "to": "cross",
+   "label": "by window",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     817,
+     157
+    ],
+    [
+     817,
+     385
+    ]
+   ],
+   "labelAt": [
+    862,
+    373
+   ],
+   "variant": "emphasis",
+   "id": "f8"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "Two acts, one scoreboard",
+   "items": [
+    "Act 1: the field-standard STA/LTA detector on raw traces (M1) and on an imported denoiser (M2)",
+    "Act 2: the array is stacked by delay-and-sum (M3), optimal weights (M4) and optimal weights with a cleaned covariance (M5)",
+    "All five methods are scored identically"
+   ]
+  },
+  {
+   "dot": "violet",
+   "title": "Numbers reported",
+   "items": [
+    "Magnitude of completeness Mc, raw against denoised, with the b value as a check that new detections are real",
+    "Pick-time bias and spread against analyst picks",
+    "The window length at which optimal weighting starts to beat plain averaging"
+   ]
+  },
+  {
+   "dot": "slate",
+   "title": "Credit",
+   "items": [
+    "Waveforms and catalogue: Southern California Earthquake Data Center",
+    "STA/LTA: Allen (1978). Optimal array weights: Capon (1969)",
+    "Imported denoiser: original authors to be credited once confirmed"
+   ]
+  }
+ ]
+}

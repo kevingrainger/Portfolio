@@ -1,0 +1,44 @@
+# iberia-era5: ERA5 single levels over the Iberian Peninsula, hourly, 0.25 degrees.
+#
+# Built in two stages:
+#   1. download_era5.py fetches one GRIB file per month from the Copernicus CDS
+#      (reanalysis-era5-single-levels) into data/era5/
+#   2. this recipe reads those files and writes an Anemoi Zarr dataset:
+#        anemoi-datasets create recipes/iberia-era5.yaml data/iberia-era5.zarr
+#
+# Solar radiation (ssrd) is stored the way ERA5 provides it - J m^-2 accumulated over
+# the hour ending at each timestamp - which is also the Anemoi convention for
+# accumulations. iberia/solar.py converts it to W m^-2 at mid-hour for analysis.
+
+name: iberia-era5
+
+dates:
+  start: 2023-01-01T00:00:00
+  end: 2023-12-31T23:00:00
+  frequency: 1h
+
+input:
+  join:
+    - grib:
+        path: data/era5/iberia-era5-{date:date(%Y-%m)}.grib
+        param: [2t, tcc, ssrd, 100u, 100v]
+
+    # Forcings computed from the grid and the clock, not downloaded: position, time
+    # of day and year, and top-of-atmosphere insolation. Standard inputs for AI
+    # forecasting models, and insolation doubles as a physical upper bound in the
+    # quality checks.
+    - forcings:
+        template: ${input.join.0.grib}
+        param:
+          - cos_latitude
+          - sin_latitude
+          - cos_longitude
+          - sin_longitude
+          - cos_julian_day
+          - sin_julian_day
+          - cos_local_time
+          - sin_local_time
+          - insolation
+
+build:
+  group_by: monthly

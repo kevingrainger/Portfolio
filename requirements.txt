@@ -1,0 +1,16 @@
+# projects 001-006 (project 007's dataset pipeline: 007-spanish-solar-portfolio/iberia_datasets/requirements.txt)
+numpy
+pandas
+scipy
+matplotlib
+yfinance
+openpyxl        # 001: reading the coral temperature record
+h5py            # 004: SCSN waveforms
+PyWavelets      # 004: wavelet denoising
+xgboost         # 006
+shap            # 006
+scikit-learn    # 003 Ledoit-Wolf cross-check, 006 baselines
+jupyter
+nbconvert
+ipykernel
+pytest

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# virtual environments
+.venv*/
+
+# downloaded and generated data - rebuilt by the pipelines, never committed
+**/iberia_datasets/data/
+*.zarr/
+*.zarr.lock
+*.grib
+*.grib.part
+
+# credentials - never committed
+.cdsapirc
+
+# large data and model files - kept locally, never committed
+*.hdf5
+*.h5
+*.pkl
+
+# not part of the portfolio repo: the website is its own repo, planning notes are private
+kevingrainger.github.io/
+_planning/
+.claude/
+/index.html
+
+# third-party market and reef data - used locally, not redistributed
+005-option-pricer/data/
+003-corrlib-correlation-toolbox/data_stock_closes.csv
+001-coral-reef-tipping-points/Coral temps.xlsx

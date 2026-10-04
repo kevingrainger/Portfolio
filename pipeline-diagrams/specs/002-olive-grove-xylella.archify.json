@@ -1,0 +1,315 @@
+{
+ "schema_version": 1,
+ "diagram_type": "dataflow",
+ "meta": {
+  "title": "Olive Grove Xylella: Simulation and Percolation Pipeline",
+  "output": ".archify/002-olive-grove-xylella/002-olive-grove-xylella.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1080,
+   520
+  ],
+  "legend": {
+   "entries": {
+    "emphasis": {
+     "label": "main path"
+    },
+    "default": {
+     "label": "supporting input"
+    },
+    "dashed": {
+     "label": "feedback"
+    },
+    "security": {
+     "label": "caveat"
+    },
+    "database": {
+     "label": "stored result"
+    }
+   }
+  }
+ },
+ "stages": [
+  {
+   "label": "Sources"
+  },
+  {
+   "label": "Simulation"
+  },
+  {
+   "label": "Measured"
+  },
+  {
+   "label": "Theory"
+  },
+  {
+   "label": "Checks"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "paper",
+   "type": "external",
+   "label": "Fierro et al. 2019",
+   "sublabel": "lattice vector model",
+   "stage": 0,
+   "row": 0
+  },
+  {
+   "id": "map",
+   "type": "external",
+   "label": "SIR-percolation",
+   "sublabel": "Grassberger, Newman",
+   "stage": 0,
+   "row": 2
+  },
+  {
+   "id": "abm",
+   "type": "backend",
+   "label": "Grove simulation",
+   "sublabel": "256 trees, 3 years",
+   "stage": 1,
+   "row": 0
+  },
+  {
+   "id": "log",
+   "type": "database",
+   "label": "Transmission log",
+   "sublabel": "source, target, day",
+   "stage": 1,
+   "row": 1
+  },
+  {
+   "id": "front",
+   "type": "backend",
+   "label": "Front speed v",
+   "sublabel": "distance per day",
+   "stage": 2,
+   "row": 0
+  },
+  {
+   "id": "T",
+   "type": "backend",
+   "label": "Transmissibility",
+   "sublabel": "T(d) by distance",
+   "stage": 2,
+   "row": 1
+  },
+  {
+   "id": "stair",
+   "type": "backend",
+   "label": "Front timeline",
+   "sublabel": "quadratic, stepped",
+   "stage": 3,
+   "row": 0
+  },
+  {
+   "id": "pc",
+   "type": "backend",
+   "label": "Bond percolation",
+   "sublabel": "threshold T_c",
+   "stage": 3,
+   "row": 1
+  },
+  {
+   "id": "cmp",
+   "type": "frontend",
+   "label": "Curve overlay",
+   "sublabel": "theory vs simulated",
+   "stage": 4,
+   "row": 0
+  },
+  {
+   "id": "size",
+   "type": "frontend",
+   "label": "Outbreak size",
+   "sublabel": "no simulation",
+   "stage": 4,
+   "row": 1
+  },
+  {
+   "id": "space",
+   "type": "frontend",
+   "label": "Critical spacing",
+   "sublabel": "checked by one run",
+   "stage": 4,
+   "row": 2
+  }
+ ],
+ "flows": [
+  {
+   "from": "paper",
+   "to": "abm",
+   "label": "model rules",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f0"
+  },
+  {
+   "from": "abm",
+   "to": "log",
+   "label": "each infection",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    315,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f1"
+  },
+  {
+   "from": "abm",
+   "to": "front",
+   "label": "front position",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f2"
+  },
+  {
+   "from": "log",
+   "to": "T",
+   "label": "infection pairs",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f3"
+  },
+  {
+   "from": "front",
+   "to": "stair",
+   "label": "speed v",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f4"
+  },
+  {
+   "from": "T",
+   "to": "pc",
+   "label": "T(d)",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f5"
+  },
+  {
+   "from": "map",
+   "to": "pc",
+   "label": "bond open with probability T",
+   "fromSide": "right",
+   "toSide": "bottom",
+   "via": [
+    [
+     745,
+     385
+    ]
+   ],
+   "labelAt": [
+    450,
+    373
+   ],
+   "id": "f6"
+  },
+  {
+   "from": "stair",
+   "to": "cmp",
+   "label": "predicted I(t)",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f7"
+  },
+  {
+   "from": "pc",
+   "to": "size",
+   "label": "cluster size",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f8"
+  },
+  {
+   "from": "pc",
+   "to": "space",
+   "label": "T = T_c",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     852,
+     271
+    ],
+    [
+     852,
+     385
+    ]
+   ],
+   "labelAt": [
+    852,
+    328
+   ],
+   "variant": "emphasis",
+   "id": "f9"
+  },
+  {
+   "from": "abm",
+   "to": "cmp",
+   "label": "simulated I(t)",
+   "fromSide": "top",
+   "toSide": "top",
+   "via": [
+    [
+     315,
+     112
+    ],
+    [
+     960,
+     112
+    ]
+   ],
+   "labelAt": [
+    637,
+    112
+   ],
+   "id": "f10"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "Source model",
+   "items": [
+    "Recreation of Fierro, Liccardo and Porcelli (2019), Scientific Reports: spittlebug vectors spreading Xylella fastidiosa through an olive grove",
+    "The simulation logic is unchanged; a transmission log records which tree infected which"
+   ]
+  },
+  {
+   "dot": "violet",
+   "title": "Second route to the same answer",
+   "items": [
+    "The final infected set of a stochastic SIR epidemic is distributed as a bond-percolation cluster (Grassberger 1983; Newman 2002)",
+    "Transmissibility T(d) is measured from one logged run, then outbreak size and the critical planting distance follow without simulating",
+    "The predicted critical spacing is confirmed by a full simulation at that spacing"
+   ]
+  },
+  {
+   "dot": "slate",
+   "title": "What percolation cannot do",
+   "items": [
+    "Percolation describes the end state and has no clock",
+    "The timeline comes from a front moving at constant speed, giving quadratic growth",
+    "The annual vector reset turns that curve into a staircase"
+   ]
+  }
+ ]
+}
