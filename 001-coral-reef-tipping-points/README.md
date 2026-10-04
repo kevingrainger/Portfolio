@@ -24,4 +24,4 @@ So I built the reef on a lattice, switched the reach of the interactions from fo
 
 `coral_model.py` · `coral_potts.ipynb` · Python, NumPy, SciPy
 
-*A side project, built for fun. The model is a toy reef calibrated to one bleaching record, so the results are qualitative. The Scott Reef temperature record it is calibrated on (`Coral temps.xlsx`) comes from reef-monitoring data and isn't redistributed here.*
+*A side project, built for fun. The model is a toy reef calibrated to one bleaching record, so the results are qualitative. The Scott Reef temperature record it is calibrated on (`Coral temps.xlsx`) comes from NOAA Coral Reef Watch and the Australian Institute of Marine Science (AIMS), and isn't redistributed here.*
