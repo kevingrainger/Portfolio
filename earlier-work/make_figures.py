@@ -149,45 +149,137 @@ def odes():
     F = "higher-order-odes-cpp"
     B = read_blocks(os.path.join(HERE, F, "Collated Data.txt"))
     q1, conv, q2 = B["(Q1)(i)"], B["(Q1)(ii)"], B["(Q2)"]
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.8), dpi=200)
-    ax = axes[0]
-    ax.plot(q1[:, 0], q1[:, 2], "k-", lw=4, alpha=0.25, label="analytic")
-    ax.plot(q1[:, 0], q1[:, 1], "o", color=figstyle.PALETTE[0], label="RK4, h = 0.1")
-    ax.set_xlabel("t"); ax.set_ylabel("y"); ax.legend()
-    ax.set_title("Fourth-order Runge-Kutta", loc="left")
-    ax = axes[1]
+
+    #RK4 against the exact solution x = exp(t^3/3 - 2t^2 + 4t) - 1
+    fig, ax = plt.subplots(figsize=(8, 4.8), dpi=200)
+    tt = np.linspace(0, 1, 200)
+    ax.plot(tt, np.exp(tt ** 3 / 3 - 2 * tt ** 2 + 4 * tt) - 1, "k-", lw=4, alpha=0.25, label="exact")
+    ax.plot(q1[:, 0], q1[:, 1], "o", color=figstyle.PALETTE[0], label="RK4, h = 0.1 (C++ output)")
+    ax.set_xlabel("t"); ax.set_ylabel("x(t)"); ax.legend()
+    ax.set_title("dx/dt = (t - 2)² (x + 1): RK4 on top of the exact answer", loc="left")
+    figstyle.save(fig, fig_path(F, "fig1_rk4_vs_exact"))
+    plt.close(fig)
+
+    #convergence
     h, err = conv[:, 0], conv[:, 4]
     slope = np.polyfit(np.log10(h), np.log10(err), 1)[0]
-    ax.loglog(h, err, "o", color=figstyle.PALETTE[1], label=f"error at t = 1 (slope {slope:.2f})")
+    fig, ax = plt.subplots(figsize=(8, 4.8), dpi=200)
+    ax.loglog(h, err, "o", color=figstyle.PALETTE[1], label=f"error at t = 1 (fitted slope {slope:.2f})")
     ax.loglog(h, err[0] * (h / h[0]) ** 4, "k--", lw=1, label="h⁴")
-    ax.set_xlabel("step size h"); ax.set_ylabel("|RK4 - analytic|"); ax.legend()
-    ax.set_title("Error falls as h⁴, as it should", loc="left")
-    ax = axes[2]
-    ax.plot(q2[:, 0], q2[:, 1], color=figstyle.PALETTE[2])
-    ax.set_xlabel("x"); ax.set_ylabel("y")
-    ax.set_title("A higher-order ODE, solved as a system", loc="left")
-    fig.tight_layout()
-    figstyle.save(fig, fig_path(F, "fig1_rk4"))
+    ax.set_xlabel("step size h"); ax.set_ylabel("|RK4 - exact|"); ax.legend()
+    ax.set_title("Halve the step, cut the error sixteen-fold", loc="left")
+    figstyle.save(fig, fig_path(F, "fig2_convergence"))
     plt.close(fig)
-    print(f"odes done (convergence slope {slope:.2f})")
+
+    #fourth-order ODE y'''' = -10 y'' - x y^3 / 7, as four first-order equations
+    fig, ax = plt.subplots(figsize=(8, 4.8), dpi=200)
+    ax.plot(q2[:, 0], q2[:, 1], color=figstyle.PALETTE[2], lw=1.6)
+    ax.axhline(0, color="0.6", lw=0.8)
+    ax.set_xlabel("x"); ax.set_ylabel("y(x)")
+    ax.set_title("y'''' = -10 y'' - x y³ / 7, solved as four first-order equations", loc="left")
+    figstyle.save(fig, fig_path(F, "fig3_fourth_order"))
+    plt.close(fig)
+
+    #shooting method, ported from "Shooting Method.cpp": x'' = -t x (t + 2) / (2 + t^2 x^2),
+    #x(0) = 3/4, x(10) = -1. Guess the starting slope, integrate, bisect on the miss.
+    def rhs(t, y):
+        return np.array([y[1], -t * y[0] * (t + 2) / (2 + t * t * y[0] * y[0])])
+
+    def trajectory(v, h=0.01):
+        t, y, out = 0.0, np.array([0.75, v]), [(0.0, 0.75)]
+        while t < 10.0 - 1e-12:
+            k1 = rhs(t, y); k2 = rhs(t + h / 2, y + h / 2 * k1)
+            k3 = rhs(t + h / 2, y + h / 2 * k2); k4 = rhs(t + h, y + h * k3)
+            y = y + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4); t += h
+            out.append((t, y[0]))
+        return np.array(out)
+
+    lo, hi = -10.0, 10.0
+    f_lo = trajectory(lo)[-1, 1] + 1
+    tries = []
+    while hi - lo > 1e-6:
+        mid = 0.5 * (lo + hi)
+        path = trajectory(mid)
+        tries.append(path)
+        if (path[-1, 1] + 1) * f_lo < 0:
+            hi = mid
+        else:
+            lo, f_lo = mid, path[-1, 1] + 1
+    v_star = 0.5 * (lo + hi)
+    best = trajectory(v_star)
+
+    fig, ax = plt.subplots(figsize=(13, 6.5), dpi=200)
+    cmap = plt.get_cmap("viridis")
+    show = tries[:12]
+    for k, p in enumerate(show):
+        ax.plot(p[:, 0], p[:, 1], color=cmap(k / len(show)), lw=1.1, alpha=0.8)
+    ax.plot(best[:, 0], best[:, 1], color=figstyle.PALETTE[1], lw=3, label=f"hit: x'(0) = {v_star:.6f}")
+    ax.plot([0, 10], [0.75, -1], "ko", ms=8, zorder=5)
+    ax.annotate("x(0) = 3/4", (0, 0.75), xytext=(0.3, 1.6), fontsize=11, arrowprops=dict(arrowstyle="->", color="0.3"))
+    ax.annotate("target x(10) = -1", (10, -1), xytext=(7.2, -2.6), fontsize=11, arrowprops=dict(arrowstyle="->", color="0.3"))
+    ax.set_ylim(min(best[:, 1].min(), -4) - 0.5, 4)
+    ax.set_xlabel("t"); ax.set_ylabel("x(t)"); ax.legend(loc="upper right")
+    ax.set_title("The shooting method: aim the starting slope, bisect on the miss (first 12 shots shown)", loc="left")
+    figstyle.save(fig, fig_path(F, "fig4_shooting"))
+    figstyle.save(fig, fig_path(F, "cover"))
+    plt.close(fig)
+    print(f"odes done (convergence slope {slope:.2f}, shooting slope x'(0) = {v_star:.6f}, {len(tries)} shots)")
 
 
 #-------- Potts --------------------------------------------------------------------------
+def _potts_snapshot(L, beta, sweeps, seed):
+    from numba import njit
+
+    @njit(cache=True)
+    def run(L, beta, sweeps, seed):
+        np.random.seed(seed)
+        s = np.random.randint(0, 3, (L, L))
+        for _ in range(sweeps):
+            for parity in range(2):                       #checkerboard: update half the lattice at a time
+                for i in range(L):
+                    for j in range((i + parity) % 2, L, 2):
+                        new = (s[i, j] + 1 + np.random.randint(0, 2)) % 3
+                        nb = (s[(i + 1) % L, j], s[(i - 1) % L, j], s[i, (j + 1) % L], s[i, (j - 1) % L])
+                        d = 0
+                        for n in nb:
+                            d += (n == s[i, j]) - (n == new)    #energy change, E = -sum of matching neighbours
+                        if d <= 0 or np.random.random() < np.exp(-beta * d):
+                            s[i, j] = new
+        return s
+    return run(L, beta, sweeps, seed)
+
+
 def potts():
     F = "potts-monte-carlo-cpp"
     d = pd.read_csv(os.path.join(HERE, F, "mc_results.csv"), skipinitialspace=True)
     beta_c = np.log(1 + np.sqrt(3))                       # exact, 2D 3-state Potts
-    fig, axes = plt.subplots(1, 2, figsize=(13, 4.8), dpi=200)
-    for ax, col, lab, c in [(axes[0], "M", "magnetisation ⟨M⟩", 0), (axes[1], "Variance", "fluctuations, var(M)", 1)]:
+
+    #the lattice itself, below, at and above the transition (a 256 x 256 Python + Numba port of MC.cpp)
+    from matplotlib.colors import ListedColormap
+    cmap = ListedColormap([figstyle.PALETTE[0], figstyle.PALETTE[4], figstyle.PALETTE[3]])
+    fig, axes = plt.subplots(1, 3, figsize=(13, 5.2), dpi=200)
+    for ax, (beta, label) in zip(axes, [(0.8, "hot: β = 0.80, disorder"), (beta_c, f"critical: β = {beta_c:.3f}"), (1.3, "cold: β = 1.30, one state wins")]):
+        s = _potts_snapshot(256, beta, 1500, 7)
+        ax.imshow(s, cmap=cmap, interpolation="nearest")
+        ax.set_title(label, loc="left", fontsize=11.5)
+        ax.set_xticks([]); ax.set_yticks([]); ax.grid(False)
+    fig.suptitle("3-state Potts model by Metropolis Monte Carlo: cooling through the phase transition", x=0.01, ha="left", fontsize=13)
+    fig.tight_layout()
+    figstyle.save(fig, fig_path(F, "fig1_lattice"))
+    figstyle.save(fig, fig_path(F, "cover"))
+    plt.close(fig)
+
+    for col, lab, c, name, title in [
+            ("M", "magnetisation ⟨M⟩", 0, "fig2_magnetisation", "Order appears: magnetisation, 24 × 24 lattice (C++ output)"),
+            ("Variance", "fluctuations, var(M)", 1, "fig3_fluctuations", "Fluctuations peak at the transition")]:
+        fig, ax = plt.subplots(figsize=(8, 4.8), dpi=200)
         ax.plot(d["Beta"], d[col], "o-", color=figstyle.PALETTE[c], ms=4)
         ax.axvline(beta_c, color="0.4", ls="--", lw=1)
         ax.text(beta_c + 0.01, ax.get_ylim()[1] * 0.92, f"exact β_c = {beta_c:.3f}", fontsize=9, color="0.3")
         ax.set_xlabel("inverse temperature β"); ax.set_ylabel(lab)
-    axes[0].set_title("3-state Potts model, 24 × 24: order appears", loc="left")
-    axes[1].set_title("Fluctuations peak at the transition", loc="left")
-    fig.tight_layout()
-    figstyle.save(fig, fig_path(F, "fig1_transition"))
-    plt.close(fig)
+        ax.set_title(title, loc="left")
+        figstyle.save(fig, fig_path(F, name))
+        plt.close(fig)
     print(f"potts done (variance peaks at beta = {d.loc[d['Variance'].idxmax(), 'Beta']:.2f})")
 
 
