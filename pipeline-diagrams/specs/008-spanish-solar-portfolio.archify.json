@@ -1,0 +1,315 @@
+{
+ "schema_version": 1,
+ "diagram_type": "dataflow",
+ "meta": {
+  "title": "Spanish Solar Portfolio: From Weather to Allocation",
+  "output": ".archify/008-spanish-solar-portfolio/008-spanish-solar-portfolio.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1080,
+   520
+  ],
+  "legend": {
+   "entries": {
+    "emphasis": {
+     "label": "main path"
+    },
+    "default": {
+     "label": "supporting input"
+    },
+    "dashed": {
+     "label": "feedback"
+    },
+    "security": {
+     "label": "caveat"
+    },
+    "database": {
+     "label": "stored result"
+    }
+   }
+  }
+ },
+ "stages": [
+  {
+   "label": "Data"
+  },
+  {
+   "label": "Generation"
+  },
+  {
+   "label": "Correlation"
+  },
+  {
+   "label": "Structure"
+  },
+  {
+   "label": "Strategy"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "era",
+   "type": "external",
+   "label": "ERA5 radiation",
+   "sublabel": "hourly, 20-40 sites",
+   "stage": 0,
+   "row": 0
+  },
+  {
+   "id": "px",
+   "type": "external",
+   "label": "ENTSO-E prices",
+   "sublabel": "day-ahead, Spain",
+   "stage": 0,
+   "row": 2
+  },
+  {
+   "id": "pv",
+   "type": "backend",
+   "label": "Panel model",
+   "sublabel": "deliberately simple",
+   "stage": 1,
+   "row": 0
+  },
+  {
+   "id": "anom",
+   "type": "backend",
+   "label": "Clear-sky removal",
+   "sublabel": "deviations only",
+   "stage": 1,
+   "row": 1
+  },
+  {
+   "id": "L",
+   "type": "backend",
+   "label": "Decay length L",
+   "sublabel": "rho(d) by season",
+   "stage": 2,
+   "row": 0
+  },
+  {
+   "id": "C",
+   "type": "database",
+   "label": "Site matrix",
+   "sublabel": "cleaned with corrlib",
+   "stage": 2,
+   "row": 1
+  },
+  {
+   "id": "neff",
+   "type": "backend",
+   "label": "Effective rank",
+   "sublabel": "raw vs cleaned",
+   "stage": 3,
+   "row": 0
+  },
+  {
+   "id": "load",
+   "type": "backend",
+   "label": "Site loadings",
+   "sublabel": "on the shared mode",
+   "stage": 3,
+   "row": 1
+  },
+  {
+   "id": "cap",
+   "type": "backend",
+   "label": "Capture rate",
+   "sublabel": "output-weighted",
+   "stage": 3,
+   "row": 2
+  },
+  {
+   "id": "alloc",
+   "type": "backend",
+   "label": "Allocation",
+   "sublabel": "arms A1 to A5",
+   "stage": 4,
+   "row": 1
+  },
+  {
+   "id": "score",
+   "type": "frontend",
+   "label": "Scoreboard",
+   "sublabel": "revenue, worst year",
+   "stage": 4,
+   "row": 2
+  }
+ ],
+ "flows": [
+  {
+   "from": "era",
+   "to": "pv",
+   "label": "irradiance",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f0"
+  },
+  {
+   "from": "pv",
+   "to": "anom",
+   "label": "site output",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    315,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f1"
+  },
+  {
+   "from": "anom",
+   "to": "C",
+   "label": "deviations",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f2"
+  },
+  {
+   "from": "C",
+   "to": "L",
+   "label": "pairs by distance",
+   "route": "straight",
+   "fromSide": "top",
+   "toSide": "bottom",
+   "labelAt": [
+    530,
+    214
+   ],
+   "id": "f3"
+  },
+  {
+   "from": "C",
+   "to": "load",
+   "label": "top mode",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "labelAt": [
+    635,
+    259
+   ],
+   "id": "f4"
+  },
+  {
+   "from": "C",
+   "to": "neff",
+   "label": "spectrum",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     602,
+     271
+    ],
+    [
+     602,
+     157
+    ]
+   ],
+   "labelAt": [
+    615,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f5"
+  },
+  {
+   "from": "px",
+   "to": "cap",
+   "label": "hourly prices",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f6"
+  },
+  {
+   "from": "load",
+   "to": "alloc",
+   "label": "exposures",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f7"
+  },
+  {
+   "from": "neff",
+   "to": "alloc",
+   "label": "N_eff floor",
+   "fromSide": "right",
+   "toSide": "top",
+   "via": [
+    [
+     960,
+     157
+    ]
+   ],
+   "labelAt": [
+    880,
+    145
+   ],
+   "id": "f8"
+  },
+  {
+   "from": "cap",
+   "to": "score",
+   "label": "capture",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f9"
+  },
+  {
+   "from": "alloc",
+   "to": "score",
+   "label": "weights",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    960,
+    328
+   ],
+   "variant": "emphasis",
+   "id": "f10"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "The chain",
+   "items": [
+    "Spatial correlation leads to simultaneous generation, which depresses the price, which lowers the capture rate and revenue",
+    "Correlation is computed on deviations from the clear-sky profile; raw output correlates near 0.95 only because the sun rises everywhere",
+    "The decay length L is estimated by season: diversification is expected to fail under winter blocking highs"
+   ]
+  },
+  {
+   "dot": "violet",
+   "title": "Strategy",
+   "items": [
+    "Capacity shares from the cleaned covariance, with expected capture rate in place of expected return",
+    "Five arms scored identically, from equal weight to the capture-rate objective",
+    "Equal weight is expected to be competitive and is reported as such"
+   ]
+  },
+  {
+   "dot": "slate",
+   "title": "Data and credit",
+   "items": [
+    "Weather: ERA5 (Hersbach et al. 2020), a reanalysis with known cloud biases. Prices: ENTSO-E",
+    "Capture rate follows the value-factor framing of Hirth (2013)",
+    "Cleaning, effective rank, tail dependence and loadings are imported from corrlib"
+   ]
+  }
+ ]
+}

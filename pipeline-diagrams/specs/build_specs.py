@@ -90,8 +90,46 @@ D("002-olive-grove-xylella","Olive Grove Xylella: Simulation and Percolation Pip
     "The timeline comes from a front moving at constant speed, giving quadratic growth",
     "The annual vector reset turns that curve into a staircase"])])
 
-# ---------------- 003 corrlib ----------------
-D("003-corrlib-correlation-toolbox","corrlib: Correlation Toolbox Pipeline",
+# ---------------- 003 Po Valley ----------------
+D("003-po-valley-downscaling","Po Valley Tmax: Physics-Anchored Downscaling",
+ ["Inputs","Daily fields","Physics","Anchor and learn","Outputs"],
+ [N("era","external","ERA5-Land","Tmax, skin T, wind",0,0),
+  N("lst","external","MODIS LST","Aqua, 1 km, gaps",0,1),
+  N("static","external","Terrain, land cover","GLO-30, WorldCover",0,2),
+  N("red","backend","Sea-level reduction","theta = T + Gamma z",1,0),
+  N("gap","backend","Cloud-gap fill","skin T + offset",1,1),
+  N("taus","backend","Surface coupling","rates add by class",1,2),
+  N("fit","backend","Adjoint fit","kappa, tau_a, tau_c",2,0),
+  N("pde","backend","Heat-budget PDE","A theta = b + q",2,1),
+  N("st","external","Stations","Meteostat Tmax",3,0),
+  N("anc","backend","Anchored solve","H theta = y exactly",3,1),
+  N("xgb","backend","XGBoost","learns q",3,2),
+  N("cv","frontend","Blocked hold-out","2023, 50 km blocks",4,0),
+  N("tmax","frontend","Tmax at 1 km","every station exact",4,1),
+  N("q","database","Missing physics","mean q map",4,2)],
+ [H("era","red","Tmax, wind"), H("lst","gap","clear-sky LST"), H("static","taus","fractions f_c"),
+  V("red","gap","skin T",1,0,"default"),
+  H("red","fit","theta_E, u","default"), H("gap","pde","theta_s"), 
+  P("taus","pde","1 / tau_s","right","bottom",[[530,385]],[450,373],"default"),
+  V("fit","pde","parameters",2,0,"default"),
+  H("pde","anc","A, b, footprints"),
+  V("st","anc","y",3,0),
+  V("anc","xgb","q where seen",3,1),
+  H("st","cv","held-out blocks","default"),
+  H("anc","tmax","theta - Gamma z"),
+  H("xgb","q","q_hat")],
+ [("emerald","The constraint",["Sasaki (1970): variational analysis with a strong constraint",
+    "Here the observations are imposed exactly and the dynamics are allowed an error term q",
+    "q is the smallest, smoothest forcing that closes the gap at every station"]),
+  ("violet","Where the learning goes",["XGBoost (Chen and Guestrin 2016) predicts q from land cover, terrain and surface temperature",
+    "Its prediction is a prior for the next anchored solve, so the stations are still returned exactly",
+    "Within each fold, q comes only from solves that exclude the held-out stations"]),
+  ("slate","Data and credit",["ERA5-Land (Munoz-Sabater et al. 2021); E-OBS as the gridded-station baseline (Cornes et al. 2018)",
+    "MODIS MYD11A1 land surface temperature; ESA WorldCover (Zanaga et al. 2022); Copernicus GLO-30",
+    "Station list from Meteostat. The published run uses placeholder daily fields"])])
+
+# ---------------- 004 corrlib ----------------
+D("004-corrlib-correlation-toolbox","corrlib: Correlation Toolbox Pipeline",
  ["Input","Measure and estimate","Matrix","Clean","Use"],
  [N("X","database","Data matrix X","variables x time",0,0),
   N("ticks","external","Tick data","irregular timestamps",0,1),
@@ -126,8 +164,8 @@ D("003-corrlib-correlation-toolbox","corrlib: Correlation Toolbox Pipeline",
     "Laloux, Cizeau, Bouchaud and Potters (1999); Bun, Bouchaud and Potters (2017)",
     "Tyler (1987); Frahm and Jaekel (2005)"])])
 
-# ---------------- 004 Seismic ----------------
-D("004-seismic-denoiser","Seismic Denoiser: Method Comparison Pipeline",
+# ---------------- 005 Seismic ----------------
+D("005-seismic-denoiser","Seismic Denoiser: Method Comparison Pipeline",
  ["Data","Methods","Detector","Scoreboard","Results"],
  [N("wave","external","SCEDC waveforms","noisy station-days",0,0),
   N("corr","external","corrlib","stacking, cleaning",0,1),
@@ -158,8 +196,8 @@ D("004-seismic-denoiser","Seismic Denoiser: Method Comparison Pipeline",
     "STA/LTA: Allen (1978). Optimal array weights: Capon (1969)",
     "Imported denoiser: original authors to be credited once confirmed"])])
 
-# ---------------- 005 Options ----------------
-D("005-option-pricer","Option Pricer: Calibration, Solvers and Validation",
+# ---------------- 006 Options ----------------
+D("006-option-pricer","Option Pricer: Calibration, Solvers and Validation",
  ["Market","Extract","Pricers","Independent check","Evidence"],
  [N("spx","external","SPX chain","4 January 2023",0,0),
   N("set","external","SET50 chain","TFEX, European",0,1),
@@ -189,8 +227,8 @@ D("005-option-pricer","Option Pricer: Calibration, Solvers and Validation",
     "Projected SOR as in Wilmott, Howison and Dewynne (1995)",
     "Built so far: SPX extraction, European and American pricing. Asian pricing and SET50 calibration are in progress"])])
 
-# ---------------- 006 Italian power ----------------
-D("006-italian-power-volatility","Italian Power Price Volatility: Forecasting Pipeline",
+# ---------------- 007 Italian power ----------------
+D("007-italian-power-volatility","Italian Power Price Volatility: Forecasting Pipeline",
  ["Data","Features","Models","Out-of-sample test","Result"],
  [N("gme","external","GME prices","day-ahead, Italy",0,0),
   N("era","external","ERA5","observed weather",0,1),
@@ -219,8 +257,8 @@ D("006-italian-power-volatility","Italian Power Price Volatility: Forecasting Pi
     "Expected outcome: forecast weather loses to observed weather and beats no weather",
     "The number reported is the forecast lead, in months, at which that advantage disappears"])])
 
-# ---------------- 007 Spanish solar ----------------
-D("007-spanish-solar-portfolio","Spanish Solar Portfolio: From Weather to Allocation",
+# ---------------- 008 Spanish solar ----------------
+D("008-spanish-solar-portfolio","Spanish Solar Portfolio: From Weather to Allocation",
  ["Data","Generation","Correlation","Structure","Strategy"],
  [N("era","external","ERA5 radiation","hourly, 20-40 sites",0,0),
   N("px","external","ENTSO-E prices","day-ahead, Spain",0,2),

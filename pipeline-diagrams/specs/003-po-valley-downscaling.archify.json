@@ -1,0 +1,354 @@
+{
+ "schema_version": 1,
+ "diagram_type": "dataflow",
+ "meta": {
+  "title": "Po Valley Tmax: Physics-Anchored Downscaling",
+  "output": ".archify/003-po-valley-downscaling/003-po-valley-downscaling.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1080,
+   520
+  ],
+  "legend": {
+   "entries": {
+    "emphasis": {
+     "label": "main path"
+    },
+    "default": {
+     "label": "supporting input"
+    },
+    "dashed": {
+     "label": "feedback"
+    },
+    "security": {
+     "label": "caveat"
+    },
+    "database": {
+     "label": "stored result"
+    }
+   }
+  }
+ },
+ "stages": [
+  {
+   "label": "Inputs"
+  },
+  {
+   "label": "Daily fields"
+  },
+  {
+   "label": "Physics"
+  },
+  {
+   "label": "Anchor and learn"
+  },
+  {
+   "label": "Outputs"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "era",
+   "type": "external",
+   "label": "ERA5-Land",
+   "sublabel": "Tmax, skin T, wind",
+   "stage": 0,
+   "row": 0
+  },
+  {
+   "id": "lst",
+   "type": "external",
+   "label": "MODIS LST",
+   "sublabel": "Aqua, 1 km, gaps",
+   "stage": 0,
+   "row": 1
+  },
+  {
+   "id": "static",
+   "type": "external",
+   "label": "Terrain, land cover",
+   "sublabel": "GLO-30, WorldCover",
+   "stage": 0,
+   "row": 2
+  },
+  {
+   "id": "red",
+   "type": "backend",
+   "label": "Sea-level reduction",
+   "sublabel": "theta = T + Gamma z",
+   "stage": 1,
+   "row": 0
+  },
+  {
+   "id": "gap",
+   "type": "backend",
+   "label": "Cloud-gap fill",
+   "sublabel": "skin T + offset",
+   "stage": 1,
+   "row": 1
+  },
+  {
+   "id": "taus",
+   "type": "backend",
+   "label": "Surface coupling",
+   "sublabel": "rates add by class",
+   "stage": 1,
+   "row": 2
+  },
+  {
+   "id": "fit",
+   "type": "backend",
+   "label": "Adjoint fit",
+   "sublabel": "kappa, tau_a, tau_c",
+   "stage": 2,
+   "row": 0
+  },
+  {
+   "id": "pde",
+   "type": "backend",
+   "label": "Heat-budget PDE",
+   "sublabel": "A theta = b + q",
+   "stage": 2,
+   "row": 1
+  },
+  {
+   "id": "st",
+   "type": "external",
+   "label": "Stations",
+   "sublabel": "Meteostat Tmax",
+   "stage": 3,
+   "row": 0
+  },
+  {
+   "id": "anc",
+   "type": "backend",
+   "label": "Anchored solve",
+   "sublabel": "H theta = y exactly",
+   "stage": 3,
+   "row": 1
+  },
+  {
+   "id": "xgb",
+   "type": "backend",
+   "label": "XGBoost",
+   "sublabel": "learns q",
+   "stage": 3,
+   "row": 2
+  },
+  {
+   "id": "cv",
+   "type": "frontend",
+   "label": "Blocked hold-out",
+   "sublabel": "2023, 50 km blocks",
+   "stage": 4,
+   "row": 0
+  },
+  {
+   "id": "tmax",
+   "type": "frontend",
+   "label": "Tmax at 1 km",
+   "sublabel": "every station exact",
+   "stage": 4,
+   "row": 1
+  },
+  {
+   "id": "q",
+   "type": "database",
+   "label": "Missing physics",
+   "sublabel": "mean q map",
+   "stage": 4,
+   "row": 2
+  }
+ ],
+ "flows": [
+  {
+   "from": "era",
+   "to": "red",
+   "label": "Tmax, wind",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f0"
+  },
+  {
+   "from": "lst",
+   "to": "gap",
+   "label": "clear-sky LST",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f1"
+  },
+  {
+   "from": "static",
+   "to": "taus",
+   "label": "fractions f_c",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f2"
+  },
+  {
+   "from": "red",
+   "to": "gap",
+   "label": "skin T",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    315,
+    214
+   ],
+   "id": "f3"
+  },
+  {
+   "from": "red",
+   "to": "fit",
+   "label": "theta_E, u",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f4"
+  },
+  {
+   "from": "gap",
+   "to": "pde",
+   "label": "theta_s",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f5"
+  },
+  {
+   "from": "taus",
+   "to": "pde",
+   "label": "1 / tau_s",
+   "fromSide": "right",
+   "toSide": "bottom",
+   "via": [
+    [
+     530,
+     385
+    ]
+   ],
+   "labelAt": [
+    450,
+    373
+   ],
+   "id": "f6"
+  },
+  {
+   "from": "fit",
+   "to": "pde",
+   "label": "parameters",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    530,
+    214
+   ],
+   "id": "f7"
+  },
+  {
+   "from": "pde",
+   "to": "anc",
+   "label": "A, b, footprints",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f8"
+  },
+  {
+   "from": "st",
+   "to": "anc",
+   "label": "y",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    745,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f9"
+  },
+  {
+   "from": "anc",
+   "to": "xgb",
+   "label": "q where seen",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    745,
+    328
+   ],
+   "variant": "emphasis",
+   "id": "f10"
+  },
+  {
+   "from": "st",
+   "to": "cv",
+   "label": "held-out blocks",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f11"
+  },
+  {
+   "from": "anc",
+   "to": "tmax",
+   "label": "theta - Gamma z",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f12"
+  },
+  {
+   "from": "xgb",
+   "to": "q",
+   "label": "q_hat",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f13"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "The constraint",
+   "items": [
+    "Sasaki (1970): variational analysis with a strong constraint",
+    "Here the observations are imposed exactly and the dynamics are allowed an error term q",
+    "q is the smallest, smoothest forcing that closes the gap at every station"
+   ]
+  },
+  {
+   "dot": "violet",
+   "title": "Where the learning goes",
+   "items": [
+    "XGBoost (Chen and Guestrin 2016) predicts q from land cover, terrain and surface temperature",
+    "Its prediction is a prior for the next anchored solve, so the stations are still returned exactly",
+    "Within each fold, q comes only from solves that exclude the held-out stations"
+   ]
+  },
+  {
+   "dot": "slate",
+   "title": "Data and credit",
+   "items": [
+    "ERA5-Land (Munoz-Sabater et al. 2021); E-OBS as the gridded-station baseline (Cornes et al. 2018)",
+    "MODIS MYD11A1 land surface temperature; ESA WorldCover (Zanaga et al. 2022); Copernicus GLO-30",
+    "Station list from Meteostat. The published run uses placeholder daily fields"
+   ]
+  }
+ ]
+}

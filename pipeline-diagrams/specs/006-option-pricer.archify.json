@@ -1,0 +1,317 @@
+{
+ "schema_version": 1,
+ "diagram_type": "dataflow",
+ "meta": {
+  "title": "Option Pricer: Calibration, Solvers and Validation",
+  "output": ".archify/006-option-pricer/006-option-pricer.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1080,
+   520
+  ],
+  "legend": {
+   "entries": {
+    "emphasis": {
+     "label": "main path"
+    },
+    "default": {
+     "label": "supporting input"
+    },
+    "dashed": {
+     "label": "feedback"
+    },
+    "security": {
+     "label": "caveat"
+    },
+    "database": {
+     "label": "stored result"
+    }
+   }
+  }
+ },
+ "stages": [
+  {
+   "label": "Market"
+  },
+  {
+   "label": "Extract"
+  },
+  {
+   "label": "Pricers"
+  },
+  {
+   "label": "Independent check"
+  },
+  {
+   "label": "Evidence"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "spx",
+   "type": "external",
+   "label": "SPX chain",
+   "sublabel": "4 January 2023",
+   "stage": 0,
+   "row": 0
+  },
+  {
+   "id": "set",
+   "type": "external",
+   "label": "SET50 chain",
+   "sublabel": "TFEX, European",
+   "stage": 0,
+   "row": 1
+  },
+  {
+   "id": "par",
+   "type": "backend",
+   "label": "Put-call parity",
+   "sublabel": "forward, discount",
+   "stage": 1,
+   "row": 0
+  },
+  {
+   "id": "sig",
+   "type": "backend",
+   "label": "sigma(t) curve",
+   "sublabel": "forward volatility",
+   "stage": 1,
+   "row": 1
+  },
+  {
+   "id": "psor",
+   "type": "backend",
+   "label": "Projected SOR",
+   "sublabel": "American boundary",
+   "stage": 2,
+   "row": 0
+  },
+  {
+   "id": "pde",
+   "type": "backend",
+   "label": "PDE solver",
+   "sublabel": "log-price grid, SOR",
+   "stage": 2,
+   "row": 1
+  },
+  {
+   "id": "vec",
+   "type": "backend",
+   "label": "Vecer reduction",
+   "sublabel": "Asian, one dimension",
+   "stage": 2,
+   "row": 2
+  },
+  {
+   "id": "tree",
+   "type": "backend",
+   "label": "Binomial tree",
+   "sublabel": "American benchmark",
+   "stage": 3,
+   "row": 0
+  },
+  {
+   "id": "cf",
+   "type": "backend",
+   "label": "Closed form",
+   "sublabel": "integrated variance",
+   "stage": 3,
+   "row": 1
+  },
+  {
+   "id": "mc",
+   "type": "backend",
+   "label": "Monte Carlo",
+   "sublabel": "control variate",
+   "stage": 3,
+   "row": 2
+  },
+  {
+   "id": "bnd",
+   "type": "frontend",
+   "label": "Exercise boundary",
+   "sublabel": "on the value surface",
+   "stage": 4,
+   "row": 0
+  },
+  {
+   "id": "conv",
+   "type": "frontend",
+   "label": "Convergence",
+   "sublabel": "order 2, fitted",
+   "stage": 4,
+   "row": 1
+  },
+  {
+   "id": "agree",
+   "type": "frontend",
+   "label": "PDE vs MC",
+   "sublabel": "matching decimals",
+   "stage": 4,
+   "row": 2
+  }
+ ],
+ "flows": [
+  {
+   "from": "spx",
+   "to": "par",
+   "label": "quotes",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f0"
+  },
+  {
+   "from": "set",
+   "to": "sig",
+   "label": "ATM quotes",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "id": "f1"
+  },
+  {
+   "from": "par",
+   "to": "sig",
+   "label": "forwards",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    315,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f2"
+  },
+  {
+   "from": "sig",
+   "to": "pde",
+   "label": "sigma(t)",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f3"
+  },
+  {
+   "from": "pde",
+   "to": "psor",
+   "label": "+ projection",
+   "route": "straight",
+   "fromSide": "top",
+   "toSide": "bottom",
+   "labelAt": [
+    530,
+    214
+   ],
+   "variant": "emphasis",
+   "id": "f4"
+  },
+  {
+   "from": "pde",
+   "to": "vec",
+   "label": "new numeraire",
+   "route": "straight",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    530,
+    328
+   ],
+   "variant": "emphasis",
+   "id": "f5"
+  },
+  {
+   "from": "psor",
+   "to": "tree",
+   "label": "American",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f6"
+  },
+  {
+   "from": "pde",
+   "to": "cf",
+   "label": "European",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f7"
+  },
+  {
+   "from": "vec",
+   "to": "mc",
+   "label": "Asian",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f8"
+  },
+  {
+   "from": "tree",
+   "to": "bnd",
+   "label": "agreement",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f9"
+  },
+  {
+   "from": "cf",
+   "to": "conv",
+   "label": "error by grid",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f10"
+  },
+  {
+   "from": "mc",
+   "to": "agree",
+   "label": "two methods",
+   "route": "straight",
+   "fromSide": "right",
+   "toSide": "left",
+   "variant": "emphasis",
+   "id": "f11"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "emerald",
+   "title": "One change to Black-Scholes",
+   "items": [
+    "Volatility becomes a function of time, read from the option chain as forward volatility",
+    "European prices then depend only on the integrated variance, so an exact formula remains and the solver can be tested against it",
+    "The implied interest rate recovered from put-call parity is checked against January 2023 rates"
+   ]
+  },
+  {
+   "dot": "violet",
+   "title": "Three option types",
+   "items": [
+    "European: validation of the solver, including measured convergence order",
+    "American: free boundary by projected SOR, checked against a binomial tree",
+    "Asian: reduction to one dimension by a change of numeraire, checked by Monte Carlo with a geometric control variate"
+   ]
+  },
+  {
+   "dot": "slate",
+   "title": "Credit and status",
+   "items": [
+    "Asian method: Vecer (2001), after Rogers and Shi (1995). Control variate: Kemna and Vorst (1990)",
+    "Projected SOR as in Wilmott, Howison and Dewynne (1995)",
+    "Built so far: SPX extraction, European and American pricing. Asian pricing and SET50 calibration are in progress"
+   ]
+  }
+ ]
+}

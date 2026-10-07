@@ -29,6 +29,13 @@ _planning/
 /index.html
 
 # third-party market and reef data - used locally, not redistributed
-005-option-pricer/data/
-003-corrlib-correlation-toolbox/data_stock_closes.csv
+006-option-pricer/data/
+004-corrlib-correlation-toolbox/data_stock_closes.csv
 001-coral-reef-tipping-points/Coral temps.xlsx
+
+# 003: real downloads, caches and the large intermediate files of a pipeline run
+003-po-valley-downscaling/data/real/
+003-po-valley-downscaling/data/cache/
+003-po-valley-downscaling/results/q_training.npz
+003-po-valley-downscaling/results/xgb_q_*.json
+003-po-valley-downscaling/results_smoke/

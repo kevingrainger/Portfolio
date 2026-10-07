@@ -1,4 +1,5 @@
-# Every push: run the corrlib tests and the Iberian dataset pipeline tests, then
+# Every push: run the corrlib tests, the Po Valley solver tests and the Iberian
+# dataset pipeline tests, then
 # build the pipeline's Docker image and run the tests inside it.
 name: CI
 
@@ -16,13 +17,25 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install numpy scipy pandas matplotlib scikit-learn pytest
-      - run: python -m pytest 003-corrlib-correlation-toolbox/tests -q
+      - run: python -m pytest 004-corrlib-correlation-toolbox/tests -q
+
+  po-valley:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install numpy scipy pandas pyproj pytest
+      # Step 0: the PDE solver and the station anchoring against problems with known answers
+      - run: python -m pytest 003-po-valley-downscaling/tests -q
 
   dataset-pipeline:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: 007-spanish-solar-portfolio/iberia_datasets
+        working-directory: 008-spanish-solar-portfolio/iberia_datasets
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -38,5 +51,5 @@ jobs:
     needs: dataset-pipeline
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t iberia-datasets 007-spanish-solar-portfolio/iberia_datasets
+      - run: docker build -t iberia-datasets 008-spanish-solar-portfolio/iberia_datasets
       - run: docker run --rm iberia-datasets

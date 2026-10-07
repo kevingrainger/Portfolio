@@ -87,9 +87,9 @@ def coral():
     print("coral cover:", path, os.path.getsize(path) // 1024, "KB")
 
 
-#-------- 003 corrlib: a clustered correlation heatmap ---------------------------------
+#-------- 004 corrlib: a clustered correlation heatmap ---------------------------------
 def corrlib():
-    sys.path.insert(0, os.path.join(ROOT, "003-corrlib-correlation-toolbox"))
+    sys.path.insert(0, os.path.join(ROOT, "004-corrlib-correlation-toolbox"))
     import yfinance as yf
     from corrlib import Correlator
     from corrlib.plotting import _linkage
@@ -100,7 +100,7 @@ def corrlib():
                "Staples": ["PG", "KO", "PEP", "WMT", "COST"], "Industrials": ["CAT", "BA", "GE", "HON", "UNP"],
                "Utilities": ["NEE", "DUK", "SO", "D", "AEP"], "Property": ["AMT", "PLD", "SPG", "O"]}
     tickers = [t for v in sectors.values() for t in v]
-    cache = os.path.join(ROOT, "003-corrlib-correlation-toolbox", "data_stock_closes.csv")
+    cache = os.path.join(ROOT, "004-corrlib-correlation-toolbox", "data_stock_closes.csv")
     if os.path.exists(cache):
         raw = pd.read_csv(cache, index_col=0, parse_dates=True)
     else:
@@ -141,15 +141,15 @@ def corrlib():
     for k, (s, col) in enumerate(palette.items()):
         ax_t.add_patch(plt.Rectangle((0, 0.38 - k * 0.045), 0.05, 0.03, color=col, transform=ax_t.transAxes))
         ax_t.text(0.08, 0.395 - k * 0.045, s, fontsize=11, va="center")
-    figstyle.save(fig, out("003-corrlib-correlation-toolbox"))
+    figstyle.save(fig, out("004-corrlib-correlation-toolbox"))
     plt.close(fig)
     print("corrlib cover done")
 
 
-#-------- 004 seismic: before and after ----------------------------------------------------
+#-------- 005 seismic: before and after ----------------------------------------------------
 def seismic():
-    sys.path.insert(0, os.path.join(ROOT, "004-seismic-denoiser"))
-    sys.path.insert(0, os.path.join(ROOT, "003-corrlib-correlation-toolbox"))
+    sys.path.insert(0, os.path.join(ROOT, "005-seismic-denoiser"))
+    sys.path.insert(0, os.path.join(ROOT, "004-corrlib-correlation-toolbox"))
     import seismic as s
     from corrlib import array_stacking as stack
 
@@ -193,14 +193,14 @@ def seismic():
         else:
             ax.set_xlabel("time (s)")
     fig.text(0.53, 0.955, "Same 2-12 Hz filter on every panel; the stack does the rest", fontsize=10, color="0.35")
-    figstyle.save(fig, out("004-seismic-denoiser"))
+    figstyle.save(fig, out("005-seismic-denoiser"))
     plt.close(fig)
     print("seismic cover done")
 
 
-#-------- 005 options: the Monte Carlo ------------------------------------------------------
+#-------- 006 options: the Monte Carlo ------------------------------------------------------
 def options():
-    softs = pd.read_csv(os.path.join(ROOT, "005-option-pricer", "data", "softs_futures.csv"), index_col=0, parse_dates=True)
+    softs = pd.read_csv(os.path.join(ROOT, "006-option-pricer", "data", "softs_futures.csv"), index_col=0, parse_dates=True)
     r = np.log(softs["coffee"]).diff().dropna()
     z = r / r.groupby(r.index.year).transform("std")
     seasonal = z.groupby(z.index.month).std(); seasonal /= seasonal.mean()
@@ -238,14 +238,14 @@ def options():
     axh.set_xlabel("paths"); axh.set_yticklabels([])
     axh.set_title(f"average price at expiry\n{np.mean(payoff > 0):.0%} of paths pay out", fontsize=11)
     fig.autofmt_xdate()
-    figstyle.save(fig, out("005-option-pricer"))
+    figstyle.save(fig, out("006-option-pricer"))
     plt.close(fig)
     print("options cover done")
 
 
-#-------- 006 Italian power: the price, projected forward with the weather -------------------
+#-------- 007 Italian power: the price, projected forward with the weather -------------------
 def power():
-    sys.path.insert(0, os.path.join(ROOT, "006-italian-power-volatility"))
+    sys.path.insert(0, os.path.join(ROOT, "007-italian-power-volatility"))
     import power as pw
     from sklearn.linear_model import LinearRegression
 
@@ -300,7 +300,7 @@ def power():
     ax.set_title("Italian power prices, projected nine months ahead from 300 weather scenarios (gas held flat)", loc="left")
     ax.legend(loc="upper left", fontsize=9, ncol=2)
     figstyle.watermark(fig)
-    figstyle.save(fig, out("006-italian-power-volatility"))
+    figstyle.save(fig, out("007-italian-power-volatility"))
     plt.close(fig)
     print("power cover done")
 
