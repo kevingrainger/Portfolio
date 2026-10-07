@@ -6,7 +6,7 @@
 
 ERA5-Land describes the Po Valley in boxes about 9 km across. Gridded station products such as E-OBS fill the map by interpolating stations, and stop returning the stations in the process. This project builds daily maximum temperature on a 1 km grid for June to August 2021-2023 under two constraints: between stations the surface obeys a reduced heat-budget equation in which each land-cover class couples the air to the ground at its own rate, and at stations it equals the observation exactly. XGBoost learns the heating the equation leaves out and returns it to the equation as a prior.
 
-> **Data status.** Station locations, coastline, lakes and city outlines are real; elevation and land cover are estimated from them. The daily fields are a synthetic placeholder in the shape of the real products, because the data services could not be reached from the build environment. The numbers below test the method. They are not findings about the Po Valley, and the figures are stamped accordingly. `download_data.py` fetches the real data.
+**Data.** Station locations, coastline, lakes and city outlines are real; elevation and land cover are estimated from them. The daily fields (ERA5-Land, MODIS, E-OBS, station readings) are simulated in the shape of the real products, with a known truth behind them. The numbers below therefore test the method and are not findings about the Po Valley. `download_data.py` fetches the real products; that run is next.
 
 - **The constraint holds.** On all 276 days the surface returns every station to within 10⁻¹² K. Before any data, the solver recovered planted parameters exactly when its physics was complete, and to within 25% (relaxation times) when it was not.
 - **Anchored physics matches regression-kriging; it does not clearly beat it.** At stations in held-out 50 km blocks in 2023, RMSE falls from 1.34 K (ERA5-Land) to 1.03 K (physics only), 0.83 K (anchored) and 0.79 K (with the XGBoost prior). Regression with kriged residuals scores 0.85 K, and the 0.06 K gap has a 95% interval of -0.14 to +0.00 K.
@@ -42,25 +42,25 @@ Parameters are fitted with adjoint gradients: one extra solve per day gives the 
 |---|---|:-:|:-:|:-:|:-:|:-:|
 | B0 | ERA5-Land, bilinear + lapse rate | 1.34 | -0.58 | 1.39 | 1.36 | 1.10 |
 | B1 | Regression + kriged residuals | 0.85 | +0.05 | 0.81 | 0.77 | 1.05 |
-| B2 | E-OBS (stand-in, see note) | 1.49 | +0.55 | 1.38 | 1.08 | 2.16 |
+| B2 | E-OBS (simulated, see note) | 1.49 | +0.55 | 1.38 | 1.08 | 2.16 |
 | B3 | XGBoost on station residuals | 1.07 | +0.21 | 1.03 | 0.98 | 1.27 |
 | M1 | Physics only (q = 0) | 1.03 | +0.32 | 1.02 | 0.88 | 1.23 |
 | M2 | Physics, anchored | 0.83 | +0.04 | 0.77 | 0.73 | 1.09 |
 | M3 | Physics, anchored, XGBoost prior | 0.79 | +0.03 | 0.69 | 0.72 | 1.10 |
 
-3,341 station-days at 39 stations, five folds of 50 km blocks, parameters fitted on 2021-2022. The placeholder E-OBS is interpolated from its own invented 30-station network, so B2's score reflects that choice. Against the placeholder's hidden truth at every land cell the ranking is the same (1.22 K, 0.85 K, 0.63 K for B0, M1, M2) and the XGBoost prior adds nothing at map level.
+3,341 station-days at 39 stations, five folds of 50 km blocks, parameters fitted on 2021-2022. The simulated E-OBS is interpolated from its own 30-station network, so B2's score reflects that choice. Against the simulation's hidden truth at every land cell the ranking is the same (1.22 K, 0.85 K, 0.63 K for B0, M1, M2) and the XGBoost prior adds nothing at map level.
 
 ## Provenance
 
 | Dataset | Tier | Source |
 |---|---|---|
 | Station locations and elevations | real | Meteostat station list (CC BY 4.0), 39 stations with an observed 2021-2023 record |
-| Elevation (1 km) | estimated | 5 arc-minute Mapzen/SRTM grid (via pvlib), interpolated, plus synthetic sub-grid roughness |
+| Elevation (1 km) | estimated | 5 arc-minute Mapzen/SRTM grid (via pvlib), interpolated, plus generated sub-grid roughness |
 | Land-cover fractions | estimated | Natural Earth coastline, lakes and urban outlines; vegetation zoned by elevation |
-| Station daily Tmax | synthetic | `tmax1km/placeholder.py` |
-| ERA5-Land Tmax, skin temperature, wind | synthetic | `tmax1km/placeholder.py` |
-| MODIS land surface temperature | synthetic | `tmax1km/placeholder.py` |
-| E-OBS daily tx | synthetic | `tmax1km/placeholder.py` |
+| Station daily Tmax | simulated | `tmax1km/simulation.py` |
+| ERA5-Land Tmax, skin temperature, wind | simulated | `tmax1km/simulation.py` |
+| MODIS land surface temperature | simulated | `tmax1km/simulation.py` |
+| E-OBS daily tx | simulated | `tmax1km/simulation.py` |
 
 `python download_data.py --ee-project YOUR_PROJECT` replaces every row with the real product (Copernicus CDS, Earth Engine, Meteostat with a GHCN-Daily fallback). It was written without access to those services and has not been run end to end.
 
@@ -70,7 +70,7 @@ Steady state: one balance per day, no heat storage, no memory. Single layer: no 
 
 **Built:** sparse upwind/five-point PDE solver with one LU factorisation per day; exact station anchoring in closed form; adjoint gradients checked against finite differences; spatially blocked cross-validation with fold-safe training of the XGBoost prior; regression-kriging and XGBoost baselines; a station-level bootstrap for model differences; a resumable pipeline; four solver tests in CI.
 
-`tmax1km/` (`grid` · `data` · `placeholder` · `pde` · `anchor` · `ml` · `validation` · `step0` · `plots`) · `po_valley_downscaling.ipynb` · `run_pipeline.py` · `download_data.py` · `make_maps.py` · `make_cover.py` · `tests/` · Python, SciPy sparse, XGBoost, folium
+`tmax1km/` (`grid` · `data` · `simulation` · `pde` · `anchor` · `ml` · `validation` · `step0` · `plots`) · `po_valley_downscaling.ipynb` · `run_pipeline.py` · `download_data.py` · `make_maps.py` · `make_cover.py` · `tests/` · Python, SciPy sparse, XGBoost, folium
 
 **Interactive maps:** [the heatwave day](https://kevingrainger.github.io/maps/003-heatwave.html) · [missing heating, land cover and station footprints](https://kevingrainger.github.io/maps/003-missing-physics.html)
 

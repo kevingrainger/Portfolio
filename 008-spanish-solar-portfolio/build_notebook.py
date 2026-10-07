@@ -15,10 +15,9 @@ This notebook measures it, from an ML-ready weather dataset built with ECMWF's
 `anemoi-datasets` (see `iberia_datasets/`): 25 sites, hourly, one year.
 
 > **Data.** ERA5 reanalysis for 2023, hourly, 0.25°, built into an Anemoi dataset that
-> passes every quality check in `iberia_datasets/`. (The same notebook was first run on a
-> synthetic placeholder with a correlation length planted on purpose; it recovered the
-> planted value month by month - the check that the method is sound. If the dataset is
-> ever a placeholder again, the figures are stamped and section 4 shows that check.)
+> passes every quality check in `iberia_datasets/`. (The same notebook was first run on
+> simulated data with a correlation length planted on purpose; it recovered the
+> planted value month by month - the check that the method is sound.)
 """)
 
 code(r"""
@@ -43,7 +42,7 @@ def stamp(fig):
 
 D['anom_sites'] = ss.deseasonalise(D['k_sites'], D['times'])
 D['anom_grid'] = ss.deseasonalise(D['k_grid'], D['times'])
-print(f"{len(D['names'])} sites, {D['k_sites'].shape[1]} hours; synthetic placeholder: {SYNTHETIC}")
+print(f"{len(D['names'])} sites, {D['k_sites'].shape[1]} hours; simulated data: {SYNTHETIC}")
 """)
 
 md(r"""
@@ -86,8 +85,8 @@ md(r"""
 Dividing by a clear-sky model should leave only the weather. On real data it does not
 quite: averaged over all 25 sites, the clear-sky index still rises through the morning
 and falls through the afternoon - a daily shape every site shares, which would
-masquerade as weather that reaches everywhere. (On the synthetic placeholder it was
-invisible, because the placeholder was generated with the same clear-sky model.) So
+masquerade as weather that reaches everywhere. (On the simulated data it was
+invisible, because that data was generated with the same clear-sky model.) So
 each site's typical value for that hour of that month is subtracted, and only what is
 left - the weather - is correlated.
 """)

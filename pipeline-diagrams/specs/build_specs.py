@@ -126,7 +126,7 @@ D("003-po-valley-downscaling","Po Valley Tmax: Physics-Anchored Downscaling",
     "Within each fold, q comes only from solves that exclude the held-out stations"]),
   ("slate","Data and credit",["ERA5-Land (Munoz-Sabater et al. 2021); E-OBS as the gridded-station baseline (Cornes et al. 2018)",
     "MODIS MYD11A1 land surface temperature; ESA WorldCover (Zanaga et al. 2022); Copernicus GLO-30",
-    "Station list from Meteostat. The published run uses placeholder daily fields"])])
+    "Station list from Meteostat. The published run uses simulated daily fields"])])
 
 # ---------------- 004 corrlib ----------------
 D("004-corrlib-correlation-toolbox","corrlib: Correlation Toolbox Pipeline",

@@ -45,10 +45,10 @@ def apply():
     })
 
 
-def watermark(fig, text="SYNTHETIC PLACEHOLDER DATA - method test, not a result"):
-    """Stamp a figure made from placeholder data, so it can never be mistaken for a finding."""
-    fig.text(0.5, 0.5, text, ha="center", va="center", rotation=20, fontsize=15,
-             color="#D55E00", alpha=0.22, weight="bold", zorder=100)
+def watermark(fig, text="Simulated test data"):
+    """Mark a figure made from simulated data with a small footnote, so it is never
+    mistaken for a measurement."""
+    fig.text(0.995, 0.005, text, ha="right", va="bottom", fontsize=7, color="0.45", zorder=100)
 
 
 def save(fig, path_without_extension, formats=("png", "pdf")):

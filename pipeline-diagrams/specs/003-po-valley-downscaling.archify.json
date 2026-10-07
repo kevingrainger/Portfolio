@@ -347,7 +347,7 @@
    "items": [
     "ERA5-Land (Munoz-Sabater et al. 2021); E-OBS as the gridded-station baseline (Cornes et al. 2018)",
     "MODIS MYD11A1 land surface temperature; ESA WorldCover (Zanaga et al. 2022); Copernicus GLO-30",
-    "Station list from Meteostat. The published run uses placeholder daily fields"
+    "Station list from Meteostat. The published run uses simulated daily fields"
    ]
   }
  ]

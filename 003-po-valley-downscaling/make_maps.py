@@ -28,8 +28,7 @@ from tmax1km.plots import DIVERGING, TEMP, land_cover_image
 
 OUT = os.path.join(HERE, "maps")
 STEP = 0.01                                            # degrees: resolution of the overlays
-STAMP = ('<div style="position:fixed;top:10px;left:50px;z-index:9999;background:#fff;border:1px solid #b5483a;color:#b5483a;'
-         'font:12px/1.4 monospace;padding:4px 8px;">placeholder daily fields: a method test, not observations</div>')
+NOTE = " (simulated test data)"
 
 
 def to_lonlat(ds, field):
@@ -65,8 +64,6 @@ def base_map(ds):
     folium.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
                      attr="Tiles &copy; Esri, HERE, Garmin, OpenStreetMap contributors", name="light grey base", max_zoom=11).add_to(m)
     folium.TileLayer("OpenStreetMap", name="OpenStreetMap base", show=False).add_to(m)
-    if ds.placeholder:
-        m.get_root().html.add_child(folium.Element(STAMP))
     return m
 
 
@@ -90,7 +87,7 @@ def heatwave(ds, maps):
         folium.CircleMarker([s.latitude, s.longitude], radius=6, color="#1b1b1f", weight=1.2, fill=True, fill_opacity=1,
                             fill_color=to_hex(TEMP(norm(obs[i]))), popup=folium.Popup(text, max_width=260), tooltip=s["name"]).add_to(layer)
     layer.add_to(m)
-    legend(TEMP, norm, f"Daily maximum temperature, {ds.days[d].date()} (°C)").add_to(m)
+    legend(TEMP, norm, f"Daily maximum temperature, {ds.days[d].date()} (°C)" + (NOTE if ds.simulated else "")).add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
     m.save(os.path.join(OUT, "heatwave.html"))
 
@@ -115,7 +112,7 @@ def missing_physics(ds, maps):
         folium.CircleMarker([s.latitude, s.longitude], radius=4, color="#1b1b1f", weight=1, fill=True, fill_color="#ffffff", fill_opacity=1,
                             tooltip=f"{s['name']} ({s.elevation:.0f} m)").add_to(layer)
     layer.add_to(m)
-    legend(DIVERGING, Normalize(-lim, lim), "Mean missing heating q, all days (K per hour)").add_to(m)
+    legend(DIVERGING, Normalize(-lim, lim), "Mean missing heating q, all days (K per hour)" + (NOTE if ds.simulated else "")).add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
     m.save(os.path.join(OUT, "missing_physics.html"))
 

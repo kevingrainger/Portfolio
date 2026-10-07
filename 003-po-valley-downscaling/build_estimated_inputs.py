@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------
 # The middle tier of the fallback rule: real download -> LOOKUP / ESTIMATE -> synthetic.
 #
-# When the real rasters cannot be downloaded, this builds stand-ins from small open
+# When the real rasters cannot be downloaded, this builds estimates from small open
 # files that can: real station locations, real coastline, lake and city outlines, and
 # a real but coarse elevation model. The outputs are committed in data/estimated/ so
 # the project runs with no downloads at all; download_data.py replaces them with the

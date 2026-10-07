@@ -326,7 +326,7 @@ def stage_evaluate(D, fold, params, l_q):
 #-------- stage: maps -------------------------------------------------------------------------
 def _map_day(args):
     """The final product for one day, anchored on every station: fields for M1, M2, M3.
-    Returns station-level checks, error against the hidden truth (placeholder only) and,
+    Returns station-level checks, error against the hidden truth (simulation only) and,
     for the days picked out for figures, the fields themselves."""
     d, vec, l_q, keep, foot_stations = args
     D = ds()
@@ -441,6 +441,6 @@ if __name__ == "__main__":
     if need("maps.npz"):
         stage_maps(D, params, l_q); done("maps")
     stage_summary(D, params, fold)
-    json.dump(dict(placeholder=bool(D.placeholder), l_q_km=l_q, n_stations=int(len(D.stations)), n_fit_days=N_FIT_DAYS,
+    json.dump(dict(simulated=bool(D.simulated), l_q_km=l_q, n_stations=int(len(D.stations)), n_fit_days=N_FIT_DAYS,
                    n_days=int(len(D.days))), open(os.path.join(RESULTS, "run.json"), "w"), indent=1)
     done("all")

@@ -11,7 +11,7 @@
 #   python download_data.py --ee-project ... --only stations era5      (any subset)
 #
 # Everything is regridded here and written to data/real/ in exactly the layout the
-# placeholder uses, so the rest of the project does not know the difference. Each part is
+# simulation uses, so the rest of the project does not know the difference. Each part is
 # independent and skipped if its output exists; what cannot be fetched is left to the
 # fallback tiers and shows up as such in the provenance table.
 #
@@ -33,7 +33,7 @@ import pandas as pd
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from tmax1km.grid import BBOX, CLASSES, EPSG, Grid
-from tmax1km.placeholder import sample_coarse, summer_days
+from tmax1km.simulation import sample_coarse, summer_days
 
 REAL = os.path.join(HERE, "data", "real")
 RAW = os.path.join(REAL, "raw")

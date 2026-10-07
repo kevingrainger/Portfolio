@@ -18,6 +18,6 @@ Eight side projects across earth systems, signal processing and energy markets, 
 
 **Running it.** Each folder has its notebooks with outputs saved; `pip install -r requirements.txt` covers projects 001–007. Project 008's dataset pipeline has its own environment (`008-spanish-solar-portfolio/iberia_datasets/requirements.txt`) and runs in Docker. CI runs the `corrlib` tests, the Po Valley solver tests and the dataset-pipeline tests on every push.
 
-**Figures** live in each project's `figures/` folder: a `cover` image (made by `make_covers.py`, about 2,600 px wide) plus numbered figures in PNG and PDF, all in one shared style (`figstyle.py`). Anything built on placeholder data is stamped as such.
+**Figures** live in each project's `figures/` folder: a `cover` image (made by `make_covers.py`, about 2,600 px wide) plus numbered figures in PNG and PDF, all in one shared style (`figstyle.py`). Figures made from simulated data carry a small footnote saying so.
 
 Data isn't committed: large files (SCSN waveforms, ERA5 GRIB, Zarr datasets) and third-party market and reef data stay local, and each project says where its data comes from.

@@ -249,7 +249,7 @@ def power():
     import power as pw
     from sklearn.linear_model import LinearRegression
 
-    df, extreme = pw.placeholder()
+    df, extreme = pw.simulate()
     feats = lambda d: np.column_stack([d.temp, (d.temp - 18) ** 2, d.log_gas, d.load, d.renewables, d.weekend])
     y = np.log(df.price.values)
     model = LinearRegression().fit(feats(df), y)

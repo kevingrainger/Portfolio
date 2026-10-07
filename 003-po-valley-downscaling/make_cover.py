@@ -22,7 +22,7 @@ if __name__ == "__main__":
     figstyle.apply()
     ds = Dataset(verbose=False)
     fig = plots.cover(ds, np.load(os.path.join(HERE, "results", "maps.npz")))
-    if ds.placeholder:
+    if ds.simulated:
         figstyle.watermark(fig)
     fig.savefig(os.path.join(HERE, "figures", "cover.png"), dpi=200, bbox_inches=fig.bbox_inches)   # exactly 2:1, no cropping
     print("wrote figures/cover.png")

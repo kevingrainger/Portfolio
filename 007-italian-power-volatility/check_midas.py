@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Does the GARCH-MIDAS estimator recover the planted parameters? Fit it to ten
-# independently simulated placeholder datasets; an unbiased estimator scatters
+# independently simulated datasets; an unbiased estimator scatters
 # around the truth. Writes results/midas_recovery.csv.
 import os
 from concurrent.futures import ProcessPoolExecutor
@@ -12,7 +12,7 @@ import power as pw
 
 
 def one(seed):
-    df, extreme = pw.placeholder(seed=seed)
+    df, extreme = pw.simulate(seed=seed)
     months = df.index.to_period("M")
     order = {m: i for i, m in enumerate(sorted(months.unique()))}
     idx = np.array([order[m] for m in months])

@@ -190,11 +190,11 @@ def pde_surfaces(ds, maps):
 
 
 def downscaling(ds, maps):
-    """What ERA5-Land sees, what the anchored model produces, and (placeholder only) the truth."""
+    """What ERA5-Land sees, what the anchored model produces, and (simulation only) the truth."""
     d = int(maps["days"][0])
     panels = [("ERA5-Land, lapse-corrected", maps["hot_theta_E"]), ("Physics, anchored, XGBoost prior (1 km)", maps["hot_M3"])]
     if "truth" in ds._maps:
-        panels.append(("Hidden truth of the placeholder", ds.field("truth", d) + GAMMA * ds.elev))
+        panels.append(("Known truth of the simulation", ds.field("truth", d) + GAMMA * ds.elev))
     norm = Normalize(18, 40)
     fig, axes = plt.subplots(1, len(panels), figsize=(5.2 * len(panels), 3.6))
     for ax, (title, theta) in zip(axes, panels):

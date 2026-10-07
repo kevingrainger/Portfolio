@@ -6,7 +6,7 @@
 #
 # download_data.py writes real products into data/real/. Whatever is missing there is
 # taken from data/estimated/ (real station locations, coastline and city outlines, a
-# coarse real elevation model) and, failing that, from placeholder.py. Every choice is
+# coarse real elevation model) and, failing that, from simulation.py. Every choice is
 # recorded in a provenance table that the notebook and README print, so a synthetic
 # number can never pass for an observation.
 #
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 from scipy import ndimage
 
-from . import placeholder
+from . import simulation
 from .grid import GAMMA, Grid, lonlat_to_xy, static_features
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,7 +40,7 @@ def _first(name):
         p = os.path.join(folder, name)
         if os.path.exists(p):
             return p, tier
-    return None, "synthetic"
+    return None, "simulated"
 
 
 def to_grid(coarse, lat, lon, grid):
@@ -106,7 +106,7 @@ class Dataset:
         rows.append(("Station locations and elevations", "real", "Meteostat station list (CC BY 4.0)"))
 
         real_daily = all(os.path.exists(os.path.join(REAL, f)) for f in ("era5land.npz", "lst_1km.npy", "station_tmax.csv"))
-        self.placeholder = not real_daily
+        self.simulated = not real_daily
         if real_daily:
             raw = self._read_real(st)
             st = raw.pop("stations")
@@ -114,8 +114,8 @@ class Dataset:
                      ("MODIS land surface temperature", "real", "MYD11A1 via Earth Engine"),
                      ("E-OBS daily tx", "real" if raw["eobs"] is not None else "missing", "Copernicus CDS")]
         else:
-            rows += [("Station daily Tmax", "synthetic", "placeholder.py"), ("ERA5-Land Tmax, skin temperature, wind", "synthetic", "placeholder.py"),
-                     ("MODIS land surface temperature", "synthetic", "placeholder.py"), ("E-OBS daily tx", "synthetic", "placeholder.py")]
+            rows += [("Station daily Tmax", "simulated", "tmax1km/simulation.py"), ("ERA5-Land Tmax, skin temperature, wind", "simulated", "tmax1km/simulation.py"),
+                     ("MODIS land surface temperature", "simulated", "tmax1km/simulation.py"), ("E-OBS daily tx", "simulated", "tmax1km/simulation.py")]
             raw = None
         self.stations = self._merge_shared_cells(st)
         self.cells = self.grid.flat(self.stations.iy, self.stations.ix)
@@ -147,17 +147,17 @@ class Dataset:
     #-------- Step 3: daily fields ------------------------------------------------------------
     def _build(self, raw, rebuild, verbose):
         os.makedirs(CACHE, exist_ok=True)
-        tag = "real" if not self.placeholder else "placeholder"
+        tag = "real" if not self.simulated else "simulated"
         meta = os.path.join(CACHE, f"{tag}_meta.npz")
         paths = {k: os.path.join(CACHE, f"{tag}_{k}.npy") for k in DAILY}
         if rebuild or not os.path.exists(meta):
             g = self.grid
             if raw is None:
                 if verbose:
-                    print("building placeholder daily fields (about two minutes, cached afterwards)")
-                days = placeholder.summer_days()
+                    print("building simulated daily fields (about two minutes, cached afterwards)")
+                days = simulation.summer_days()
                 truth = np.lib.format.open_memmap(paths["truth"], "w+", np.float32, (len(days),) + g.shape)
-                raw = placeholder.generate(g, self.elev, self.frac, self.sea, self.features, self.stations, days, keep_truth=truth)
+                raw = simulation.generate(g, self.elev, self.frac, self.sea, self.features, self.stations, days, keep_truth=truth)
                 truth.flush()
                 merged_tmax = raw["tmax"]
             else:
@@ -184,15 +184,15 @@ class Dataset:
             y = merged_tmax + GAMMA * self.stations.z_km.values[None, :]
             np.savez(meta, days=days.values.astype("datetime64[D]"), y=y, cloud=cloud, has_eobs=raw["eobs"] is not None)
             if raw.get("drivers") is not None:
-                raw["drivers"].to_csv(os.path.join(CACHE, "placeholder_drivers.csv"))
+                raw["drivers"].to_csv(os.path.join(CACHE, "simulated_drivers.csv"))
         m = np.load(meta)
         self.days = pd.DatetimeIndex(m["days"])
         self.y = m["y"]                                   # days x stations, sea-level-reduced, NaN where missing
         self.cloud = m["cloud"]                           # share of land under cloud in the MODIS overpass
         self.has_eobs = bool(m["has_eobs"])
         self._maps = {k: np.load(p, mmap_mode="r") for k, p in paths.items() if os.path.exists(p)}
-        dpath = os.path.join(CACHE, "placeholder_drivers.csv")
-        self.drivers = pd.read_csv(dpath, index_col=0, parse_dates=True) if self.placeholder and os.path.exists(dpath) else None
+        dpath = os.path.join(CACHE, "simulated_drivers.csv")
+        self.drivers = pd.read_csv(dpath, index_col=0, parse_dates=True) if self.simulated and os.path.exists(dpath) else None
 
     def day(self, d):
         """The fields the PDE needs on day d (index into self.days)."""

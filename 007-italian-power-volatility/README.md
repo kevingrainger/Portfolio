@@ -20,4 +20,4 @@ A 2026 study found extreme weather to be the main driver of Italian power-price 
 
 `power.py` · `italian_power.ipynb` · `check_midas.py` · Python, XGBoost, SHAP, SciPy
 
-*A side project, built for fun. It currently runs on a placeholder in the shape of the real data (GME prices, ERA5 weather, TTF gas), with relationships planted so each stage can be checked. Figures are stamped until the real series replace it.*
+*A side project, built for fun. It currently runs on simulated data in the shape of the real series (GME prices, ERA5 weather, TTF gas), with relationships planted so each stage can be checked against a known answer. The real series are next.*

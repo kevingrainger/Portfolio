@@ -10,14 +10,14 @@
 #   Stage 3   does it still work on a FORECAST of the weather, and how far ahead?
 #
 # Until the real series are pulled (GME prices, ERA5 weather, TTF gas, Terna load),
-# placeholder() builds data in exactly their shape with the relationships PLANTED,
+# simulate() builds data in exactly their shape with the relationships PLANTED,
 # so each stage is tested on whether it recovers a known answer.
 
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-#-------- planted truths for the placeholder -----------------------------------------
+#-------- planted truths for the simulation -----------------------------------------
 TRUE = dict(
     gas_elasticity=0.55,          # log price per log gas
     heat_curve=0.0045,            # U-shape in temperature around 18 C
@@ -39,7 +39,7 @@ def beta_weights(K, w):
     return raw / raw.sum()
 
 
-def placeholder(start="2015-01-01", end="2024-12-31", seed=0, **overrides):
+def simulate(start="2015-01-01", end="2024-12-31", seed=0, **overrides):
     """Daily data in the shape of the real series, with the relationships planted.
     Any entry of TRUE can be overridden, e.g. midas_theta=0.35 for a stronger weather effect."""
     T = {**TRUE, **overrides}

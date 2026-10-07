@@ -1,4 +1,4 @@
-#-------- placeholder.py ---------------------------------------------------------------
+#-------- simulation.py ---------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # The last tier of the fallback rule: synthetic daily fields, in the shape of the real
 # products, for when ERA5-Land, MODIS, E-OBS and the station records cannot be reached.
@@ -28,7 +28,7 @@ TRUE = dict(mean_lapse=6.9, lapse_sd=0.6, drift_hours=1.2, tpi_effect=0.6, stati
 HEATWAVES = [("2021-08-12", 4.0), ("2022-07-22", 5.5), ("2023-08-23", 4.5)]     # peak day, size in K
 
 
-EOBS_NETWORK = 30                # stations in the stand-in E-OBS network
+EOBS_NETWORK = 30                # stations in the simulated E-OBS network
 EOBS_BANDWIDTH_KM = 35.0         # width of the kernel that interpolates between them
 
 
@@ -124,7 +124,7 @@ def generate(grid, elev_km, frac, sea, features, stations, days=None, seed=7, ke
     z_eobs = sample_coarse(elev_km, grid, lat, lon, 6.0)
     relief = (elev_km - elev_km.min()) / (elev_km.max() - elev_km.min())
 
-    # the stand-in E-OBS network: sparse, mostly low-lying, and not the validation stations
+    # the simulated E-OBS network: sparse, mostly low-lying, and not the validation stations
     land = np.flatnonzero((~sea & grid.interior()).ravel())
     pick = rng.choice(land, EOBS_NETWORK, replace=False, p=_normalised(np.exp(-elev_km.ravel()[land] / 0.8)))
     net_iy, net_ix = np.unravel_index(pick, grid.shape)

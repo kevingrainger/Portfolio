@@ -14,7 +14,7 @@
 import numpy as np
 from scipy.optimize import minimize
 
-from . import placeholder
+from . import simulation
 from .anchor import Anchor, Smoother
 from .grid import CLASSES, block_mean
 from .pde import M2S_TO_KM2H, DaySystem, Params, misfit
@@ -28,9 +28,9 @@ def fake_days(grid, frac, n_days, rng, wind_scale=1.0):
     cover, and a wind that changes direction and strength from day to day."""
     out = []
     for _ in range(n_days):
-        theta_E = 32 + 2.0 * placeholder.smooth_field(grid.shape, 150, rng, grid.dx)
+        theta_E = 32 + 2.0 * simulation.smooth_field(grid.shape, 150, rng, grid.dx)
         theta_s = theta_E + np.tensordot(SKIN, frac, axes=1) * rng.uniform(0.6, 1.1) \
-            + 1.0 * placeholder.smooth_field(grid.shape, 20, rng, grid.dx)
+            + 1.0 * simulation.smooth_field(grid.shape, 20, rng, grid.dx)
         speed, heading = wind_scale * 8.0 * np.exp(rng.normal(0, 0.6)), rng.uniform(0, 2 * np.pi)
         out.append(dict(theta_E=theta_E, theta_s=theta_s, u=np.full(grid.shape, speed * np.cos(heading)),
                         v=np.full(grid.shape, speed * np.sin(heading))))
@@ -46,7 +46,7 @@ def run(static, n_days=30, n_stations=40, q_size=0.3, coarsen=4, seed=0, wind_sc
     frac = block_mean(static["fractions"].astype(float), coarsen)
     frac = frac / frac.sum(0)
     days = fake_days(grid, frac, n_days, rng, wind_scale)
-    q_true = q_size * placeholder.smooth_field(grid.shape, 40, rng, grid.dx)            # K/h, the same every day
+    q_true = q_size * simulation.smooth_field(grid.shape, 40, rng, grid.dx)            # K/h, the same every day
 
     inner = grid.interior()
     land = np.flatnonzero((frac[CLASSES.index("water")] < 0.5) & inner)
