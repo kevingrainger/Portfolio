@@ -215,3 +215,79 @@ def network_loss_grid(deg, p, lgd, T_bar, beta, n=2001):
 def network_tranche_el(grid, a, d):
     z, w, T, L = grid
     return float((tranche_payoff(L, a, d) * w).sum())
+
+
+#-------- May (1972): stability of a large random system -------------------------
+def may_matrix(N, C, sigma, rng):
+    """Community matrix  A = -I + B:  each species regulates itself at unit rate, and
+    each ordered pair interacts with probability C, with strength drawn N(0, sigma^2)."""
+    B = rng.normal(0.0, sigma, (N, N)) * (rng.random((N, N)) < C)
+    np.fill_diagonal(B, 0.0)
+    return B - np.eye(N)
+
+
+def may_stable(N, C, sigma, rng):
+    """Locally stable if every eigenvalue has negative real part."""
+    return np.linalg.eigvals(may_matrix(N, C, sigma, rng)).real.max() < 0
+
+
+#-------- degree correlations: disassortative and assortative networks -------------
+def degrees_of(edges, N):
+    return np.bincount(edges.ravel(), minlength=N)
+
+
+def assortativity(edges, N):
+    """Pearson correlation of the degrees at either end of a link (Newman 2002)."""
+    k = degrees_of(edges, N)
+    x = np.concatenate([k[edges[:, 0]], k[edges[:, 1]]]).astype(float)
+    y = np.concatenate([k[edges[:, 1]], k[edges[:, 0]]]).astype(float)
+    return float(np.corrcoef(x, y)[0, 1])
+
+
+def rewire(edges, N, mode, n_swaps, rng):
+    """Degree-preserving rewiring towards assortative or disassortative mixing
+    (Xulvi-Brunet & Sokolov 2004). Two links are drawn; their four ends are sorted by
+    degree and re-paired either high-high / low-low (assortative) or high-low
+    (disassortative). Self-loops and repeated links are refused."""
+    e = [tuple(x) for x in edges]
+    present = set(e)
+    k = degrees_of(edges, N)
+    m = len(e)
+    for _ in range(n_swaps):
+        i, j = rng.integers(m, size=2)
+        if i == j:
+            continue
+        a, b = e[i]; c, d = e[j]
+        nodes = sorted({a, b, c, d}, key=lambda v: k[v])
+        if len(nodes) < 4:
+            continue
+        lo1, lo2, hi1, hi2 = nodes
+        if mode == "assortative":
+            new = [(hi1, hi2), (lo1, lo2)]
+        else:
+            new = [(hi2, lo1), (hi1, lo2)]
+        new = [tuple(sorted(x)) for x in new]
+        if any(x in present for x in new):
+            continue
+        present.discard(e[i]); present.discard(e[j])
+        e[i], e[j] = new
+        present.update(new)
+    return np.array(e)
+
+
+def correlated_threshold(edges, N):
+    """Bond-percolation threshold on a network with degree correlations:
+       T_c = 1 / Lambda,  Lambda the largest eigenvalue of  C_{kk'} = (k' - 1) P(k'|k),
+    where P(k'|k) is the probability that a link from a degree-k node ends at degree k'
+    (Boguna & Pastor-Satorras 2002; Vazquez & Moreno 2003). For uncorrelated networks
+    Lambda = (<k^2> - <k>) / <k>, recovering the earlier formula."""
+    k = degrees_of(edges, N)
+    ks = np.unique(k[k > 0])
+    pos = {v: i for i, v in enumerate(ks)}
+    E = np.zeros((len(ks), len(ks)))
+    for a, b in edges:
+        E[pos[k[a]], pos[k[b]]] += 1
+        E[pos[k[b]], pos[k[a]]] += 1
+    P = E / E.sum(1, keepdims=True)
+    M = P * (ks[None, :] - 1)
+    return float(1.0 / np.abs(np.linalg.eigvals(M)).max())

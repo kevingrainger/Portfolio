@@ -74,7 +74,7 @@ def fig1():
         a.pane.set_facecolor((1, 1, 1, 0)); a.pane.set_edgecolor("0.85")
     ax.legend(loc="upper left", bbox_to_anchor=(0.02, 0.92))
     ax.set_title("Bond percolation on a Poisson network", pad=4)
-    figstyle.save(fig, os.path.join(FIG, "fig1_percolation_surface"))
+    figstyle.save(fig, os.path.join(FIG, "fig2_percolation_surface"))
     figstyle.save(fig, os.path.join(FIG, "hero"), formats=("png",))
     plt.close(fig)
 
@@ -103,7 +103,7 @@ def fig2():
     a1.set_title("(a) Expected loss", loc="left")
     a2.set_title("(b) Probability of any loss", loc="left")
     a2.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
-    figstyle.save(fig, os.path.join(FIG, "fig2_tranche_switch"))
+    figstyle.save(fig, os.path.join(FIG, "fig6_tranche_switch"))
     plt.close(fig)
 
 
@@ -178,7 +178,7 @@ def fig3():
     for yy, r in zip(ypos, ratio):
         a2.text(max(r, 1) * 1.25, yy, f"{r:,.1f}×" if r < 10 else f"{r:,.0f}×", va="center", fontsize=8.5, color=INK)
     a2.set_xlim(0.1, max(ratio) * 12)
-    figstyle.save(fig, os.path.join(FIG, "fig3_equal_mean"))
+    figstyle.save(fig, os.path.join(FIG, "fig7_equal_mean"))
     plt.close(fig)
     return rows, mean_loss, p_above
 
@@ -229,7 +229,7 @@ def fig4(N=10_000, trials=12, seed=7):
     a2.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
     out["watts"] = dict(z=zs.tolist(), p_global=p_global, size_global=size_global, window=[lo, hi], phi=phi)
     json.dump(out, open(os.path.join(RES, "simulation_check.json"), "w"), indent=2)
-    figstyle.save(fig, os.path.join(FIG, "fig4_simulation_check"))
+    figstyle.save(fig, os.path.join(FIG, "fig8_simulation_check"))
     plt.close(fig)
 
 

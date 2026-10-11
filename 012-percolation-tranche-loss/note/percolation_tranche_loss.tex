@@ -3,13 +3,12 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{microtype}
+\usepackage[expansion=false]{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \definecolor{ink}{HTML}{2430BC}
 \hypersetup{colorlinks=true,linkcolor=ink,citecolor=ink,urlcolor=ink}
 \usepackage[numbers,sort&compress]{natbib}
-
 
 \newtheorem{proposition}{Proposition}
 \theoremstyle{definition}
@@ -23,8 +22,8 @@
 
 \graphicspath{{../figures/}}
 
-\title{\textbf{When does a supply-chain failure reach the senior tranche?}\\[4pt]
-\large Percolation thresholds and the distribution of structured credit losses}
+\title{\textbf{Ecology for bankers, revisited}\\[4pt]
+\large Stability, percolation and the spread of failure through supply chains and structured credit}
 \author{Kevin Grainger}
 \date{October 2026}
 
@@ -33,26 +32,70 @@
 
 \begin{abstract}
 \noindent
-Structured credit models link defaults through a common economic factor. Firms are also linked directly, through supply chains, so that one failure can cause others. This note joins the two. It reviews the percolation theory of random networks, in which a failure spreads along each link with a fixed probability, and the threshold above which a single failure can reach a finite fraction of the network. It then derives the loss distribution of a portfolio whose obligors sit on such a network, and the expected loss of each tranche. Two results follow. First, with a single source of failure the probability that a tranche suffers any loss is discontinuous in the strength of contagion: it is zero until the giant failure cluster exceeds the attachment point, and then jumps. Second, in a calibrated model in which the economy sets the strength of contagion, matching the mean loss of a Vasicek model leaves the expected loss of the 15--30\% tranche about 46 times larger, while the equity tranche's falls by 40\%. Mean loss does not identify where in the capital structure the risk sits. Every analytic result is checked by Monte Carlo simulation on networks of $10^4$ firms. The percolation and cascade results are those of the cited authors; the application to tranche loss is the contribution of this note.
+In 2008 May, Levin and Sugihara argued that the tools ecologists use to ask when a complex system tips from one state to another should be turned on finance. This note does that in two parts. Part~I derives the tools: May's bound on the stability of a large random system, checked against the eigenvalues of simulated community matrices; the percolation theory of random networks, which gives the threshold above which one failure can reach a finite share of the whole; and the effect of disassortative wiring, in which large nodes link to small ones, a pattern the 2008 article highlights in pollination webs and in the Fedwire payment system. Part~II applies them to two cases. (A) The Rhine low water of 2018: a spatial supply network of firms at the real industrial centres of the Rhine basin, calibrated to the estimate that a month of low water cut German industrial output by about 1\%. The aggregate figure fixes a line, not a point: the same 1\% is reproduced by economies anywhere from 6\% to 89\% of the way to their percolation threshold, depending on how much of the loss was direct. Below about 40~cm at Kaub the river cannot do much more damage; what decides whether the next low water is a 1\% month or a 10\% month is whether road and rail can replace the barges. (B) Structured credit: a portfolio whose obligors sit on such a network has a loss distribution with a gap, the probability that a senior tranche is touched at all jumps at a threshold, and at equal mean loss the 15--30\% tranche carries about 46 times the expected loss of a Vasicek model. The theorems of Part~I are those of the cited authors; the case studies are the contribution of this note.
 \end{abstract}
 
+\tableofcontents
+
 %=====================================================================
-\section{Motivation: an ecologist's warning}
+\section{Introduction: an ecologist's warning}
 %=====================================================================
 
-For most of the twentieth century ecologists held that complexity breeds stability: a food web with many species and many links between them should absorb shocks that would topple a simple one. In 1972 Robert May tested that belief with a short calculation and found it to be false \citep{May1972}. He took $N$ species, let a fraction $C$ of the possible pairs interact, and drew each interaction strength at random with standard deviation $\sigma$. Linearised about equilibrium, with each species self-regulating at unit rate, the community matrix has eigenvalues that, for large $N$, fill a disc of radius $\sigma\sqrt{NC}$ centred on $-1$. The system is stable almost surely when
+For most of the twentieth century ecologists held that complexity breeds stability: a food web with many species and many links between them should absorb shocks that would topple a simple one. In 1972 Robert May tested that belief with a short calculation and found it to be false \citep{May1972}. Adding species, adding links or strengthening them all push a random system towards instability, and the change is sharp.
+
+In February 2008, as the sub-prime losses spread, May, Levin and Sugihara asked in \textit{Nature} what bankers could learn from ecologists \citep{MayLevinSugihara2008}. Their article makes four points that this note takes up. Catastrophic change in a system often derives less from an external shock than from ``how it is organized'': from feedbacks and from linkages that are latent and unrecognised. The topology of a network matters: they describe the Federal Reserve's Fedwire payment network, in which about 9,500 banks are linked but the connectivity is around 0.003 and 66 banks carry three-quarters of the daily value, and they note that it is \emph{disassortative}, large banks being linked disproportionately to small ones, as in the networks of plants and the animals that pollinate them \citep{Bascompte2006, Soramaki2007}. Disassortative structure, they write, tends to confer stability against disturbance. Modularity, the extent to which a system decouples into compartments, can act as a firebreak, as in the management of forest fires and epidemics. And robustness in a financial system ``is something that emerges; it cannot be engineered.''
+
+The note is in two parts. Part~I derives the mathematics behind these claims: May's stability bound (Section~\ref{sec:may}), percolation on random networks (Section~\ref{sec:perc}), the effect of degree correlations (Section~\ref{sec:assort}), and cascades with thresholds and direction (Section~\ref{sec:cascade}). Part~II applies it to a supply chain, the Rhine low water of 2018 (Section~\ref{sec:rhine}), and to a structured credit portfolio (Section~\ref{sec:credit}).
+
+\part{Theory}
+
+%=====================================================================
+\section{May's stability bound}
+\label{sec:may}
+%=====================================================================
+
+\subsection{The community matrix}
+
+Take $N$ species with abundances $x_1,\dots,x_N$ held at an equilibrium $x^*$. Small departures $y = x - x^*$ evolve, to first order, as
+\begin{equation}
+\dot y = A\,y ,
+\end{equation}
+where $A_{ij} = \partial \dot x_i / \partial x_j$ at equilibrium is the \emph{community matrix}. The equilibrium is stable if every perturbation decays, which is the case exactly when every eigenvalue of $A$ has a negative real part.
+
+May made no assumption about which species eat which. He let each species regulate itself, $A_{ii} = -1$ (which sets the unit of time), and filled the off-diagonal entries at random: each ordered pair interacts with probability $C$, the \emph{connectance}, and an interaction has a strength drawn from a distribution with mean zero and standard deviation $\sigma$. So
+\begin{equation}
+A = -I + B ,
+\end{equation}
+where the entries of $B$ are independent, with mean zero and variance $C\sigma^2$.
+
+\subsection{The circular law}
+
+The eigenvalues of $B$ are what decide stability, since those of $A$ are the same values shifted left by one. For a large random matrix with independent entries of mean zero and variance $v$, the eigenvalues fill a disc in the complex plane of radius $\sqrt{Nv}$, uniformly, as $N \to \infty$. This is the circular law, proved by Girko and in full generality by Tao and Vu \citep{TaoVu2010}. With $v = C\sigma^2$ the disc has radius $\sigma\sqrt{NC}$, so the eigenvalues of $A$ fill a disc of that radius centred on $-1$.
+
+\subsection{The bound}
+
+The rightmost eigenvalue sits at $-1 + \sigma\sqrt{NC}$. The system is therefore stable, with probability tending to one, when
 \begin{equation}
 \sigma\sqrt{NC} < 1 ,
 \label{eq:may}
 \end{equation}
-and unstable almost surely when the inequality is reversed. Adding species, adding links or strengthening them all push a random system towards instability. The transition is sharp.
+and unstable, with probability tending to one, when the inequality is reversed \citep{May1972}. Three features carry into everything that follows. First, size, connectance and interaction strength enter only through one combination; doubling the number of links is as dangerous as increasing every interaction by $\sqrt 2$. Second, the change is a threshold, not a gradual erosion. Third, self-regulation sets the scale: the bound is relative to the rate at which each component damps its own fluctuations, which is what capital and liquidity buffers do for a bank.
 
-In 2008 the senior tranches of mortgage and corporate credit structures, rated as nearly riskless, lost value together. Writing in \textit{Nature} that year, May, Levin and Sugihara argued that bankers could learn from ecologists \citep{MayLevinSugihara2008}: risk had been assessed node by node, while the danger lay in the links. Haldane and May developed the argument with a model of interbank lending \citep{HaldaneMay2011}.
+Figure~\ref{fig:may} checks the bound numerically. For $N = 400$ and $C = 0.25$ the eigenvalues fill the predicted disc; at $\sigma\sqrt{NC} = 0.8$ the disc lies wholly in the left half-plane and at $1.2$ it crosses into the right. The probability that a random system is stable falls from one to zero around $\sigma\sqrt{NC} = 1$, more sharply the larger the system.
 
-This note follows that thread to one precise question. A structured credit portfolio is usually priced as if its obligors default together only because they share an economy. Firms in a supply chain are also linked directly: a supplier that fails can take its customers with it. When does that direct linkage turn a local failure into a portfolio-wide one, and what does it do to the loss borne by each tranche?
+Allesina and Tang \citep{AllesinaTang2012} later showed that the structure of interactions moves the bound: predator--prey pairs, with opposite signs, are more stable than random ones, and mutualistic and competitive pairs less. The random matrix is the reference case against which structure is measured.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig1_may_stability.pdf}
+\caption{May's bound. (a, b) Eigenvalues of one random community matrix with $N = 400$, $C = 0.25$, against the predicted disc (dashed) and the stability boundary $\mathrm{Re}\,\lambda = 0$. (c) Fraction of random matrices that are stable, against $\sigma\sqrt{NC}$, for three sizes.}
+\label{fig:may}
+\end{figure}
 
 %=====================================================================
+
 \section{Percolation on random networks}
+\label{sec:perc}
 %=====================================================================
 
 \subsection{The network}
@@ -103,7 +146,7 @@ Expanding for small $S$ gives $S \approx 2(cT-1)/(cT)^2$: the giant cluster grow
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{fig1_percolation_surface.pdf}
+\includegraphics[width=0.78\textwidth]{fig2_percolation_surface.pdf}
 \caption{Size $S$ of the giant failure cluster on a Poisson network, against mean number of trading partners $c$ and transmissibility $T$. Below the curve $cT=1$ every failure stays local.}
 \label{fig:surface}
 \end{figure}
@@ -117,18 +160,63 @@ Below $T_c$ failures are finite, but not small near the threshold. The mean numb
 \end{equation}
 which for a Poisson network is $1 + cT/(1-cT)$. It diverges at $T_c$. In the language of statistical physics this is the susceptibility; in the language of credit it is the factor by which supply-chain contagion multiplies own-cause defaults.
 
+
 %=====================================================================
-\section{Directed supply networks}
+\section{Who links to whom: disassortative networks}
+\label{sec:assort}
 %=====================================================================
 
-Supply relations have a direction. A supplier's failure halts its customers' production; a customer's failure costs its suppliers a receivable, which is a different and often smaller shock. Let firms have $j$ suppliers and $k$ customers with joint distribution $p_{jk}$, and let failure pass from supplier to customer with probability $T$. The same argument on the directed tree \citep{NewmanStrogatzWatts2001} gives a giant out-cluster, the set of firms reachable from a typical failure, when
+\subsection{Degree correlations}
+
+The configuration model of Section~\ref{sec:perc} matches partners at random, so the degree at one end of a link says nothing about the degree at the other. Real networks are not like this. Newman \citep{Newman2002assort} measured the correlation with the \emph{assortativity coefficient} $r$, the Pearson correlation between the degrees at the two ends of a randomly chosen link. Social networks are assortative ($r > 0$): well-connected people know each other. Technological and biological networks tend to be disassortative ($r < 0$): hubs connect to many small nodes. The pollination webs studied by Bascompte, Jordano and Olesen \citep{Bascompte2006} and the Fedwire network \citep{Soramaki2007} are of the second kind.
+
+\subsection{The threshold with correlations}
+
+Let $P(k' \mid k)$ be the probability that a link leaving a node of degree $k$ arrives at a node of degree $k'$. Let $u_k$ be the probability that following a link out of a degree-$k$ node does not lead to the giant failure cluster. The link is either deleted, or kept and the node it reaches, of degree $k'$, is not connected to the giant cluster through any of its $k'-1$ other links:
 \begin{equation}
-T\,\frac{\avg{jk}}{\avg{k}} > 1 .
+u_k = 1 - T + T \sum_{k'} P(k' \mid k)\, u_{k'}^{\,k'-1}.
 \end{equation}
-The threshold depends on the correlation between a firm's number of suppliers and its number of customers. Firms that both buy from many and sell to many, the assemblers and distributors at the middle of a chain, lower it most. Acemoglu, Carvalho, Ozdaglar and Tahbaz-Salehi \citep{Acemoglu2012} reach a related conclusion for output rather than default: when a few sectors supply many others, sector-level shocks do not average out in the aggregate.
+Write $u_k = 1 - \varepsilon_k$ and keep first-order terms:
+\begin{equation}
+\varepsilon_k = T \sum_{k'} (k'-1)\, P(k' \mid k)\, \varepsilon_{k'} .
+\end{equation}
+A non-zero solution, and so a giant cluster, first appears when $T$ times the largest eigenvalue $\Lambda$ of the matrix $C_{kk'} = (k'-1)P(k' \mid k)$ reaches one \citep{BogunaPastorSatorras2002, VazquezMoreno2003}:
+\begin{equation}
+T_c = \frac{1}{\Lambda} .
+\label{eq:Tc_corr}
+\end{equation}
+Without correlations $P(k' \mid k) = k' p_{k'} / \avg{k}$, the matrix has rank one, $\Lambda = (\avg{k^2} - \avg{k})/\avg{k}$, and \eqref{eq:Tc} is recovered. The threshold is again the inverse of a leading eigenvalue, as in May's bound: in both cases a perturbation grows when the largest mode of the linearised system exceeds the damping.
+
+\subsection{Same degrees, different wiring}
+
+To isolate the effect of wiring, Figure~\ref{fig:assort} keeps one degree sequence fixed, a power law with $\gamma = 2.5$ on $10^4$ nodes, and rewires its links. Following Xulvi-Brunet and Sokolov \citep{XulviBrunetSokolov2004}, two links are chosen at random, their four end nodes are ranked by degree, and the links are reconnected either largest-to-largest and smallest-to-smallest (assortative) or largest-to-smallest (disassortative); every node keeps its degree. The thresholds from \eqref{eq:Tc_corr}, computed from the measured $P(k' \mid k)$ of each network, are:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Wiring & $r$ & $T_c$ from \eqref{eq:Tc_corr} & Largest cluster at $T = 0.5$ \\
+\midrule
+Disassortative & $-0.29$ & 0.149 & 0.83 \\
+Uncorrelated   & $-0.01$ & 0.072 & 0.73 \\
+Assortative    & $+0.71$ & 0.018 & 0.35 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Disassortative wiring doubles the threshold. This is the stability May, Levin and Sugihara describe: the hubs are spread across the network, each surrounded by small nodes with few onward links, so a weak contagion dies out. Assortative wiring does the opposite: the hubs form a core that percolates at almost any transmissibility, but the failure stays in the core. Above $T \approx 0.28$ the order reverses, and the disassortative network fails most completely: every small node hangs from a hub, and once the hubs are in the giant cluster so is almost everything else. The wiring that protects against small shocks is the wiring that loses the most in a large one.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{fig3_disassortativity.pdf}
+\caption{Largest failure cluster against transmissibility for one degree sequence wired three ways. Dotted lines mark $T_c$ from the leading eigenvalue of $C_{kk'}$. Means of 8 percolation runs on $10^4$ nodes.}
+\label{fig:assort}
+\end{figure}
 
 %=====================================================================
-\section{Threshold cascades and the robust-yet-fragile network}
+\section{Thresholds, direction and the robust-yet-fragile network}
+\label{sec:cascade}
+
+\subsection{Threshold cascades}
 %=====================================================================
 
 Percolation assumes each link transmits independently. A firm with many customers may survive the loss of one. Watts \citep{Watts2002} replaced the transmissibility with a threshold: a firm fails once at least a fraction $\phi$ of its partners have failed. A firm of degree $k$ is \emph{vulnerable} if a single failed partner suffices, that is if $k \le 1/\phi$. Let $\rho_k = 1$ for vulnerable degrees and $0$ otherwise. Repeating the branching argument on vulnerable firms alone, global cascades are possible when
@@ -138,8 +226,78 @@ Percolation assumes each link transmits independently. A firm with many customer
 \end{equation}
 For a Poisson network the condition holds over a window of mean degree. At the lower edge the network is too sparse to carry a cascade. At the upper edge firms have so many partners that few are vulnerable. Near the upper edge cascades are rare, but when one starts it takes almost the whole network: the cascade size jumps discontinuously, unlike the continuous percolation transition. Gai and Kapadia \citep{GaiKapadia2010} found the same behaviour in a model of interbank exposures and described the system as robust yet fragile: more connections make contagion less likely and larger when it occurs. Figure~\ref{fig:sim}(b) reproduces the window.
 
+
+\subsection{Directed networks}
+
+Supply relations have a direction. A supplier's failure halts its customers' production; a customer's failure costs its suppliers a receivable, which is a different and often smaller shock. Let firms have $j$ suppliers and $k$ customers with joint distribution $p_{jk}$, and let failure pass from supplier to customer with probability $T$. The same argument on the directed tree \citep{NewmanStrogatzWatts2001} gives a giant out-cluster, the set of firms reachable from a typical failure, when
+\begin{equation}
+T\,\frac{\avg{jk}}{\avg{k}} > 1 .
+\end{equation}
+The threshold depends on the correlation between a firm's number of suppliers and its number of customers. Firms that both buy from many and sell to many, the assemblers and distributors at the middle of a chain, lower it most. Acemoglu, Carvalho, Ozdaglar and Tahbaz-Salehi \citep{Acemoglu2012} reach a related conclusion for output rather than default: when a few sectors supply many others, sector-level shocks do not average out in the aggregate.
+
+
+\part{Case studies}
+
 %=====================================================================
-\section{Tranche loss}
+\section{Case A: the Rhine runs dry}
+\label{sec:rhine}
+%=====================================================================
+
+\subsection{The event}
+
+On 22 October 2018 the gauge at Kaub, in the narrow rocky gorge of the Middle Rhine between Bingen and St.~Goar, read 25~cm, the lowest since records began. On 31 July 2026 it read 25~cm again, two months earlier in the year \citep{Leinetal2026}. Kaub is the reference gauge for barge traffic between the North Sea ports and the industry of the Upper Rhine: below 78~cm barges must sail part-loaded, and below about 40~cm barge transport is barely viable \citep{KBC2022}. Inland waterways carry about 7\% of German freight, more than 80\% of it on the Rhine \citep{KBC2022}; what it carries is mostly bulk input: fuels, chemical feedstock, coal and ore. In 2018 BASF cut production at Ludwigshafen and reported that the low water reduced its earnings by about \texteuro 250~million \citep{BASF2019}. Ademmer, Jannsen and Meuchelb\"ock \citep{Ademmer2023} estimate that a month with 30 days below 78~cm at Kaub reduces German industrial production by about 1\%.
+
+The question for this section is whether that 1\% was a local transport problem or the visible part of a network effect, and how close the German supply network came to the threshold of Section~\ref{sec:perc}.
+
+\subsection{A spatial supply network}
+
+The network has $N = 4{,}000$ firms placed at twenty industrial centres of the Rhine basin and of Germany, at their real coordinates, with a scatter of about 10~km. Each firm has a sector, from eight; an output drawn from a log-normal distribution; and an exposure to Kaub,
+\begin{equation}
+e_i = x_{h(i)}\, b_{s(i)},
+\end{equation}
+where $x_h = 1$ for centres whose bulk traffic must pass the Middle Rhine (Mainz, Frankfurt, Ludwigshafen and Mannheim, Karlsruhe, Strasbourg, Basel), $0.35$ for the Lower Rhine below Kaub (Duisburg, D\"usseldorf, Cologne), and $0$ inland; and $b_s$ is the share of a sector's bulk inputs that arrives by water, from $0.8$ for fuels to $0.05$ for vehicles. Each firm buys from on average four suppliers. The supplier's sector is drawn from the firm's column of an input--output matrix, and its location from a gravity kernel $\propto e^{-d/250\,\mathrm{km}}$, so that most supply is regional but some crosses the country. Links point from supplier to customer.
+
+\paragraph{The shock.} At a Kaub level $h$, firm $i$ loses a month of output directly with probability
+\begin{equation}
+q_i(h) = \kappa\, e_i\, s(h), \qquad s(h) = \frac{1}{1 + e^{(h - 78)/12}} ,
+\end{equation}
+where $s(h)$ is the chance that a barge delivery falls short, one half at the 78~cm light-loading mark and close to one by 40~cm, and $\kappa$ is the chance that a shortfall costs the month's output rather than being bridged from stock. These are the seeds.
+
+\paragraph{Contagion.} A disrupted supplier disrupts each customer with probability $T$: the share of that input that cannot be replaced by another supplier, or by road and rail, within the month. This is directed bond percolation, and its threshold is $T_c = \avg{k}/\avg{jk}$ (Section~\ref{sec:cascade}), with $j$ and $k$ a firm's numbers of suppliers and customers. For this network $T_c = 0.249$, which simulation confirms: at $T = 0.25$ none of 40 single disruptions reached more than 5\% of firms, and at $T = 0.30$ twelve of 40 did.
+
+\subsection{Calibration: one number fixes a line}
+
+A month below 78~cm is represented by $h = 55$~cm. For each value of $\kappa$ there is one transmissibility $T^*$ at which the model loses 1\% of German industrial output in that month (found by bisection, 200 simulations per step). The pairs $(\kappa, T^*)$ form a line (Figure~\ref{fig:rhinefut}b). At one end the loss is almost all direct and the network barely matters ($T^*/T_c = 0.06$ when 85\% of the loss is direct). At the other the direct loss is small and amplified fivefold by the network, which then sits close to its threshold ($T^*/T_c = 0.89$ when 6\% is direct). The aggregate figure cannot tell these economies apart.
+
+\subsection{What the model says}
+
+\paragraph{The river saturates.} In all three calibrations of Figure~\ref{fig:rhinefut}, lowering Kaub from 55~cm to the 25~cm record raises the monthly loss by at most 13\%, from 1.0\% to 1.1\%. Once barges are barely viable, a further fall in the river removes little that has not already gone. The 2026 record is, in this model, no worse than 2018 for the same network.
+
+\paragraph{The threshold is set on land.} What changes the outcome is $T$, the substitutability of the inputs. At the record low, an economy that sat at $T^*/T_c = 0.34$ in 2018 loses 11\% of output if $T$ rises to $T_c$, and 39\% at $1.25\,T_c$; one that sat at $0.80$ loses 4\% and 35\%. Above the threshold the three economies converge, because the loss is then set by the giant cluster, not by the seeds. Figure~\ref{fig:rhinemap} shows where: below the threshold the damage is a faint band along the Upper Rhine; above it the cascade reaches Stuttgart, Munich, Hamburg and Berlin, none of which is on the river. A low-water month coinciding with a rail strike, a shortage of lorry drivers (reported in 2018 \citep{ICIS2018}) or a second disruption to the same inputs is the scenario that matters, not a lower river.
+
+\paragraph{Which economy is Germany?} The line in Figure~\ref{fig:rhinefut}b can be cut by a second, independent number: the share of the 1\% that fell in sectors with direct barge exposure. That needs sector-level production data and a real input--output table in place of the stylised one used here (Section~\ref{sec:limits}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig4_rhine_map.pdf}
+\caption{Probability that a firm loses the month's output at the record Kaub level of 25~cm, in an economy calibrated to 2018 with 15\% of the loss direct ($T^*/T_c = 0.80$). (a) As calibrated. (b) With substitution strained so that $T = 1.25\,T_c$. Marker size scales with output. 200 simulations. Basemap: Natural Earth.}
+\label{fig:rhinemap}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig5_rhine_futures.pdf}
+\caption{(a) German industrial output lost in a month at Kaub 25~cm, against transmissibility, for three economies that each reproduce the 1\% loss of a 2018 low-water month (circles). (b) All pairs of direct loss and distance to threshold that reproduce the 1\%.}
+\label{fig:rhinefut}
+\end{figure}
+
+%=====================================================================
+
+\section{Case B: structured credit}
+\label{sec:credit}
+
+A structured credit portfolio is usually priced as if its obligors default together only because they share an economy. Firms in a supply chain are also linked directly, as the Rhine case shows. When does that direct linkage turn a local failure into a portfolio-wide one, and what does it do to the loss borne by each tranche?
+
 %=====================================================================
 
 \subsection{Tranches}
@@ -190,7 +348,7 @@ The expected loss is continuous but has a kink at $T_a$; the probability of bein
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{fig2_tranche_switch.pdf}
+\includegraphics[width=\textwidth]{fig6_tranche_switch.pdf}
 \caption{Single-seed model on a Poisson network with $c=4$ ($T_c = 0.25$), $\lambda = 2$ own-cause failures a year and loss given default $\ell = 0.6$. (a) Expected loss of each tranche. (b) Probability that each tranche suffers any loss: it jumps once the giant cluster passes the attachment point.}
 \label{fig:switch}
 \end{figure}
@@ -256,47 +414,67 @@ The results are in Table~\ref{tab:tranche} and Figure~\ref{fig:equal}. At equal 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{fig3_equal_mean.pdf}
+\includegraphics[width=\textwidth]{fig7_equal_mean.pdf}
 \caption{Network-factor model against Vasicek at equal mean loss, calibration of Table~\ref{tab:cal}. (a) Loss densities; grey lines mark the tranche attachment points. (b) Ratio of expected tranche losses.}
 \label{fig:equal}
 \end{figure}
+
 
 %=====================================================================
 \section{Numerical check}
 %=====================================================================
 
-Each closed form above was checked by simulation on configuration-model networks of $N = 10^4$ firms, with self-loops and repeated links removed. For bond percolation, each link is kept with probability $T$ and the clusters found by a sparse connected-components search; Figure~\ref{fig:sim}(a) compares the largest cluster with $S$ from \eqref{eq:S} for a Poisson network and for a power law with $\gamma = 2.5$. Agreement is within the run-to-run spread away from the threshold; at the threshold the finite network rounds the transition, as expected. For the Watts model a single seed is failed and the cascade followed to completion, 400 times per mean degree; Figure~\ref{fig:sim}(b) shows the probability of a global cascade (more than 5\% of firms) and its size against the window predicted by \eqref{eq:watts}. The simulated window extends slightly past the analytic upper edge, where cascades remain possible on a finite network for a little longer; Watts reports the same \citep{Watts2002}. Near that edge the jump in cascade size is plain: at a mean degree of 6, 6\% of seeds set off a cascade, and each of those takes the entire network.
+Each closed form in Part~I was checked by simulation on configuration-model networks of $N = 10^4$ nodes, with self-loops and repeated links removed. For bond percolation, each link is kept with probability $T$ and the clusters found by a sparse connected-components search; Figure~\ref{fig:sim}(a) compares the largest cluster with $S$ from \eqref{eq:S} for a Poisson network and for a power law with $\gamma = 2.5$. Agreement is within the run-to-run spread away from the threshold; at the threshold the finite network rounds the transition, as expected. For the Watts model a single seed is failed and the cascade followed to completion, 400 times per mean degree; Figure~\ref{fig:sim}(b) shows the probability of a global cascade (more than 5\% of nodes) and its size against the window predicted by \eqref{eq:watts}. The simulated window extends slightly past the analytic upper edge, where cascades remain possible on a finite network for a little longer; Watts reports the same \citep{Watts2002}. Near that edge the jump in cascade size is plain: at a mean degree of 6, 6\% of seeds set off a cascade, and each of those takes the entire network. May's bound (Figure~\ref{fig:may}) and the correlated threshold (Figure~\ref{fig:assort}) are checked in their own sections.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{fig4_simulation_check.pdf}
-\caption{(a) Largest failure cluster in simulation (markers, mean and standard deviation of 12 networks of $10^4$ firms) against theory (lines). (b) Watts threshold cascade with $\phi = 0.18$: probability and size of a global cascade, against the analytic window (shaded).}
+\includegraphics[width=\textwidth]{fig8_simulation_check.pdf}
+\caption{(a) Largest failure cluster in simulation (markers, mean and standard deviation of 12 networks of $10^4$ nodes) against theory (lines). (b) Watts threshold cascade with $\phi = 0.18$: probability and size of a global cascade, against the analytic window (shaded).}
 \label{fig:sim}
 \end{figure}
 
 %=====================================================================
 \section{Limits}
+\label{sec:limits}
 %=====================================================================
 
-The network is random apart from its degree distribution. Real supply networks are clustered, assortative and geographically embedded, and percolation thresholds on such networks differ from \eqref{eq:Tc}. Links are static over the year; firms in fact replace failed suppliers, which lowers the effective $T$ with time. Loss given default is a constant, where in practice it is lower in bad years. Own-cause defaults are independent of the economy, where in practice they are not; a full model would let both $p$ and $T$ depend on $Z$. The portfolio is the whole network, where a real collateral pool holds a sample of it, and the giant cluster's overlap with a pool then matters. Nothing here is calibrated to a real portfolio: the calibration in Table~\ref{tab:cal} is chosen to give a plausible mean loss and frequency of crisis years. The result to take away is structural, not numerical: at fixed mean loss, contagion through a network with a threshold moves risk to the top of the capital structure.
+\paragraph{Theory.} The networks of Part~I are random apart from their degree distributions and, in Section~\ref{sec:assort}, their degree correlations. Real networks are also clustered and modular, and the firebreak effect of modularity that May, Levin and Sugihara describe is not modelled here. Links are static.
+
+\paragraph{The Rhine.} The firms are placed at real industrial centres, but the firm network itself is generated, not observed. The input--output matrix that chooses suppliers is a stylised eight-sector matrix; the next version replaces it with the Destatis input--output table for 2018, which also gives a second calibration target (the sectoral split of the 1\% loss) and so a point on the line of Figure~\ref{fig:rhinefut}b. The barge shares $b_s$, the exposures $x_h$ and the shape of $s(h)$ are assumptions, anchored only at the 78~cm and 40~cm marks. A disrupted firm loses a whole month of output; partial losses and recovery within the month are not modelled. The Kaub level is held at one value for the month.
+
+\paragraph{Structured credit.} The portfolio is the whole network, where a real collateral pool holds a sample of it. Loss given default is constant, where in practice it is lower in bad years. Own-cause defaults are independent of the economy; a full model would let both $p$ and $T$ depend on $Z$. The calibration in Table~\ref{tab:cal} is chosen for a plausible mean loss and frequency of crisis years, not fitted to a real pool.
+
+The results to take away are structural, not numerical. In the supply chain, an aggregate loss does not reveal how close the network is to its threshold, and the threshold is set by substitution, not by the size of the shock. In credit, at fixed mean loss, contagion through a network with a threshold moves risk to the top of the capital structure.
 
 %=====================================================================
-\section*{Code}
+\section*{Code and data}
 %=====================================================================
-All figures and tables are produced by \texttt{simulate.py}; the theory and simulation are in \texttt{percolation.py}.
+All figures and tables are produced by \texttt{simulate\_theory.py}, \texttt{simulate.py} and \texttt{simulate\_rhine.py}; the theory and simulation are in \texttt{percolation.py} and \texttt{rhine.py}. Basemap: Natural Earth (public domain).
 
-\bibliographystyle{unsrtnat}
 \begin{thebibliography}{99}
 \bibitem[May(1972)]{May1972} R.~M. May. Will a large complex system be stable? \textit{Nature} 238, 413--414 (1972).
 \bibitem[May et~al.(2008)]{MayLevinSugihara2008} R.~M. May, S.~A. Levin, G.~Sugihara. Ecology for bankers. \textit{Nature} 451, 893--895 (2008).
 \bibitem[Haldane and May(2011)]{HaldaneMay2011} A.~G. Haldane, R.~M. May. Systemic risk in banking ecosystems. \textit{Nature} 469, 351--355 (2011).
+\bibitem[Bascompte et~al.(2006)]{Bascompte2006} J.~Bascompte, P.~Jordano, J.~M. Olesen. Asymmetric coevolutionary networks facilitate biodiversity maintenance. \textit{Science} 312, 431--433 (2006).
+\bibitem[Soram\"aki et~al.(2007)]{Soramaki2007} K.~Soram\"aki, M.~L. Bech, J.~Arnold, R.~J. Glass, W.~E. Beyeler. The topology of interbank payment flows. \textit{Physica A} 379, 317--333 (2007).
+\bibitem[Tao and Vu(2010)]{TaoVu2010} T.~Tao, V.~Vu. Random matrices: universality of ESDs and the circular law. \textit{Ann. Probab.} 38, 2023--2065 (2010).
+\bibitem[Allesina and Tang(2012)]{AllesinaTang2012} S.~Allesina, S.~Tang. Stability criteria for complex ecosystems. \textit{Nature} 483, 205--208 (2012).
 \bibitem[Newman et~al.(2001)]{NewmanStrogatzWatts2001} M.~E.~J. Newman, S.~H. Strogatz, D.~J. Watts. Random graphs with arbitrary degree distributions and their applications. \textit{Phys. Rev. E} 64, 026118 (2001).
 \bibitem[Callaway et~al.(2000)]{Callaway2000} D.~S. Callaway, M.~E.~J. Newman, S.~H. Strogatz, D.~J. Watts. Network robustness and fragility: percolation on random graphs. \textit{Phys. Rev. Lett.} 85, 5468--5471 (2000).
 \bibitem[Cohen et~al.(2000)]{Cohen2000} R.~Cohen, K.~Erez, D.~ben-Avraham, S.~Havlin. Resilience of the Internet to random breakdowns. \textit{Phys. Rev. Lett.} 85, 4626--4628 (2000).
-\bibitem[Newman(2002)]{Newman2002} M.~E.~J. Newman. Spread of epidemic disease on networks. \textit{Phys. Rev. E} 66, 016128 (2002).
+\bibitem[Newman(2002a)]{Newman2002} M.~E.~J. Newman. Spread of epidemic disease on networks. \textit{Phys. Rev. E} 66, 016128 (2002).
+\bibitem[Newman(2002b)]{Newman2002assort} M.~E.~J. Newman. Assortative mixing in networks. \textit{Phys. Rev. Lett.} 89, 208701 (2002).
+\bibitem[Bogu\~n\'a and Pastor-Satorras(2002)]{BogunaPastorSatorras2002} M.~Bogu\~n\'a, R.~Pastor-Satorras. Epidemic spreading in correlated complex networks. \textit{Phys. Rev. E} 66, 047104 (2002).
+\bibitem[V\'azquez and Moreno(2003)]{VazquezMoreno2003} A.~V\'azquez, Y.~Moreno. Resilience to damage of graphs with degree correlations. \textit{Phys. Rev. E} 67, 015101 (2003).
+\bibitem[Xulvi-Brunet and Sokolov(2004)]{XulviBrunetSokolov2004} R.~Xulvi-Brunet, I.~M. Sokolov. Reshuffling scale-free networks: from random to assortative. \textit{Phys. Rev. E} 70, 066102 (2004).
 \bibitem[Watts(2002)]{Watts2002} D.~J. Watts. A simple model of global cascades on random networks. \textit{Proc. Natl. Acad. Sci. USA} 99, 5766--5771 (2002).
 \bibitem[Gai and Kapadia(2010)]{GaiKapadia2010} P.~Gai, S.~Kapadia. Contagion in financial networks. \textit{Proc. R. Soc. A} 466, 2401--2423 (2010).
 \bibitem[Acemoglu et~al.(2012)]{Acemoglu2012} D.~Acemoglu, V.~M. Carvalho, A.~Ozdaglar, A.~Tahbaz-Salehi. The network origins of aggregate fluctuations. \textit{Econometrica} 80, 1977--2016 (2012).
+\bibitem[Ademmer et~al.(2023)]{Ademmer2023} M.~Ademmer, N.~Jannsen, S.~Meuchelb\"ock. Extreme weather events and economic activity: the case of low water levels on the Rhine river. \textit{German Economic Review} (2023), \href{https://doi.org/10.1515/ger-2022-0077}{doi:10.1515/ger-2022-0077}.
+\bibitem[KBC(2022)]{KBC2022} KBC Economics. The water level of the Rhine and the German economy (2022). \url{https://www.kbc.com/en/economics/publications/econonderzoeksrapport19.html}
+\bibitem[BASF(2019)]{BASF2019} BASF. BASF Report 2018: results, press release P-19-141 (26 February 2019).
+\bibitem[ICIS(2018)]{ICIS2018} ICIS. Rhine water level hits lowest mark on record, still decreasing (18 October 2018).
+\bibitem[leinetal24(2026)]{Leinetal2026} leinetal24. Rhein-Alarm bei Kaub: Pegel f\"allt auf 24 Zentimeter (31 July 2026).
 \bibitem[Vasicek(2002)]{Vasicek2002} O.~Vasicek. The distribution of loan portfolio value. \textit{Risk} 15(12), 160--162 (2002).
 \end{thebibliography}
 

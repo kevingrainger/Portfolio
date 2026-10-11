@@ -1,37 +1,39 @@
-# When does a supply-chain failure reach the senior tranche?
+# Ecology for bankers, revisited
 
-**Percolation theory says a network of firms has a threshold: below it every failure stays local, above it one failure can take a finite share of the whole economy. Put a credit portfolio on that network and, at the same average loss, the risk moves from the bottom of the capital structure to the top.**
+**In 2008 May, Levin and Sugihara asked what bankers could learn from ecologists. This note derives the ecologists' tools (May's stability bound, percolation thresholds, disassortative wiring) and turns them on two systems: German industry when the Rhine runs dry, and a structured credit portfolio.**
 
 ![A cascade spreading through a supply network](figures/cover.gif)
 
-![Giant failure cluster over mean degree and transmissibility](figures/hero.png)
+![The Rhine at its record low: the network as calibrated to 2018, and with road and rail strained](figures/fig4_rhine_map.png)
 
-In 1972 Robert May showed that a large random ecosystem is stable only while $\sigma\sqrt{NC} < 1$: more species, more links or stronger links tip it into instability, and the change is sharp. In 2008, the year senior credit tranches rated as near riskless lost value together, May, Levin and Sugihara asked what bankers could learn from ecologists. This note follows that question to one precise answer.
+In 1972 Robert May showed that a large random ecosystem is stable only while $\sigma\sqrt{NC} < 1$. The eigenvalues of its community matrix fill a disc of that radius, and once the disc crosses zero the system tips. Percolation theory gives the network version: failure passing along each link with probability $T$ spreads to a finite share of the whole only above
 
-Firms are nodes of a random network; a failure passes along each link with probability $T$. A failure cluster spanning the network exists only above
+$$T_c = \frac{\langle k\rangle}{\langle k^2\rangle - \langle k\rangle}, \qquad \text{or, with degree correlations,}\qquad T_c = 1/\Lambda\big[(k'-1)P(k'\mid k)\big].$$
 
-$$T_c = \frac{\langle k\rangle}{\langle k^2\rangle - \langle k\rangle}, \qquad S = 1 - G_0(u),\quad u = 1 - T + T\,G_1(u),$$
+Both are the inverse of a leading eigenvalue.
 
-where $G_0$ and $G_1$ are the generating functions of the degree and excess-degree distributions (Newman, Strogatz and Watts 2001). The note derives what that does to tranche losses.
+**Part I: theory.**
+- **May's bound, checked.** Simulated community matrices fill the predicted disc, and the probability of stability drops from one to zero at $\sigma\sqrt{NC} = 1$, more sharply as $N$ grows.
+- **Disassortative wiring doubles the threshold.** Hubs linked to small nodes (Fedwire, pollination webs) protect against weak contagion: $T_c$ goes from 0.072 to 0.149 for the same degree sequence. Above $T \approx 0.28$ the same wiring fails most completely.
 
-- **The senior tranche switches on.** With a single source of failure the loss is two-point, $0$ or $\ell S$. The probability that a tranche is touched at all is zero until the giant cluster passes its attachment point, then jumps.
-- **A network-factor model.** With many own-cause defaults the loss of a large portfolio is deterministic, $L = \ell\,[1-(1-p)G_0(v)]$, so the randomness has to come from the economy moving the network across its threshold. The model then has the same one-factor structure as Vasicek's.
-- **Equal mean, different tails.** Calibrated to a 1.9% mean annual loss and a network that crosses its threshold about once in 26 years, the 15–30% tranche's expected loss is **46 times** Vasicek's at the same mean (9× to 3,800× across correlations 0.3 to 0.1), while the equity tranche's is about 40% lower.
-- **Checked by simulation** on networks of 10,000 firms, for percolation on Poisson and power-law networks and for Watts's threshold cascade, which reproduces the robust-yet-fragile window of Gai and Kapadia.
+**Part II, case A: the Rhine runs dry.** On 31 July 2026 the Kaub gauge matched its 2018 record of 25 cm. A spatial network of 4,000 firms at the real Rhine-basin centres is calibrated to the estimate that a low-water month costs about 1% of German industrial output.
+- **One number fixes a line, not a point.** The same 1% is reproduced by economies anywhere from 6% to 89% of the way to their percolation threshold.
+- **The river saturates.** From 55 cm to 25 cm the monthly loss rises by at most 13%.
+- **The threshold is set on land.** If road and rail cannot replace the barges ($T = 1.25\,T_c$), the same low water costs about a third of output, and the cascade reaches Stuttgart, Munich and Berlin.
+
+**Part II, case B: structured credit.** At the same 1.9% mean loss as a Vasicek model, the 15–30% tranche carries **46×** the expected loss and equity about 40% less. Risk moves up the capital structure.
 
 | | |
 |:-:|:-:|
-| ![Tranche switch](figures/fig2_tranche_switch.png) | ![Equal mean loss](figures/fig3_equal_mean.png) |
-| ![Simulation check](figures/fig4_simulation_check.png) | |
+| ![May's bound](figures/fig1_may_stability.png) | ![Disassortativity](figures/fig3_disassortativity.png) |
+| ![Rhine futures](figures/fig5_rhine_futures.png) | ![Equal mean loss](figures/fig7_equal_mean.png) |
 
-**The note:** [`note/percolation_tranche_loss.pdf`](note/percolation_tranche_loss.pdf) (9 pages: percolation on random networks, directed supply networks, threshold cascades, tranche loss, numerical check, limits).
+**The note:** [`note/percolation_tranche_loss.pdf`](note/percolation_tranche_loss.pdf) (16 pages). **Interactive map:** [`maps/rhine_cascade.html`](maps/rhine_cascade.html).
 
-**Built:** generating-function solvers for the giant cluster, the failed fraction with many seeds and the Watts cascade condition; configuration-model networks and sparse cluster search for Monte Carlo; Vasicek tranche losses by quadrature.
+**Built:** circular-law check of May's bound; generating-function solvers for giant clusters, failed fractions and the Watts cascade condition; degree-preserving assortative and disassortative rewiring with the correlated-threshold eigenvalue; a gravity-and-input-output spatial supply network with directed percolation and calibration by bisection; Vasicek tranche losses by quadrature; Monte Carlo checks on networks of 10,000 nodes.
 
-`percolation.py` · `simulate.py` · `note/` · Python, NumPy, SciPy sparse, NetworkX, LaTeX
+`percolation.py` · `rhine.py` · `simulate_theory.py` · `simulate_rhine.py` · `simulate.py` · `note/` · Python, NumPy, SciPy sparse, NetworkX, folium, LaTeX
 
-**Limits:** random networks apart from the degree distribution, static links, constant loss given default, own-cause defaults independent of the economy, and a calibration chosen for plausibility rather than fitted to a real pool. The result is structural, not numerical.
+**Limits:** the Rhine network is generated, not observed. Its input–output matrix is a stylised eight-sector one, to be replaced by the Destatis 2018 table, which also pins a point on the calibration line. The barge-exposure shares are assumptions. The credit calibration is chosen for plausibility, not fitted to a pool.
 
-**Next:** a graph neural network trained on simulated cascades, tested on whether it recovers $T_c$ for degree distributions it has not seen.
-
-*A side project, built for fun. All figures come from simulated networks. Credits: May (1972), Nature 238, 413; May, Levin & Sugihara (2008), Nature 451, 893; Haldane & May (2011), Nature 469, 351; Newman, Strogatz & Watts (2001), Phys. Rev. E 64, 026118; Callaway, Newman, Strogatz & Watts (2000), Phys. Rev. Lett. 85, 5468; Cohen, Erez, ben-Avraham & Havlin (2000), Phys. Rev. Lett. 85, 4626; Newman (2002), Phys. Rev. E 66, 016128; Watts (2002), PNAS 99, 5766; Gai & Kapadia (2010), Proc. R. Soc. A 466, 2401; Acemoglu, Carvalho, Ozdaglar & Tahbaz-Salehi (2012), Econometrica 80, 1977; Vasicek (2002), Risk 15(12), 160. The percolation and cascade results are theirs; the link to tranche loss is this note's.*
+*A side project, built for fun. Credits: May, Levin & Sugihara (2008), Nature 451, 893; May (1972), Nature 238, 413; Tao & Vu (2010), Ann. Probab. 38, 2023; Allesina & Tang (2012), Nature 483, 205; Bascompte, Jordano & Olesen (2006), Science 312, 431; Soramäki et al. (2007), Physica A 379, 317; Newman, Strogatz & Watts (2001), Phys. Rev. E 64, 026118; Callaway et al. (2000), Phys. Rev. Lett. 85, 5468; Cohen et al. (2000), Phys. Rev. Lett. 85, 4626; Newman (2002), Phys. Rev. E 66, 016128 and Phys. Rev. Lett. 89, 208701; Boguñá & Pastor-Satorras (2002), Phys. Rev. E 66, 047104; Vázquez & Moreno (2003), Phys. Rev. E 67, 015101; Xulvi-Brunet & Sokolov (2004), Phys. Rev. E 70, 066102; Watts (2002), PNAS 99, 5766; Gai & Kapadia (2010), Proc. R. Soc. A 466, 2401; Haldane & May (2011), Nature 469, 351; Acemoglu et al. (2012), Econometrica 80, 1977; Vasicek (2002), Risk 15(12), 160; Ademmer, Jannsen & Meuchelböck (2023), German Economic Review, doi:10.1515/ger-2022-0077. Rhine facts from KBC Economics (2022), BASF (2019) and ICIS (2018). Basemap: Natural Earth.*
