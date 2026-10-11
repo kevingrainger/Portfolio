@@ -50,6 +50,36 @@ Parameters are fitted with adjoint gradients: one extra solve per day gives the 
 
 3,341 station-days at 39 stations, five folds of 50 km blocks, parameters fitted on 2021-2022. The simulated E-OBS is interpolated from its own 30-station network, so B2's score reflects that choice. Against the simulation's hidden truth at every land cell the ranking is the same (1.22 K, 0.85 K, 0.63 K for B0, M1, M2) and the XGBoost prior adds nothing at map level.
 
+## A neural network trained from scratch
+
+A third approach beside the physics and XGBoost: a small **U-Net** (Ronneberger, Fischer & Brox 2015), the standard image-to-image network in statistical downscaling (Baño-Medina, Manzanas & Gutiérrez 2020). It takes 14 coarse and static maps (ERA5-Land, the surface-temperature excess, wind, terrain and six land-cover fractions) and returns a 1 km field, plus a 5% and a 95% quantile. It has 120,000 parameters and is written in JAX.
+
+- **Target.** Stations are too sparse to train an image model on. So the dense target is the anchored physics surface (M2), built for each fold **without that fold's stations**. Stations stay the ground truth for scoring.
+- **Split.** Trained on 2021-2022, scored in 2023, at stations in held-out 50 km blocks: the same 3,341 station-days as the table above. There is one network per fold.
+- **Loss.** Squared error for the mean, plus pinball loss for the two quantiles.
+- **M4.** The U-Net field is also used as the prior of the station anchoring, the way XGBoost is in M3.
+
+| | Model | RMSE (K) | Bias (K) | Hottest 5% of days | < 200 m | 200-800 m | > 800 m |
+|---|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| B0 | ERA5-Land, bilinear + lapse rate | 1.34 | -0.58 | 1.49 | 1.39 | 1.36 | 1.10 |
+| M1 | Physics only | 1.03 | +0.32 | 0.86 | 1.02 | 0.88 | 1.23 |
+| U | **U-Net alone** | **1.03** | +0.27 | 1.04 | 1.03 | 0.88 | 1.18 |
+| M2 | Physics, anchored | 0.83 | +0.04 | 0.80 | 0.77 | 0.73 | 1.09 |
+| M4 | **Physics, anchored, U-Net prior** | **0.87** | +0.08 | 0.83 | 0.84 | 0.73 | 1.11 |
+| M3 | Physics, anchored, XGBoost prior | 0.79 | +0.03 | 0.78 | 0.69 | 0.72 | 1.10 |
+
+- **Without stations, the network matches the physics.** From the coarse fields alone, the U-Net is as accurate at unseen stations as the physics-only surface (1.03 K each), and well ahead of ERA5-Land. Against the simulation's hidden truth at every land cell, it scores 0.85 K, against 1.19 K for ERA5-Land and 0.66 K for the anchored physics.
+- **As a prior it does not help.** Anchored, the U-Net's field scores 0.87 K, slightly worse than anchoring the plain physics. The skill comes from the stations, and a prior learned from an anchored surface carries nothing the anchoring does not already supply.
+- **Its uncertainty was too confident, and is fixed.** The 90% interval held only 66% of 2023 readings. It was trained against a smooth surface, not against thermometers. **Conformalised quantile regression** (Romano, Patterson & Candès 2019) widens it by the 90th percentile of the misses on 2022, at each fold's own held-out stations. In 2023 it then holds 86%, with a mean width of 3.0 K.
+
+| | |
+|:-:|:-:|
+| ![U-Net beside the physics surface](figures/fig6_unet_surfaces.png) | ![Skill](figures/fig7_unet_skill.png) |
+
+**Interactive:** [error at every held-out station, physics against U-Net](https://kevingrainger.github.io/maps/003-unet-errors.html)
+
+`tmax1km/unet.py` · `run_unet.py`
+
 ## Provenance
 
 | Dataset | Tier | Source |
@@ -70,10 +100,10 @@ Steady state: one balance per day, no heat storage, no memory. Single layer: no 
 
 **Built:** sparse upwind/five-point PDE solver with one LU factorisation per day; exact station anchoring in closed form; adjoint gradients checked against finite differences; spatially blocked cross-validation with fold-safe training of the XGBoost prior; regression-kriging and XGBoost baselines; a station-level bootstrap for model differences; a resumable pipeline; four solver tests in CI.
 
-`tmax1km/` (`grid` · `data` · `simulation` · `pde` · `anchor` · `ml` · `validation` · `step0` · `plots`) · `po_valley_downscaling.ipynb` · `run_pipeline.py` · `download_data.py` · `make_maps.py` · `make_cover.py` · `tests/` · Python, SciPy sparse, XGBoost, folium
+`tmax1km/` (`grid` · `data` · `simulation` · `pde` · `anchor` · `ml` · `unet` · `validation` · `step0` · `plots`) · `po_valley_downscaling.ipynb` · `run_pipeline.py` · `run_unet.py` · `download_data.py` · `make_maps.py` · `make_cover.py` · `tests/` · Python, SciPy sparse, XGBoost, JAX, folium
 
 **Interactive maps:** [the heatwave day](https://kevingrainger.github.io/maps/003-heatwave.html) · [missing heating, land cover and station footprints](https://kevingrainger.github.io/maps/003-missing-physics.html)
 
 **Next:** the real data. Then the regional ARPA station networks, which multiply the anchors tenfold; a lapse rate fitted per day; and a second-order advection scheme so that κ means something.
 
-*A side project, built for fun. Credits: ERA5-Land (Muñoz-Sabater et al. 2021, [doi:10.5194/essd-13-4349-2021](https://doi.org/10.5194/essd-13-4349-2021)); E-OBS (Cornes et al. 2018, [doi:10.1029/2017JD028200](https://doi.org/10.1029/2017JD028200)); variational analysis (Sasaki 1970, Mon. Wea. Rev. 98, 875-883; Lorenc 1986, [doi:10.1002/qj.49711247414](https://doi.org/10.1002/qj.49711247414)); the closest published relative, First Street Foundation's geostatistical air temperature model (Wilson et al. 2022, Climate 10(3):47, [doi:10.3390/cli10030047](https://doi.org/10.3390/cli10030047)); physics-informed machine learning (Karniadakis et al. 2021; Harder et al. 2023); ESA WorldCover 2021 (Zanaga et al. 2022, [doi:10.5281/zenodo.7254221](https://doi.org/10.5281/zenodo.7254221)); XGBoost (Chen & Guestrin 2016, [doi:10.1145/2939672.2939785](https://doi.org/10.1145/2939672.2939785)). Station list from Meteostat; outlines from Natural Earth.*
+*A side project, built for fun. Credits: ERA5-Land (Muñoz-Sabater et al. 2021, [doi:10.5194/essd-13-4349-2021](https://doi.org/10.5194/essd-13-4349-2021)); E-OBS (Cornes et al. 2018, [doi:10.1029/2017JD028200](https://doi.org/10.1029/2017JD028200)); variational analysis (Sasaki 1970, Mon. Wea. Rev. 98, 875-883; Lorenc 1986, [doi:10.1002/qj.49711247414](https://doi.org/10.1002/qj.49711247414)); the closest published relative, First Street Foundation's geostatistical air temperature model (Wilson et al. 2022, Climate 10(3):47, [doi:10.3390/cli10030047](https://doi.org/10.3390/cli10030047)); physics-informed machine learning (Karniadakis et al. 2021; Harder et al. 2023); ESA WorldCover 2021 (Zanaga et al. 2022, [doi:10.5281/zenodo.7254221](https://doi.org/10.5281/zenodo.7254221)); XGBoost (Chen & Guestrin 2016, [doi:10.1145/2939672.2939785](https://doi.org/10.1145/2939672.2939785)); U-Net (Ronneberger, Fischer & Brox 2015, MICCAI); deep-learning downscaling (Baño-Medina, Manzanas & Gutiérrez 2020, [doi:10.5194/gmd-13-2109-2020](https://doi.org/10.5194/gmd-13-2109-2020)); conformalised quantile regression (Romano, Patterson & Candès 2019, NeurIPS). Station list from Meteostat; outlines from Natural Earth.*

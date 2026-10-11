@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_2954c20f4d337589ee33ba96e0e77cf8 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_2954c20f4d337589ee33ba96e0e77cf8" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_2954c20f4d337589ee33ba96e0e77cf8 = L.map(
+                "map_2954c20f4d337589ee33ba96e0e77cf8",
+                {
+                    center: [45.1, 9.9],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 8,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_2954c20f4d337589ee33ba96e0e77cf8);
+
+            
+
+        
+    
+            var tile_layer_6ae1d76ccadcded9c895eee25d7eb92a = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 11,
+  "maxNativeZoom": 11,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri, HERE, Garmin, OpenStreetMap contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_6ae1d76ccadcded9c895eee25d7eb92a.addTo(map_2954c20f4d337589ee33ba96e0e77cf8);
+        
+    
+            var tile_layer_f971635ab8d9f806d66804bb247cd509 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_998305f9e0cc613210a4286ffea02d6a = L.circleMarker(
+                [45.8689, 7.1708],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#841e5a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_998305f9e0cc613210a4286ffea02d6a.bindTooltip(
+                `<div>
+                     Grand St. Bernard / Grand Saint Bernard (2472 m): physics, anchored 1.16 K; physics 1.16, U-Net 1.25, physics + U-Net 1.16
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_94c6c2dbbb1663eb375361142f30a2c1 = L.circleMarker(
+                [46.1667, 8.8833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ce1d4e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_94c6c2dbbb1663eb375361142f30a2c1.bindTooltip(
+                `<div>
+                     Locarno-Magadino (197 m): physics, anchored 0.94 K; physics 0.94, U-Net 0.97, physics + U-Net 0.83
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0c95b990f3d1cd3c3eeda70e5e8a8c69 = L.circleMarker(
+                [46.0, 8.9667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ee543f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_0c95b990f3d1cd3c3eeda70e5e8a8c69.bindTooltip(
+                `<div>
+                     Lugano (273 m): physics, anchored 0.76 K; physics 0.76, U-Net 0.85, physics + U-Net 0.73
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5e2dd6e174abb3b0a4447ddeeed75a0a = L.circleMarker(
+                [46.15, 11.0333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ab185a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_5e2dd6e174abb3b0a4447ddeeed75a0a.bindTooltip(
+                `<div>
+                     Paganella (2125 m): physics, anchored 1.05 K; physics 1.05, U-Net 1.08, physics + U-Net 1.06
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b066b477702e1c707eafcf8bb82761ed = L.circleMarker(
+                [46.0333, 12.6],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eb463e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_b066b477702e1c707eafcf8bb82761ed.bindTooltip(
+                `<div>
+                     Aviano (128 m): physics, anchored 0.80 K; physics 0.80, U-Net 0.95, physics + U-Net 0.82
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d23470cd706242ac3f9d15239fa288b7 = L.circleMarker(
+                [45.9333, 7.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6b1f56", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_d23470cd706242ac3f9d15239fa288b7.bindTooltip(
+                `<div>
+                     Pian Rosa (3480 m): physics, anchored 1.24 K; physics 1.24, U-Net 1.12, physics + U-Net 1.32
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_22113d5663eea2bb4fe6faba0d563a58 = L.circleMarker(
+                [45.2167, 7.65],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f5946b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_22113d5663eea2bb4fe6faba0d563a58.bindTooltip(
+                `<div>
+                     Torino / Caselle (301 m): physics, anchored 0.59 K; physics 0.59, U-Net 0.83, physics + U-Net 0.60
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7f086b05afc90a30c02326f891529d55 = L.circleMarker(
+                [45.0333, 7.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58a61", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_7f086b05afc90a30c02326f891529d55.bindTooltip(
+                `<div>
+                     Torino / Bric Della Croce (709 m): physics, anchored 0.62 K; physics 0.62, U-Net 0.78, physics + U-Net 0.58
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ce31109e7eaf618a8a9bb82971989f83 = L.circleMarker(
+                [45.5167, 8.6667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6ae87", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_ce31109e7eaf618a8a9bb82971989f83.bindTooltip(
+                `<div>
+                     Novara / Cameri (178 m): physics, anchored 0.51 K; physics 0.51, U-Net 0.76, physics + U-Net 0.55
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b8854379faf29939609953faff268d06 = L.circleMarker(
+                [45.6167, 8.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6a077", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_b8854379faf29939609953faff268d06.bindTooltip(
+                `<div>
+                     Milano / Malpensa (234 m): physics, anchored 0.55 K; physics 0.55, U-Net 0.85, physics + U-Net 0.62
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f352becf90c873e4e6173a04b83c398a = L.circleMarker(
+                [45.6667, 9.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f69e75", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_f352becf90c873e4e6173a04b83c398a.bindTooltip(
+                `<div>
+                     Bergamo / Orio Al Serio (238 m): physics, anchored 0.56 K; physics 0.56, U-Net 0.86, physics + U-Net 0.58
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e4cd0d1d89e7a49174e68d7db19ae9e0 = L.circleMarker(
+                [45.4333, 9.2833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6b893", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_e4cd0d1d89e7a49174e68d7db19ae9e0.bindTooltip(
+                `<div>
+                     Milano / Linate (107 m): physics, anchored 0.47 K; physics 0.47, U-Net 0.76, physics + U-Net 0.49
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_99b7c967bf52b2ffa38681a34c002325 = L.circleMarker(
+                [44.9167, 9.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58f66", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_99b7c967bf52b2ffa38681a34c002325.bindTooltip(
+                `<div>
+                     Piacenza (134 m): physics, anchored 0.60 K; physics 0.60, U-Net 0.77, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_33c1b10ff995ca4f2d93079c7f24e07c = L.circleMarker(
+                [45.4167, 10.2833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f59970", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_33c1b10ff995ca4f2d93079c7f24e07c.bindTooltip(
+                `<div>
+                     Brescia / Ghedi (102 m): physics, anchored 0.57 K; physics 0.57, U-Net 0.71, physics + U-Net 0.53
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cff58eafa5e970230ef6688dd79124a2 = L.circleMarker(
+                [45.4644, 10.5553],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cd1c4e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_cff58eafa5e970230ef6688dd79124a2.bindTooltip(
+                `<div>
+                     Verona / Rivoltella (64 m): physics, anchored 0.94 K; physics 0.94, U-Net 1.16, physics + U-Net 0.94
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4d7979bc7ecc63662e73dd620fb2e48a = L.circleMarker(
+                [45.3833, 10.8667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f4835b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_4d7979bc7ecc63662e73dd620fb2e48a.bindTooltip(
+                `<div>
+                     Verona / Villafranca (67 m): physics, anchored 0.64 K; physics 0.64, U-Net 0.78, physics + U-Net 0.66
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5a313f75cf7bae6f4833c98594823e0b = L.circleMarker(
+                [45.4, 11.85],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f5946b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_5a313f75cf7bae6f4833c98594823e0b.bindTooltip(
+                `<div>
+                     Padova (13 m): physics, anchored 0.59 K; physics 0.59, U-Net 0.87, physics + U-Net 0.66
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5d7f1212f48187f8f7088c5013d02911 = L.circleMarker(
+                [45.6833, 12.1],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58860", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_5d7f1212f48187f8f7088c5013d02911.bindTooltip(
+                `<div>
+                     Treviso / Istrana (45 m): physics, anchored 0.62 K; physics 0.62, U-Net 0.86, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d04e4a6e714f7c4a7b7f005c32d114f4 = L.circleMarker(
+                [45.65, 12.1833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58d64", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_d04e4a6e714f7c4a7b7f005c32d114f4.bindTooltip(
+                `<div>
+                     Treviso / S. Angelo (18 m): physics, anchored 0.61 K; physics 0.61, U-Net 0.79, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bfa28288f978e5b6b25625b5e5f52964 = L.circleMarker(
+                [45.5, 12.3333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c81951", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_bfa28288f978e5b6b25625b5e5f52964.bindTooltip(
+                `<div>
+                     Venezia / Tessera (2 m): physics, anchored 0.96 K; physics 0.96, U-Net 1.21, physics + U-Net 1.24
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a88fa53402c5b55b4d4576f4ab93038b = L.circleMarker(
+                [44.2425, 8.2011],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9a1b5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_a88fa53402c5b55b4d4576f4ab93038b.bindTooltip(
+                `<div>
+                     Monte Settepani / Caragna (1381 m): physics, anchored 1.10 K; physics 1.10, U-Net 1.33, physics + U-Net 1.18
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_026b722099c9200080e0208d4f723996 = L.circleMarker(
+                [44.3833, 7.8167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f26747", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_026b722099c9200080e0208d4f723996.bindTooltip(
+                `<div>
+                     Mondovi (559 m): physics, anchored 0.71 K; physics 0.71, U-Net 0.94, physics + U-Net 0.73
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_82ec8f92a74d302cd8637ac9d84cd45d = L.circleMarker(
+                [44.25, 7.8],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e53940", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_82ec8f92a74d302cd8637ac9d84cd45d.bindTooltip(
+                `<div>
+                     Monte Malanotte (1741 m): physics, anchored 0.84 K; physics 0.84, U-Net 1.08, physics + U-Net 0.86
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f9bdd86dcb37047ba6bdbe3274bfb7cf = L.circleMarker(
+                [44.6333, 8.9333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f4815a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_f9bdd86dcb37047ba6bdbe3274bfb7cf.bindTooltip(
+                `<div>
+                     Passo Dei Giovi (468 m): physics, anchored 0.64 K; physics 0.64, U-Net 0.75, physics + U-Net 0.80
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_95666242c52bc35eb7645f5f0f380dfe = L.circleMarker(
+                [44.4167, 8.85],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c81951", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_95666242c52bc35eb7645f5f0f380dfe.bindTooltip(
+                `<div>
+                     Genova / Sestri (2 m): physics, anchored 0.96 K; physics 0.96, U-Net 1.48, physics + U-Net 1.26
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8e41b6318ff23ca724447423bb28ef8e = L.circleMarker(
+                [44.05, 8.1167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7d1f5a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_8e41b6318ff23ca724447423bb28ef8e.bindTooltip(
+                `<div>
+                     Albenga (45 m): physics, anchored 1.19 K; physics 1.19, U-Net 1.42, physics + U-Net 1.19
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a9b7534be84f15a4eadc72a3a8474152 = L.circleMarker(
+                [44.4333, 9.9333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f47a54", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_a9b7534be84f15a4eadc72a3a8474152.bindTooltip(
+                `<div>
+                     Passo Della Cisa (1039 m): physics, anchored 0.66 K; physics 0.66, U-Net 0.85, physics + U-Net 0.72
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_41640f2d58cf98f16b04b661f8817481 = L.circleMarker(
+                [44.0833, 9.9833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef5640", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_41640f2d58cf98f16b04b661f8817481.bindTooltip(
+                `<div>
+                     Sarzana / Luni (9 m): physics, anchored 0.76 K; physics 0.76, U-Net 0.98, physics + U-Net 0.81
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_93eb15e3703f787c6785c0514d369ccd = L.circleMarker(
+                [44.5275, 11.2886],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58a61", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_93eb15e3703f787c6785c0514d369ccd.bindTooltip(
+                `<div>
+                     Bologna / Borgo Panigale (51 m): physics, anchored 0.62 K; physics 0.62, U-Net 0.80, physics + U-Net 0.60
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_90113ac5509ff6fe9acc9c002bac297a = L.circleMarker(
+                [44.8153, 11.6125],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6be9b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_90113ac5509ff6fe9acc9c002bac297a.bindTooltip(
+                `<div>
+                     Ferrara / Fontana (9 m): physics, anchored 0.46 K; physics 0.46, U-Net 0.76, physics + U-Net 0.46
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_15f8d0e5826f46fcd679f4a88e884a6c = L.circleMarker(
+                [44.2, 10.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2d1738", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_15f8d0e5826f46fcd679f4a88e884a6c.bindTooltip(
+                `<div>
+                     Monte Cimone (2165 m): physics, anchored 1.45 K; physics 1.45, U-Net 1.43, physics + U-Net 1.35
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_77bdfe7f68538f8e139826fdc40cefab = L.circleMarker(
+                [44.8333, 11.6167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6bc99", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_77bdfe7f68538f8e139826fdc40cefab.bindTooltip(
+                `<div>
+                     Ferrara (10 m): physics, anchored 0.46 K; physics 0.46, U-Net 0.77, physics + U-Net 0.46
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a57f2876f1c54325169b8658dc61d1f7 = L.circleMarker(
+                [44.5333, 11.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f4845d", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_a57f2876f1c54325169b8658dc61d1f7.bindTooltip(
+                `<div>
+                     Bologna / Borgo Panigale (36 m): physics, anchored 0.63 K; physics 0.63, U-Net 0.85, physics + U-Net 0.64
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1268db58925528d1c97649d42758c447 = L.circleMarker(
+                [44.45, 12.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c1d5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_1268db58925528d1c97649d42758c447.bindTooltip(
+                `<div>
+                     Punta Marina (2 m): physics, anchored 1.14 K; physics 1.14, U-Net 1.81, physics + U-Net 1.36
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6ec3f104253f402add5bcb86c69d75ff = L.circleMarker(
+                [44.2, 12.0667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cf1e4d", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_6ec3f104253f402add5bcb86c69d75ff.bindTooltip(
+                `<div>
+                     Forli (27 m): physics, anchored 0.93 K; physics 0.93, U-Net 0.93, physics + U-Net 0.91
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_31bc34c948d8e4bd0e757c3b02ff4f9e = L.circleMarker(
+                [44.2167, 12.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef5840", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_31bc34c948d8e4bd0e757c3b02ff4f9e.bindTooltip(
+                `<div>
+                     Cervia (6 m): physics, anchored 0.75 K; physics 0.75, U-Net 1.03, physics + U-Net 1.08
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2cb6b3b1841599274a158241c165eeb6 = L.circleMarker(
+                [44.0333, 12.6167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d62449", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_2cb6b3b1841599274a158241c165eeb6.bindTooltip(
+                `<div>
+                     Rimini (12 m): physics, anchored 0.91 K; physics 0.91, U-Net 1.39, physics + U-Net 1.00
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_684be013837ef662d54561c78d6e83dd = L.circleMarker(
+                [45.0864, 7.6034],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef5640", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_684be013837ef662d54561c78d6e83dd.bindTooltip(
+                `<div>
+                     Torino / Collegno (287 m): physics, anchored 0.76 K; physics 0.76, U-Net 0.86, physics + U-Net 0.71
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_71a618d56c2cddcc5201b6d04ae88e2c = L.circleMarker(
+                [45.7394, 7.362],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#811e5a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59);
+        
+    
+            circle_marker_71a618d56c2cddcc5201b6d04ae88e2c.bindTooltip(
+                `<div>
+                     Aosta / Pollein (546 m): physics, anchored 1.17 K; physics 1.17, U-Net 1.16, physics + U-Net 1.09
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_b7a73c44158c6e72b12dcf1c74a917c4 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_52c9c0b7e460a5a33b9e2fd2b7b40da6 = L.circleMarker(
+                [45.8689, 7.1708],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#681f55", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_52c9c0b7e460a5a33b9e2fd2b7b40da6.bindTooltip(
+                `<div>
+                     Grand St. Bernard / Grand Saint Bernard (2472 m): U-Net alone 1.25 K; physics 1.16, U-Net 1.25, physics + U-Net 1.16
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_71fc13500cc5155fb0fb2c0c04556751 = L.circleMarker(
+                [46.1667, 8.8833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c51852", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_71fc13500cc5155fb0fb2c0c04556751.bindTooltip(
+                `<div>
+                     Locarno-Magadino (197 m): U-Net alone 0.97 K; physics 0.94, U-Net 0.97, physics + U-Net 0.83
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c965fbfd92cf30406a9d351275529ffc = L.circleMarker(
+                [46.0, 8.9667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e23442", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_c965fbfd92cf30406a9d351275529ffc.bindTooltip(
+                `<div>
+                     Lugano (273 m): U-Net alone 0.85 K; physics 0.76, U-Net 0.85, physics + U-Net 0.73
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dd84524de69900c6c65542c3dcbed81a = L.circleMarker(
+                [46.15, 11.0333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a3195b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_dd84524de69900c6c65542c3dcbed81a.bindTooltip(
+                `<div>
+                     Paganella (2125 m): U-Net alone 1.08 K; physics 1.05, U-Net 1.08, physics + U-Net 1.06
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8ae60108cd6a9ae1c452aa44f45801b6 = L.circleMarker(
+                [46.0333, 12.6],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cb1b4f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_8ae60108cd6a9ae1c452aa44f45801b6.bindTooltip(
+                `<div>
+                     Aviano (128 m): U-Net alone 0.95 K; physics 0.80, U-Net 0.95, physics + U-Net 0.82
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_528a34fa57d48f05079a33a33d28ff97 = L.circleMarker(
+                [45.9333, 7.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#931c5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_528a34fa57d48f05079a33a33d28ff97.bindTooltip(
+                `<div>
+                     Pian Rosa (3480 m): U-Net alone 1.12 K; physics 1.24, U-Net 1.12, physics + U-Net 1.32
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cb99f4d1b3a89c0166dc078fe1eef1d4 = L.circleMarker(
+                [45.2167, 7.65],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e73d3f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_cb99f4d1b3a89c0166dc078fe1eef1d4.bindTooltip(
+                `<div>
+                     Torino / Caselle (301 m): U-Net alone 0.83 K; physics 0.59, U-Net 0.83, physics + U-Net 0.60
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_927a045c4b4d301dd4e40358b67a6692 = L.circleMarker(
+                [45.0333, 7.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ed503e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_927a045c4b4d301dd4e40358b67a6692.bindTooltip(
+                `<div>
+                     Torino / Bric Della Croce (709 m): U-Net alone 0.78 K; physics 0.62, U-Net 0.78, physics + U-Net 0.58
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ac2919a8be16060d949369ffd8691831 = L.circleMarker(
+                [45.5167, 8.6667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef5640", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_ac2919a8be16060d949369ffd8691831.bindTooltip(
+                `<div>
+                     Novara / Cameri (178 m): U-Net alone 0.76 K; physics 0.51, U-Net 0.76, physics + U-Net 0.55
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_071230ddd0d1d4167fdefbb16fa7247b = L.circleMarker(
+                [45.6167, 8.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e23442", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_071230ddd0d1d4167fdefbb16fa7247b.bindTooltip(
+                `<div>
+                     Milano / Malpensa (234 m): U-Net alone 0.85 K; physics 0.55, U-Net 0.85, physics + U-Net 0.62
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_be46cd5fb9b52912a75a85740d1f899c = L.circleMarker(
+                [45.6667, 9.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e03143", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_be46cd5fb9b52912a75a85740d1f899c.bindTooltip(
+                `<div>
+                     Bergamo / Orio Al Serio (238 m): U-Net alone 0.86 K; physics 0.56, U-Net 0.86, physics + U-Net 0.58
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1e149ccb3bea89a7a0b57babcdafa8b7 = L.circleMarker(
+                [45.4333, 9.2833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ee543f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_1e149ccb3bea89a7a0b57babcdafa8b7.bindTooltip(
+                `<div>
+                     Milano / Linate (107 m): U-Net alone 0.76 K; physics 0.47, U-Net 0.76, physics + U-Net 0.49
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d074b2e7f5032254afb3e92f788d1f2e = L.circleMarker(
+                [44.9167, 9.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ee543f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_d074b2e7f5032254afb3e92f788d1f2e.bindTooltip(
+                `<div>
+                     Piacenza (134 m): U-Net alone 0.77 K; physics 0.60, U-Net 0.77, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1fd2ebf1a1170239c51a0ef60a97d52f = L.circleMarker(
+                [45.4167, 10.2833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f26747", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_1fd2ebf1a1170239c51a0ef60a97d52f.bindTooltip(
+                `<div>
+                     Brescia / Ghedi (102 m): U-Net alone 0.71 K; physics 0.57, U-Net 0.71, physics + U-Net 0.53
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2d0835fca8b65f0fe678fb22f7a496cd = L.circleMarker(
+                [45.4644, 10.5553],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#871e5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_2d0835fca8b65f0fe678fb22f7a496cd.bindTooltip(
+                `<div>
+                     Verona / Rivoltella (64 m): U-Net alone 1.16 K; physics 0.94, U-Net 1.16, physics + U-Net 0.94
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7c8316b4ecd27ba62315676c9ae692f0 = L.circleMarker(
+                [45.3833, 10.8667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec4c3e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_7c8316b4ecd27ba62315676c9ae692f0.bindTooltip(
+                `<div>
+                     Verona / Villafranca (67 m): U-Net alone 0.78 K; physics 0.64, U-Net 0.78, physics + U-Net 0.66
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7e67e586bb7f903cde49009c1d17c4fe = L.circleMarker(
+                [45.4, 11.85],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#df2f44", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_7e67e586bb7f903cde49009c1d17c4fe.bindTooltip(
+                `<div>
+                     Padova (13 m): U-Net alone 0.87 K; physics 0.59, U-Net 0.87, physics + U-Net 0.66
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3f9f15713f5d2c70dc576f49a8579334 = L.circleMarker(
+                [45.6833, 12.1],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e03143", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_3f9f15713f5d2c70dc576f49a8579334.bindTooltip(
+                `<div>
+                     Treviso / Istrana (45 m): U-Net alone 0.86 K; physics 0.62, U-Net 0.86, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7d579076a2df7b63e623b2a405bb724a = L.circleMarker(
+                [45.65, 12.1833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ec4c3e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_7d579076a2df7b63e623b2a405bb724a.bindTooltip(
+                `<div>
+                     Treviso / S. Angelo (18 m): U-Net alone 0.79 K; physics 0.61, U-Net 0.79, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0684250ff7360d181554f009d0ab9005 = L.circleMarker(
+                [45.5, 12.3333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#751f58", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_0684250ff7360d181554f009d0ab9005.bindTooltip(
+                `<div>
+                     Venezia / Tessera (2 m): U-Net alone 1.21 K; physics 0.96, U-Net 1.21, physics + U-Net 1.24
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cff107f7b9d5b10fa17cc65e141978de = L.circleMarker(
+                [44.2425, 8.2011],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#501d4c", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_cff107f7b9d5b10fa17cc65e141978de.bindTooltip(
+                `<div>
+                     Monte Settepani / Caragna (1381 m): U-Net alone 1.33 K; physics 1.10, U-Net 1.33, physics + U-Net 1.18
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_656fc8bf27680c380880dbc7a06b62d6 = L.circleMarker(
+                [44.3833, 7.8167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cd1c4e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_656fc8bf27680c380880dbc7a06b62d6.bindTooltip(
+                `<div>
+                     Mondovi (559 m): U-Net alone 0.94 K; physics 0.71, U-Net 0.94, physics + U-Net 0.73
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8aa0acfb398cdd72dd34a7d76b70bf0e = L.circleMarker(
+                [44.25, 7.8],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a11a5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_8aa0acfb398cdd72dd34a7d76b70bf0e.bindTooltip(
+                `<div>
+                     Monte Malanotte (1741 m): U-Net alone 1.08 K; physics 0.84, U-Net 1.08, physics + U-Net 0.86
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8fc71c23e79fd93239c0f9cd8c5fa4e3 = L.circleMarker(
+                [44.6333, 8.9333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef5a41", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_8fc71c23e79fd93239c0f9cd8c5fa4e3.bindTooltip(
+                `<div>
+                     Passo Dei Giovi (468 m): U-Net alone 0.75 K; physics 0.64, U-Net 0.75, physics + U-Net 0.80
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_49a5a0d2e3d19afca15af9ef0bf61687 = L.circleMarker(
+                [44.4167, 8.85],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#221331", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_49a5a0d2e3d19afca15af9ef0bf61687.bindTooltip(
+                `<div>
+                     Genova / Sestri (2 m): U-Net alone 1.48 K; physics 0.96, U-Net 1.48, physics + U-Net 1.26
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b578ef339800d9bdc30e49a087777bf5 = L.circleMarker(
+                [44.05, 8.1167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#33183c", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_b578ef339800d9bdc30e49a087777bf5.bindTooltip(
+                `<div>
+                     Albenga (45 m): U-Net alone 1.42 K; physics 1.19, U-Net 1.42, physics + U-Net 1.19
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8d4784091d3133f2fa26bdd86590f4a3 = L.circleMarker(
+                [44.4333, 9.9333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e23442", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_8d4784091d3133f2fa26bdd86590f4a3.bindTooltip(
+                `<div>
+                     Passo Della Cisa (1039 m): U-Net alone 0.85 K; physics 0.66, U-Net 0.85, physics + U-Net 0.72
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_23aa50540b74656014186b8bdfacee4a = L.circleMarker(
+                [44.0833, 9.9833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c11754", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_23aa50540b74656014186b8bdfacee4a.bindTooltip(
+                `<div>
+                     Sarzana / Luni (9 m): U-Net alone 0.98 K; physics 0.76, U-Net 0.98, physics + U-Net 0.81
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d763bcab1967793a4eb1a0962e9ef0e6 = L.circleMarker(
+                [44.5275, 11.2886],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eb463e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_d763bcab1967793a4eb1a0962e9ef0e6.bindTooltip(
+                `<div>
+                     Bologna / Borgo Panigale (51 m): U-Net alone 0.80 K; physics 0.62, U-Net 0.80, physics + U-Net 0.60
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a55487863914fe0fee62bad8eeafe815 = L.circleMarker(
+                [44.8153, 11.6125],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef5640", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_a55487863914fe0fee62bad8eeafe815.bindTooltip(
+                `<div>
+                     Ferrara / Fontana (9 m): U-Net alone 0.76 K; physics 0.46, U-Net 0.76, physics + U-Net 0.46
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_098620d7433163e0e2a4313591b41462 = L.circleMarker(
+                [44.2, 10.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#31183b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_098620d7433163e0e2a4313591b41462.bindTooltip(
+                `<div>
+                     Monte Cimone (2165 m): U-Net alone 1.43 K; physics 1.45, U-Net 1.43, physics + U-Net 1.35
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_41031d326e943fdb8181fdfd0f59f605 = L.circleMarker(
+                [44.8333, 11.6167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ed503e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_41031d326e943fdb8181fdfd0f59f605.bindTooltip(
+                `<div>
+                     Ferrara (10 m): U-Net alone 0.77 K; physics 0.46, U-Net 0.77, physics + U-Net 0.46
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_82788d3961ecc663b1fca69190eb22d3 = L.circleMarker(
+                [44.5333, 11.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e33641", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_82788d3961ecc663b1fca69190eb22d3.bindTooltip(
+                `<div>
+                     Bologna / Borgo Panigale (36 m): U-Net alone 0.85 K; physics 0.63, U-Net 0.85, physics + U-Net 0.64
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1727f3f7abac85108e7afb4f9e2c9a14 = L.circleMarker(
+                [44.45, 12.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#03051a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_1727f3f7abac85108e7afb4f9e2c9a14.bindTooltip(
+                `<div>
+                     Punta Marina (2 m): U-Net alone 1.81 K; physics 1.14, U-Net 1.81, physics + U-Net 1.36
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_27c12e7afcc1e210ee0bec375c060f37 = L.circleMarker(
+                [44.2, 12.0667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cf1e4d", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_27c12e7afcc1e210ee0bec375c060f37.bindTooltip(
+                `<div>
+                     Forli (27 m): U-Net alone 0.93 K; physics 0.93, U-Net 0.93, physics + U-Net 0.91
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e40bb08e259debe46e5a19f3fc40153e = L.circleMarker(
+                [44.2167, 12.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b21758", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_e40bb08e259debe46e5a19f3fc40153e.bindTooltip(
+                `<div>
+                     Cervia (6 m): U-Net alone 1.03 K; physics 0.75, U-Net 1.03, physics + U-Net 1.08
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_20e8ff33dcd22861bfc6ebb7f97cffa1 = L.circleMarker(
+                [44.0333, 12.6167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3f1b43", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_20e8ff33dcd22861bfc6ebb7f97cffa1.bindTooltip(
+                `<div>
+                     Rimini (12 m): U-Net alone 1.39 K; physics 0.91, U-Net 1.39, physics + U-Net 1.00
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2b7a87f5ae08008f81aaeb0c8bdba0a3 = L.circleMarker(
+                [45.0864, 7.6034],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e13342", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_2b7a87f5ae08008f81aaeb0c8bdba0a3.bindTooltip(
+                `<div>
+                     Torino / Collegno (287 m): U-Net alone 0.86 K; physics 0.76, U-Net 0.86, physics + U-Net 0.71
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_116ea90a8c139b91f2e1cf356aa86b6a = L.circleMarker(
+                [45.7394, 7.362],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#841e5a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_b7a73c44158c6e72b12dcf1c74a917c4);
+        
+    
+            circle_marker_116ea90a8c139b91f2e1cf356aa86b6a.bindTooltip(
+                `<div>
+                     Aosta / Pollein (546 m): U-Net alone 1.16 K; physics 1.17, U-Net 1.16, physics + U-Net 1.09
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_b7a73c44158c6e72b12dcf1c74a917c4.addTo(map_2954c20f4d337589ee33ba96e0e77cf8);
+        
+    
+            var feature_group_3fbaafe344379e9d92af34c254c78283 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_856c70e072a027f1e84c6e9e91a84e07 = L.circleMarker(
+                [45.8689, 7.1708],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#871e5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_856c70e072a027f1e84c6e9e91a84e07.bindTooltip(
+                `<div>
+                     Grand St. Bernard / Grand Saint Bernard (2472 m): physics + U-Net prior 1.16 K; physics 1.16, U-Net 1.25, physics + U-Net 1.16
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b8d4015aab0491cdf440944470bf294f = L.circleMarker(
+                [46.1667, 8.8833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e73d3f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_b8d4015aab0491cdf440944470bf294f.bindTooltip(
+                `<div>
+                     Locarno-Magadino (197 m): physics + U-Net prior 0.83 K; physics 0.94, U-Net 0.97, physics + U-Net 0.83
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bd3f09b160f3047a4dc93723b70d42ed = L.circleMarker(
+                [46.0, 8.9667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f06043", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_bd3f09b160f3047a4dc93723b70d42ed.bindTooltip(
+                `<div>
+                     Lugano (273 m): physics + U-Net prior 0.73 K; physics 0.76, U-Net 0.85, physics + U-Net 0.73
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3ff0730730a8229e70a3584978aac5e8 = L.circleMarker(
+                [46.15, 11.0333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a6195a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_3ff0730730a8229e70a3584978aac5e8.bindTooltip(
+                `<div>
+                     Paganella (2125 m): physics + U-Net prior 1.06 K; physics 1.05, U-Net 1.08, physics + U-Net 1.06
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b85da280942e4681f1daf0592d074d2d = L.circleMarker(
+                [46.0333, 12.6],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e83f3f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_b85da280942e4681f1daf0592d074d2d.bindTooltip(
+                `<div>
+                     Aviano (128 m): physics + U-Net prior 0.82 K; physics 0.80, U-Net 0.95, physics + U-Net 0.82
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fb8619aa66efa5b195cbce8a917d49c0 = L.circleMarker(
+                [45.9333, 7.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#531e4d", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_fb8619aa66efa5b195cbce8a917d49c0.bindTooltip(
+                `<div>
+                     Pian Rosa (3480 m): physics + U-Net prior 1.32 K; physics 1.24, U-Net 1.12, physics + U-Net 1.32
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b83e6add36e3162463e0fd92d2b2153b = L.circleMarker(
+                [45.2167, 7.65],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f59067", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_b83e6add36e3162463e0fd92d2b2153b.bindTooltip(
+                `<div>
+                     Torino / Caselle (301 m): physics + U-Net prior 0.60 K; physics 0.59, U-Net 0.83, physics + U-Net 0.60
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_361df558c3770de358cab25d0671e80a = L.circleMarker(
+                [45.0333, 7.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f5946b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_361df558c3770de358cab25d0671e80a.bindTooltip(
+                `<div>
+                     Torino / Bric Della Croce (709 m): physics + U-Net prior 0.58 K; physics 0.62, U-Net 0.78, physics + U-Net 0.58
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0cbf198f35c535cc2532437947c4720d = L.circleMarker(
+                [45.5167, 8.6667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6a077", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_0cbf198f35c535cc2532437947c4720d.bindTooltip(
+                `<div>
+                     Novara / Cameri (178 m): physics + U-Net prior 0.55 K; physics 0.51, U-Net 0.76, physics + U-Net 0.55
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_76e825f028b6bd2d9b20e02284a2ce3a = L.circleMarker(
+                [45.6167, 8.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58860", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_76e825f028b6bd2d9b20e02284a2ce3a.bindTooltip(
+                `<div>
+                     Milano / Malpensa (234 m): physics + U-Net prior 0.62 K; physics 0.55, U-Net 0.85, physics + U-Net 0.62
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b9fde0c32eed08e21879abdf4b490c57 = L.circleMarker(
+                [45.6667, 9.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f5976e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_b9fde0c32eed08e21879abdf4b490c57.bindTooltip(
+                `<div>
+                     Bergamo / Orio Al Serio (238 m): physics + U-Net prior 0.58 K; physics 0.56, U-Net 0.86, physics + U-Net 0.58
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_72df5644f302a17dcd9d3acd756e06e8 = L.circleMarker(
+                [45.4333, 9.2833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6b48f", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_72df5644f302a17dcd9d3acd756e06e8.bindTooltip(
+                `<div>
+                     Milano / Linate (107 m): physics + U-Net prior 0.49 K; physics 0.47, U-Net 0.76, physics + U-Net 0.49
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e1962b34bb6446bf4243354ddd4598be = L.circleMarker(
+                [44.9167, 9.7333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58d64", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_e1962b34bb6446bf4243354ddd4598be.bindTooltip(
+                `<div>
+                     Piacenza (134 m): physics + U-Net prior 0.61 K; physics 0.60, U-Net 0.77, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ff093212bc7f74a49782a4fc3bd07a66 = L.circleMarker(
+                [45.4167, 10.2833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6a67e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_ff093212bc7f74a49782a4fc3bd07a66.bindTooltip(
+                `<div>
+                     Brescia / Ghedi (102 m): physics + U-Net prior 0.53 K; physics 0.57, U-Net 0.71, physics + U-Net 0.53
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_144df7d4c6e84e5d60e2fb3085787ed5 = L.circleMarker(
+                [45.4644, 10.5553],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ce1d4e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_144df7d4c6e84e5d60e2fb3085787ed5.bindTooltip(
+                `<div>
+                     Verona / Rivoltella (64 m): physics + U-Net prior 0.94 K; physics 0.94, U-Net 1.16, physics + U-Net 0.94
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0c4cbc96efbec828fce87458dd0bade2 = L.circleMarker(
+                [45.3833, 10.8667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f47a54", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_0c4cbc96efbec828fce87458dd0bade2.bindTooltip(
+                `<div>
+                     Verona / Villafranca (67 m): physics + U-Net prior 0.66 K; physics 0.64, U-Net 0.78, physics + U-Net 0.66
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7080c2c1f3cd349762c49f3da2c024f0 = L.circleMarker(
+                [45.4, 11.85],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f47a54", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_7080c2c1f3cd349762c49f3da2c024f0.bindTooltip(
+                `<div>
+                     Padova (13 m): physics + U-Net prior 0.66 K; physics 0.59, U-Net 0.87, physics + U-Net 0.66
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c0f2ace01db104bbeaba4b45e7973e45 = L.circleMarker(
+                [45.6833, 12.1],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58d64", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_c0f2ace01db104bbeaba4b45e7973e45.bindTooltip(
+                `<div>
+                     Treviso / Istrana (45 m): physics + U-Net prior 0.61 K; physics 0.62, U-Net 0.86, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_467afeca9994f59f5d8c3f90afd9f509 = L.circleMarker(
+                [45.65, 12.1833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58b63", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_467afeca9994f59f5d8c3f90afd9f509.bindTooltip(
+                `<div>
+                     Treviso / S. Angelo (18 m): physics + U-Net prior 0.61 K; physics 0.61, U-Net 0.79, physics + U-Net 0.61
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_155daeff02b432cb67b4e28f23d2abc6 = L.circleMarker(
+                [45.5, 12.3333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6d1f56", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_155daeff02b432cb67b4e28f23d2abc6.bindTooltip(
+                `<div>
+                     Venezia / Tessera (2 m): physics + U-Net prior 1.24 K; physics 0.96, U-Net 1.21, physics + U-Net 1.24
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_95e5c4630a29134804565aaf625d5cb4 = L.circleMarker(
+                [44.2425, 8.2011],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7f1e5a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_95e5c4630a29134804565aaf625d5cb4.bindTooltip(
+                `<div>
+                     Monte Settepani / Caragna (1381 m): physics + U-Net prior 1.18 K; physics 1.10, U-Net 1.33, physics + U-Net 1.18
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_915d3675b04dc0079c936fe7c62427d5 = L.circleMarker(
+                [44.3833, 7.8167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f16244", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_915d3675b04dc0079c936fe7c62427d5.bindTooltip(
+                `<div>
+                     Mondovi (559 m): physics + U-Net prior 0.73 K; physics 0.71, U-Net 0.94, physics + U-Net 0.73
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_02538cc51f13d364e6471851e1d719fb = L.circleMarker(
+                [44.25, 7.8],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e13342", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_02538cc51f13d364e6471851e1d719fb.bindTooltip(
+                `<div>
+                     Monte Malanotte (1741 m): physics + U-Net prior 0.86 K; physics 0.84, U-Net 1.08, physics + U-Net 0.86
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a58723c609962ef310c80fe864ba7872 = L.circleMarker(
+                [44.6333, 8.9333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eb463e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_a58723c609962ef310c80fe864ba7872.bindTooltip(
+                `<div>
+                     Passo Dei Giovi (468 m): physics + U-Net prior 0.80 K; physics 0.64, U-Net 0.75, physics + U-Net 0.80
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2979fb5ca26ea8801152bbf685ccf07f = L.circleMarker(
+                [44.4167, 8.85],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#661f54", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_2979fb5ca26ea8801152bbf685ccf07f.bindTooltip(
+                `<div>
+                     Genova / Sestri (2 m): physics + U-Net prior 1.26 K; physics 0.96, U-Net 1.48, physics + U-Net 1.26
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ddd0b13845d43d3c1e3573a0c80b9351 = L.circleMarker(
+                [44.05, 8.1167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7b1f59", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_ddd0b13845d43d3c1e3573a0c80b9351.bindTooltip(
+                `<div>
+                     Albenga (45 m): physics + U-Net prior 1.19 K; physics 1.19, U-Net 1.42, physics + U-Net 1.19
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_85a4877da7fc53795c9ed0d5c79f41c9 = L.circleMarker(
+                [44.4333, 9.9333],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f16646", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_85a4877da7fc53795c9ed0d5c79f41c9.bindTooltip(
+                `<div>
+                     Passo Della Cisa (1039 m): physics + U-Net prior 0.72 K; physics 0.66, U-Net 0.85, physics + U-Net 0.72
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1c429d534dd51632fd46bb5a6334be89 = L.circleMarker(
+                [44.0833, 9.9833],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ea443e", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_1c429d534dd51632fd46bb5a6334be89.bindTooltip(
+                `<div>
+                     Sarzana / Luni (9 m): physics + U-Net prior 0.81 K; physics 0.76, U-Net 0.98, physics + U-Net 0.81
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0776a7214f718f3c4a07d6acf483fadd = L.circleMarker(
+                [44.5275, 11.2886],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f58f66", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_0776a7214f718f3c4a07d6acf483fadd.bindTooltip(
+                `<div>
+                     Bologna / Borgo Panigale (51 m): physics + U-Net prior 0.60 K; physics 0.62, U-Net 0.80, physics + U-Net 0.60
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_97de2c3e69d3c016907d69410f9da7b7 = L.circleMarker(
+                [44.8153, 11.6125],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6bc99", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_97de2c3e69d3c016907d69410f9da7b7.bindTooltip(
+                `<div>
+                     Ferrara / Fontana (9 m): physics + U-Net prior 0.46 K; physics 0.46, U-Net 0.76, physics + U-Net 0.46
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c8b45a6ec7fffe51548108be973ed275 = L.circleMarker(
+                [44.2, 10.7],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#491d49", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_c8b45a6ec7fffe51548108be973ed275.bindTooltip(
+                `<div>
+                     Monte Cimone (2165 m): physics + U-Net prior 1.35 K; physics 1.45, U-Net 1.43, physics + U-Net 1.35
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_721d8748dee0bc8bd3f7a40e943eb4e5 = L.circleMarker(
+                [44.8333, 11.6167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f6bc99", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_721d8748dee0bc8bd3f7a40e943eb4e5.bindTooltip(
+                `<div>
+                     Ferrara (10 m): physics + U-Net prior 0.46 K; physics 0.46, U-Net 0.77, physics + U-Net 0.46
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2e0200dfa268eb5225224dd3c7f0470e = L.circleMarker(
+                [44.5333, 11.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f4835b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_2e0200dfa268eb5225224dd3c7f0470e.bindTooltip(
+                `<div>
+                     Bologna / Borgo Panigale (36 m): physics + U-Net prior 0.64 K; physics 0.63, U-Net 0.85, physics + U-Net 0.64
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b24d61443aa4451f3227895a0b40f453 = L.circleMarker(
+                [44.45, 12.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#451c47", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_b24d61443aa4451f3227895a0b40f453.bindTooltip(
+                `<div>
+                     Punta Marina (2 m): physics + U-Net prior 1.36 K; physics 1.14, U-Net 1.81, physics + U-Net 1.36
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_860dafc7b6356583ea8835046f7602e7 = L.circleMarker(
+                [44.2, 12.0667],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d5224a", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_860dafc7b6356583ea8835046f7602e7.bindTooltip(
+                `<div>
+                     Forli (27 m): physics + U-Net prior 0.91 K; physics 0.93, U-Net 0.93, physics + U-Net 0.91
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ce7a9c2847891ee590a76cd940bddb01 = L.circleMarker(
+                [44.2167, 12.3],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a3195b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_ce7a9c2847891ee590a76cd940bddb01.bindTooltip(
+                `<div>
+                     Cervia (6 m): physics + U-Net prior 1.08 K; physics 0.75, U-Net 1.03, physics + U-Net 1.08
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d510952b710c248457c5b3737467d4a8 = L.circleMarker(
+                [44.0333, 12.6167],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bc1656", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_d510952b710c248457c5b3737467d4a8.bindTooltip(
+                `<div>
+                     Rimini (12 m): physics + U-Net prior 1.00 K; physics 0.91, U-Net 1.39, physics + U-Net 1.00
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_50e9dddf186fc880a8a0032d51f890ff = L.circleMarker(
+                [45.0864, 7.6034],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f26948", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_50e9dddf186fc880a8a0032d51f890ff.bindTooltip(
+                `<div>
+                     Torino / Collegno (287 m): physics + U-Net prior 0.71 K; physics 0.76, U-Net 0.86, physics + U-Net 0.71
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1a5badd49a0816eb86f3cbf288041990 = L.circleMarker(
+                [45.7394, 7.362],
+                {"bubblingMouseEvents": true, "color": "#1b1b1f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9f1a5b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 1}
+            ).addTo(feature_group_3fbaafe344379e9d92af34c254c78283);
+        
+    
+            circle_marker_1a5badd49a0816eb86f3cbf288041990.bindTooltip(
+                `<div>
+                     Aosta / Pollein (546 m): physics + U-Net prior 1.09 K; physics 1.17, U-Net 1.16, physics + U-Net 1.09
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var layer_control_c0821eb05664ec97e1c25ec45ade6134_layers = {
+                base_layers : {
+                    "light grey base" : tile_layer_6ae1d76ccadcded9c895eee25d7eb92a,
+                    "OpenStreetMap base" : tile_layer_f971635ab8d9f806d66804bb247cd509,
+                },
+                overlays :  {
+                    "physics, anchored" : feature_group_c32d0ac5f4670b93dd2dd3ac81f0aa59,
+                    "U-Net alone" : feature_group_b7a73c44158c6e72b12dcf1c74a917c4,
+                    "physics + U-Net prior" : feature_group_3fbaafe344379e9d92af34c254c78283,
+                },
+            };
+            let layer_control_c0821eb05664ec97e1c25ec45ade6134 = L.control.layers(
+                layer_control_c0821eb05664ec97e1c25ec45ade6134_layers.base_layers,
+                layer_control_c0821eb05664ec97e1c25ec45ade6134_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_2954c20f4d337589ee33ba96e0e77cf8);
+
+        
+</script>
+</html>

@@ -8,6 +8,8 @@ openpyxl        # 001: reading the coral temperature record
 h5py            # 005: SCSN waveforms
 PyWavelets      # 005: wavelet denoising
 xgboost         # 003, 007
+jax             # 003: U-Net (CPU is enough)
+optax           # 003: U-Net optimiser
 shap            # 007
 scikit-learn    # 004 Ledoit-Wolf cross-check, 007 baselines
 pyproj          # 003: UTM grid
