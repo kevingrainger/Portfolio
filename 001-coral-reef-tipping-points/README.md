@@ -28,7 +28,7 @@ The Potts reef has no likelihood that can be written down: the probability of an
 
 1. **Simulate.** 8,000 reefs, each with four parameters drawn from broad priors: coupling $J$, heat sensitivity $s$ (the external field), bleaching threshold $T_0$ and inverse noise $\beta$. Each is run free through the same 151-day Scott Reef record.
 2. **Summarise.** The bleached fraction in fifteen 10-day blocks, measured from its own floor (the record never drops below a 2% background the model lacks).
-3. **Train.** A mixture density network, written from scratch in NumPy with hand-derived gradients checked against finite differences, maps the summaries to a mixture of eight Gaussians over the parameters: $q(\theta \mid x) = \sum_k \pi_k(x)\, \mathcal N(\theta;\, \mu_k(x), \Sigma_k(x))$. Minimising $-\mathbb E \log q(\theta \mid x)$ over the bank makes $q$ the posterior (Papamakarios & Murray 2016).
+3. **Train.** A mixture density network, written from scratch in NumPy with hand-derived gradients checked against finite differences, maps the summaries to a mixture of eight Gaussians over the parameters: $q(\theta \mid x) = \sum_k \pi_k(x)\, \mathcal N(\theta;\, \mu_k(x), \mathrm{diag}\,\sigma_k^2(x))$. Minimising $-\mathbb E \log q(\theta \mid x)$ over the bank makes $q$ the posterior (Papamakarios & Murray 2016).
 4. **Check on known answers.** On 1,000 held-out simulations, the true parameters fall inside the 90% credible interval 89-90% of the time for every parameter. The rejection baseline (keep the nearest 2% of simulations) is too wide on the threshold, at 98%.
 
 What the record says:
