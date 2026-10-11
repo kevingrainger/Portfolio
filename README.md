@@ -1,6 +1,6 @@
 # Kevin Grainger: projects
 
-Eight side projects across earth systems, signal processing and energy markets, plus three from my undergraduate physics degree. Most start from a published model and try to add one honest result. They're built for fun; the write-ups are short, and the graphics do most of the talking.
+Nine side projects across earth systems, signal processing, energy markets and network risk, plus three from my undergraduate physics degree. Most start from a published model and try to add one honest result. They're built for fun; the write-ups are short, and the graphics do most of the talking.
 
 | | Project | In one line |
 |:-:|---|---|
@@ -12,6 +12,7 @@ Eight side projects across earth systems, signal processing and energy markets, 
 | <img src="006-option-pricer/figures/cover.png" width="320"> | **[006 · Option pricer](006-option-pricer)** | European, American and Asian options, from the S&P 500 to cocoa and Bangkok, and a hedge that surprises. |
 | <img src="007-italian-power-volatility/figures/cover.png" width="320"> | **[007 · Italian power volatility](007-italian-power-volatility)** | How far ahead can a weather forecast see a power-price storm? |
 | <img src="008-spanish-solar-portfolio/figures/cover.png" width="320"> | **[008 · Spanish solar portfolio](008-spanish-solar-portfolio)** | How far does a cloud reach, from an ML-ready ERA5 dataset built with ECMWF's Anemoi? |
+| <img src="012-percolation-tranche-loss/figures/cover.gif" width="320"> | **[012 · Percolation and tranche loss](012-percolation-tranche-loss)** | When does a supply-chain failure reach the senior tranche? A maths note on network thresholds and structured credit. |
 | <img src="earlier-work/pde-solvers-cpp/figures/cover.png" width="320"> | **[009 · PDEs by over-relaxation](earlier-work/pde-solvers-cpp)** | Laplace's equation in C++ and a cost surface for SOR, then the same solver pricing American options. *Undergraduate.* |
 | <img src="earlier-work/potts-monte-carlo-cpp/figures/cover.png" width="320"> | **[010 · The Potts model](earlier-work/potts-monte-carlo-cpp)** | Monte Carlo through a phase transition, and the seed of the coral reef model. *Undergraduate.* |
 | <img src="earlier-work/higher-order-odes-cpp/figures/cover.png" width="320"> | **[011 · Higher-order ODEs](earlier-work/higher-order-odes-cpp)** | Runge–Kutta by hand, fourth-order convergence, and the shooting method. *Undergraduate.* |
