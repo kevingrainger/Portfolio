@@ -10,7 +10,7 @@ A reef is a patchwork. Each patch is healthy coral, bleached coral, bare rock or
 
 So I built the reef on a lattice, switched the reach of the interactions from four neighbours to the whole reef, and warmed and cooled the water.
 
-- **It reproduces a real bleaching event** without being steered towards it: 37% of the reef bleached in the model, against 40% observed, and it recovered.
+- **It reproduces the shape of a bleaching event**: bleaching, then recovery. The curve it was first checked against turned out to be hand-drawn, so it is now fitted to real surveys instead (below).
 - **Reefs get stuck.** Once heat kills enough coral, seaweed takes the space, and cooling the water back doesn't bring the coral back.
 - **Mean field gets stuck worst.** The loop is about 60% wider when every patch feels the whole reef than with four neighbours: local survivors reseed their surroundings.
 - **Two honest negatives.** Warming *speed* barely matters; how hot it gets does. And none of the classic early-warning signals fire before collapse, because the slide is gradual.
@@ -20,33 +20,52 @@ So I built the reef on a lattice, switched the reach of the interactions from fo
 | ![Calibration](figures/fig1_calibration.png) | ![Reef snapshots](figures/fig2_reef_snapshots.png) |
 | ![Warming rate](figures/fig3_rate_map.png) | ![Early warning](figures/fig4_early_warning.png) |
 
-## Tuning the parameters from data
+## What one survey says about coral tolerance
 
-The model above runs on parameters set by hand. This section asks what the bleaching record itself says about them, with error bars.
+The model above runs on parameters set by hand and a temperature curve. This section asks a sharper question of real data. **How much heat can Scott Reef's corals take before they bleach?** The answer comes with error bars.
 
-The Potts reef has no likelihood that can be written down: the probability of an observed bleaching curve given the parameters is not available in closed form. It can be simulated, and that is enough. **Simulation-based inference** (Cranmer, Brehmer & Louppe 2020) trains a network on simulations to return the posterior directly:
+**What changed, and why.** A literature check exposed two problems with the first version.
 
-1. **Simulate.** 8,000 reefs, each with four parameters drawn from broad priors: coupling $J$, heat sensitivity $s$ (the external field), bleaching threshold $T_0$ and inverse noise $\beta$. Each is run free through the same 151-day Scott Reef record.
-2. **Summarise.** The bleached fraction in fifteen 10-day blocks, measured from its own floor (the record never drops below a 2% background the model lacks).
-3. **Train.** A mixture density network, written from scratch in NumPy with hand-derived gradients checked against finite differences, maps the summaries to a mixture of eight Gaussians over the parameters: $q(\theta \mid x) = \sum_k \pi_k(x)\, \mathcal N(\theta;\, \mu_k(x), \mathrm{diag}\,\sigma_k^2(x))$. Minimising $-\mathbb E \log q(\theta \mid x)$ over the bank makes $q$ the posterior (Papamakarios & Murray 2016).
-4. **Check on known answers.** On 1,000 held-out simulations, the true parameters fall inside the 90% credible interval 89-90% of the time for every parameter. The rejection baseline (keep the nearest 2% of simulations) is too wide on the threshold, at 98%.
+- **Wrong heat measure.** Bleaching does not follow the day's temperature. It follows accumulated heat. The field's standard measure is NOAA Coral Reef Watch's **degree heating weeks** (Skirving et al. 2020):
 
-What the record says:
+  ```
+  HotSpot   HS(t)  = SST(t) − MMM                      (MMM: mean of the warmest month)
+  DHW(t)          = (1/7) Σ over the last 84 days of HS,  counting only HS ≥ 1 °C
+  ```
 
-- **The threshold is pinned; the coupling is not.** $T_0 = 29.8$ °C (90% interval 29.7-30.0), close to the hand-set 30.0. Coupling, sensitivity and noise all move away from their hand-set values: $J = 1.31$ (1.12-1.41, against 0.5), $s = 1.51$ (1.17-1.79, against 0.8), $\beta = 0.23$ (0.17-0.28, against 0.15). The coupling sits near the top of its prior, so the prior bound is informative there.
-- **The fit improves, but not everywhere.** Posterior draws reproduce the record with a median error of 0.167, against 0.221 for the hand-set values and 0.215 for rejection. Neither fixes the model's second bleaching episode after day 60, which the real reef did not have. No parameter setting removes it, which points to a missing mechanism (acclimatisation after a first bleaching is one candidate), not a mistuned one.
-- **How hot before it tips?** Each posterior draw is warmed and cooled as in the hysteresis experiment. The reef loses half its healthy coral at a sustained 32.4 °C (90% interval 32.2-32.7), 0.8 °C above the hottest day in the record. The hand-set model put it at 32.75 °C, at the edge of that interval. None of the posterior reefs recovers on cooling.
+  NOAA expects significant bleaching from about 4 DHW and mortality from about 8. One rolling 12-week window is the standard, so the model now runs on NOAA's own daily DHW for the Scott-Ashmore station, October 2015 to July 2016.
+- **Corals differ.** Within one reef population, the most and least heat-tolerant tenth of colonies differ by 4-5 DHW (Humanes et al. 2022). The Potts model had a single threshold for every patch. Each patch now has its own tolerance D₅₀ ~ N(μ_D, σ_D²), drawn once and spatially smoothed so neighbouring colonies are alike. In physics terms, the uniform external field becomes a **random field**: quenched disorder.
+- **And the old target was not data.** The bleaching curve used before (`Coral temps.xlsx`, "Smooth") was hand-drawn, and its temperatures do not match 2016 at Scott Reef (correlation 0.12 with NOAA's record). Those earlier fits have been removed.
+
+**The data.** The target is now 65 real site surveys by AIMS at Scott Reef on 13-20 April 2016, from the Global Coral Bleaching Database (van Woesik & Kratochwill 2022). Each site reports bleaching as a category: 6 sites at 30-60%, 24 at 60-90% and 35 above 90%. On those days DHW stood at 16.5, twice NOAA's mortality level.
+
+**The inference.** The same simulation-based inference as before (Cranmer, Brehmer & Louppe 2020):
+
+1. Simulate 8,000 reefs through the NOAA record, with priors on four parameters: mean tolerance μ_D (2-16 DHW), spread σ_D, stress sensitivity s and noise β.
+2. "Survey" each one exactly as AIMS did: 65 random sites on 16 April, binned into the same four categories.
+3. Train a mixture density network, written in NumPy with hand-derived gradients, to return q(θ | survey) = Σ_k π_k 𝒩(θ; μ_k, diag σ_k²).
+
+On 800 held-out simulations, the 90% credible interval contains the truth 90% of the time for every parameter (89.5-90.4%).
+
+**What the survey says:**
+
+- **The surveys fit well.** The posterior predicts 0.5, 6.7, 20 and 37 sites in the four categories, against 0, 6, 24 and 35 observed.
+- **But two different reefs fit them, and the survey cannot choose between them.** The posterior is bimodal:
+  - a **sensitive reef** (37% of the posterior): mean tolerance 4.5 DHW, right on NOAA's threshold, with a weak response to stress;
+  - a **tolerant reef** (63%): mean tolerance 12.7 DHW, with a sharp response.
+
+  By mid-April both have bleached about 85% of living coral. This is a classic identifiability failure: one snapshot, taken at a heat level far beyond both thresholds, cannot separate how tolerant the corals are from how steeply they respond once past it.
+- **They disagree about the summer.** By 1 February, the sensitive reef has 59% of its coral bleached and the tolerant reef 26%. A single survey in February or early March would decide between them. The Global Coral Bleaching Database has none for Scott Reef in 2016. AIMS's May 2016 update says warm water had affected the region "over the past 2 months" and that severity was still rising during the April voyage. That slightly favours the tolerant reef, but it is not a measurement.
+- **So what?** NOAA's 4 DHW alert is a regional average. If Scott Reef is the tolerant reef, the alert sounded about three months before its corals bleached in earnest. That is a real gap for anyone using the alert to time a response, and it is the question an earlier survey would answer.
 
 | | |
 |:-:|:-:|
-| ![Posterior](figures/fig5_posterior.png) | ![Check on held-out simulations](figures/fig6_inference_check.png) |
+| ![Heat stress and the two reefs that fit the April surveys](figures/fig8_scott_reef_2016.png) | ![Posterior over tolerance and sensitivity](figures/fig9_tolerance.png) |
 
-![Posterior predictive check and tipping temperature](figures/fig7_tipping_temperature.png)
-
-`inference/simulate_bank.py` · `inference/mdn.py` · `inference/infer.py`
+`coral_crw.py` · `inference/simulate_bank_crw.py` · `inference/mdn.py` · `inference/infer_crw.py` · `data/`
 
 **Built:** a vectorised rewrite of my original Potts model, about 9× faster. Along the way I found that coral in the original could never die: its death rule needed heat stress above a cap. Adding mortality and grazed macroalgae (the Mumby feedback) fixed that.
 
-`coral_model.py` · `coral_potts.ipynb` · `inference/` · Python, NumPy, SciPy
+`coral_model.py` · `coral_crw.py` · `coral_potts.ipynb` · `inference/` · Python, NumPy, SciPy
 
-*A side project, built for fun. The model is a toy reef calibrated to one bleaching record, so the results are qualitative. The Scott Reef temperature record it is calibrated on (`Coral temps.xlsx`) comes from NOAA Coral Reef Watch and the Australian Institute of Marine Science (AIMS), and isn't redistributed here. Inference: Cranmer, Brehmer & Louppe (2020), PNAS 117, 30055; Papamakarios & Murray (2016), NeurIPS; mixture density networks from Bishop (1994).*
+*A side project, built for fun. The lattice model is a toy, so the hysteresis results are qualitative. Data: NOAA Coral Reef Watch daily 5 km heat stress, Scott-Ashmore Reefs virtual station (Skirving et al. 2020, Remote Sensing 12(23):3856, [doi:10.3390/rs12233856](https://doi.org/10.3390/rs12233856)); Global Coral Bleaching Database, NOAA NCEI accession 0228498 (van Woesik & Kratochwill 2022, Scientific Data 9:20, [doi:10.1038/s41597-022-01121-y](https://doi.org/10.1038/s41597-022-01121-y)), with Scott Reef surveys by the Australian Institute of Marine Science. Biology: Humanes et al. (2022), Proc. R. Soc. B 289:20220872 (variation in heat tolerance within a reef); Ainsworth et al. (2016), Science 352:338 (pre-bleaching thermal history). Inference: Cranmer, Brehmer & Louppe (2020), PNAS 117, 30055; Papamakarios & Murray (2016), NeurIPS; mixture density networks from Bishop (1994).*
