@@ -64,6 +64,17 @@ On 800 held-out simulations, the 90% credible interval contains the truth 90% of
 
 `coral_crw.py` · `inference/simulate_bank_crw.py` · `inference/mdn.py` · `inference/infer_crw.py` · `data/`
 
+## Where does Scott Reef tip?
+
+The first version quoted a single tipping temperature from the hand-drawn curve. With the reef now fitted to real surveys, the question can be asked with error bars. For 40 parameter sets drawn from the posterior (20 from each mode), the water is held at a fixed temperature above the warmest-month mean for 120 days, stepped up 0.1 °C at a time, then stepped back down.
+- **The sensitive reef tips at +1.1 to +1.2 °C** (80% of draws), about 30.6–30.7 °C. Once the water holds 1 °C above the warmest-month mean, heat stress builds at 12 DHW, past this reef's mortality threshold.
+- **The tolerant reef tips at +1.4 to +1.7 °C,** about 31.0–31.3 °C.
+- **Neither comes back on cooling, in any draw.** This model has no coral larvae arriving from outside the lattice, so a reef that has died has nothing to regrow from. Real reefs recover, slowly, from larvae carried in from other reefs. The model's hysteresis is therefore an upper bound, and adding larval supply is the natural next step.
+
+![The tipping point with error bars](figures/fig10_tipping_crw.png)
+
+`run_tipping_crw.py`
+
 **Built:** a vectorised rewrite of my original Potts model, about 9× faster. Along the way I found that coral in the original could never die: its death rule needed heat stress above a cap. Adding mortality and grazed macroalgae (the Mumby feedback) fixed that.
 
 `coral_model.py` · `coral_crw.py` · `coral_potts.ipynb` · `inference/` · Python, NumPy, SciPy
