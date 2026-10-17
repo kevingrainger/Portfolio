@@ -39,6 +39,7 @@ _planning/
 003-po-valley-downscaling/results/q_training.npz
 003-po-valley-downscaling/results/xgb_q_*.json
 003-po-valley-downscaling/results_smoke/
+003-po-valley-downscaling/results_smoke_real/
 
 # 013-016: open data (ERA5/Open-Meteo, PortWatch, BCRP, MODIS, Sentinel-2) is committed;
 # Yahoo Finance prices are not redistributable and are re-downloaded by each fetch script

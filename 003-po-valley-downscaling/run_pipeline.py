@@ -6,6 +6,7 @@
 #
 #   python run_pipeline.py            run whatever has not been run yet
 #   python run_pipeline.py --force    run everything again
+#   python run_pipeline.py --real     on the downloaded data (data/real/), into results_real/
 #
 #   fit       M1 parameters on about 40 days of 2021-2022: one fit on all stations, one
 #             per spatial fold, and one with the wind switched off
@@ -39,7 +40,8 @@ from tmax1km.pde import DaySystem, Params, length_scales, misfit
 
 FORCE = "--force" in sys.argv
 SMOKE = "--smoke" in sys.argv                          # a few days and iterations, to check the plumbing
-RESULTS = os.path.join(HERE, "results_smoke" if SMOKE else "results")
+REAL = "--real" in sys.argv                            # results from the downloaded data kept apart from the simulated ones
+RESULTS = os.path.join(HERE, ("results_smoke" if SMOKE else "results") + ("_real" if REAL else ""))
 WORKERS = 2
 N_FIT_DAYS = 4 if SMOKE else 40
 LQ_GRID = [10.0, 25.0] if SMOKE else [10.0, 25.0, 60.0, 120.0, 250.0]   # km
@@ -79,7 +81,7 @@ def run_parallel(fn, tasks, name, chunk=8):
     """Map fn over tasks in worker processes. Finished chunks are kept on disk, so an
     interrupted run picks up where it stopped."""
     import pickle
-    tmp = os.path.join(HERE, "data", "cache", "run_smoke" if SMOKE else "run")
+    tmp = os.path.join(HERE, "data", "cache", ("run_smoke" if SMOKE else "run") + ("_real" if REAL else ""))
     os.makedirs(tmp, exist_ok=True)
     out = []
     with ProcessPoolExecutor(WORKERS, mp_context=mp.get_context("spawn")) as pool:
