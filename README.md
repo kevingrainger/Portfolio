@@ -25,4 +25,4 @@ Thirteen side projects across earth systems, signal processing, commodity and en
 
 **Figures** live in each project's `figures/` folder: a `cover` image (made by `make_covers.py`, about 2,600 px wide) plus numbered figures in PNG and PDF, all in one shared style (`figstyle.py`). Figures made from simulated data carry a small footnote saying so.
 
-**Data:** small open datasets are committed next to the code; market prices that can't be redistributed are re-downloaded by each project's scripts, and the large ERA5 dataset for 008 is attached to a GitHub Release. [`DATA.md`](DATA.md) lists every dataset, where it lives and how to get it.
+**Data:** small open datasets are committed next to the code; market prices that can't be redistributed are re-downloaded by each project's scripts, and the large ERA5 dataset for 008 is attached to a GitHub Release. [`DATA.md`](DATA.md) lists every dataset, where it lives and how to get it. Open work is listed in [`NEXT_STEPS.md`](NEXT_STEPS.md).
