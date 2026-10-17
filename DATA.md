@@ -15,7 +15,7 @@ Every project's `data/README.md` has the details.
 | 005 Seismic | — | SCSN labelled waveforms (HDF5, about 6 GB): Ross, Meier & Hauksson (2018), via the SCEDC, [doi:10.7909/C3WD3xH1](https://doi.org/10.7909/C3WD3xH1) |
 | 006 Options | — | softs futures (Yahoo, re-downloaded by `options_03_asian_softs.ipynb`); S&P 500 option chain for 4 January 2023 and SET50 history (Investing.com), which can't be redistributed: put them in `data/` to re-run |
 | 007 Italian power | — (simulated data) | real GME, TTF, load and SEAS5 data: still to be built |
-| 008 Spanish solar | the pipeline, recipe and test fixtures | **the ERA5 Iberia dataset for 2023 (Anemoi Zarr, 279 MB): GitHub Release `data-v1`, file `iberia-era5-2023.zarr.zip` (232 MB), checksum below**; or rebuild it with `python download_era5.py 2023-01 2023-12` then `anemoi-datasets create recipes/iberia-era5.yaml data/iberia-era5.zarr` (free CDS key) |
+| 008 Spanish solar | the pipeline, recipe and test fixtures; AIFS and IFS solar forecasts and ERA5 daily solar energy at the 25 sites (`aifs/data/`, Open-Meteo, CC BY 4.0) | **the ERA5 Iberia dataset for 2023 (Anemoi Zarr, 279 MB): GitHub Release `data-v1`, file `iberia-era5-2023.zarr.zip` (232 MB), checksum below**; or rebuild it with `python download_era5.py 2023-01 2023-12` then `anemoi-datasets create recipes/iberia-era5.yaml data/iberia-era5.zarr` (free CDS key) |
 | 012 Percolation | — (generated networks) | — |
 | 013 Coffee | ERA5, GFS and ECMWF temperatures at 8 regions (`data/`) | coffee futures (Yahoo): `python fetch_data.py prices` |
 | 014 Copper | PortWatch ports, BCRP copper exports, smelter hot spots | copper futures (Yahoo): fetched by `analyse_ports.py` |

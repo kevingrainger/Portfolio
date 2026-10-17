@@ -47,3 +47,8 @@ _planning/
 015-commodity-option-hedging/data/front_months.csv
 # archives built for GitHub Releases, too large for the repo
 release-assets/
+# 007: TTF gas is from Yahoo Finance, so it and the joined table that carries it are rebuilt by fetch_real.py
+007-italian-power-volatility/data/ttf.csv
+007-italian-power-volatility/data/real_daily.csv
+# 008: rebuilt in seconds by aifs/score_forecasts.py
+008-spanish-solar-portfolio/aifs/results/scored_days.csv
