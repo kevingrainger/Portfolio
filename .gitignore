@@ -40,8 +40,10 @@ _planning/
 003-po-valley-downscaling/results/xgb_q_*.json
 003-po-valley-downscaling/results_smoke/
 
-# 013-016: downloaded data and caches, rebuilt by each project's fetch script
-013-coffee-forward-curves/data/
-014-copper-satellite-signals/data/
-015-commodity-option-hedging/data/
-016-sahel-desertification/data/
+# 013-016: open data (ERA5/Open-Meteo, PortWatch, BCRP, MODIS, Sentinel-2) is committed;
+# Yahoo Finance prices are not redistributable and are re-downloaded by each fetch script
+013-coffee-forward-curves/data/kc_*.csv
+014-copper-satellite-signals/data/hg_front.csv
+015-commodity-option-hedging/data/front_months.csv
+# archives built for GitHub Releases, too large for the repo
+release-assets/
