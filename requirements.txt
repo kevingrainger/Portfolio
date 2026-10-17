@@ -1,4 +1,4 @@
-# projects 001-007 (project 008's dataset pipeline: 008-spanish-solar-portfolio/iberia_datasets/requirements.txt)
+# projects 001-007 and 013-016 (project 008's dataset pipeline: 008-spanish-solar-portfolio/iberia_datasets/requirements.txt)
 numpy
 pandas
 scipy
@@ -17,4 +17,6 @@ folium          # 003: interactive maps
 jupyter
 nbconvert
 ipykernel
+numba           # 016: the lattice
+rasterio        # 014, 016: Sentinel-2 windows from Planetary Computer
 pytest

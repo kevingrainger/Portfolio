@@ -1,0 +1,31 @@
+name,country,lat,lon,verified,hot_pixels,scenes_hot,source
+Chuquicamata (Codelco),Chile,-22.317,-68.8805,yes,138,4,Sentinel-2 SWIR hot spot
+Altonorte (Glencore),Chile,-23.7808,-70.318,yes,105,4,Sentinel-2 SWIR hot spot
+Potrerillos (Codelco),Chile,-26.433,-69.457,no,0,0,unconfirmed
+Hernan Videla Lira (ENAMI),Chile,-27.393,-70.272,no,15,1,unconfirmed
+Chagres (Anglo American),Chile,-32.8032,-70.9529,yes,82,3,Sentinel-2 SWIR hot spot
+Ventanas (Codelco),Chile,-32.7356,-71.4681,yes,10,2,Sentinel-2 SWIR hot spot
+Caletones (Codelco),Chile,-34.1065,-70.4577,yes,88,4,Sentinel-2 SWIR hot spot
+Ilo (Southern Copper),Peru,-17.555,-71.363,no,0,0,unconfirmed
+Guixi (Jiangxi Copper),China,28.2893,117.2142,yes,32,4,Sentinel-2 SWIR hot spot
+Tongling Jinguan,China,30.9063,117.7996,yes,31,4,Sentinel-2 SWIR hot spot
+Daye Nonferrous,China,30.0907,114.9711,yes,98,4,Sentinel-2 SWIR hot spot
+Xiangguang Copper (Yanggu),China,36.1254,115.7518,yes,13,2,Sentinel-2 SWIR hot spot
+Guangxi Jinchuan (Fangchenggang),China,21.6759,108.4123,yes,266,4,Sentinel-2 SWIR hot spot
+Yunnan Copper (Kunming),China,25.0377,102.6544,yes,304,4,Sentinel-2 SWIR hot spot
+Saganoseki (JX Nippon),Japan,33.24,131.88,no,6,1,unconfirmed
+Onsan (LS MnM),South Korea,35.4376,129.3493,yes,142,4,Sentinel-2 SWIR hot spot
+Gresik (Smelting),Indonesia,-7.1753,112.6666,yes,146,4,Sentinel-2 SWIR hot spot
+Pirdop (Aurubis),Bulgaria,42.7147,24.1722,yes,83,3,Sentinel-2 SWIR hot spot
+Huelva (Atlantic Copper),Spain,37.245,-6.945,no,4,1,unconfirmed
+Hamburg (Aurubis),Germany,53.5118,10.0371,yes,107,3,Sentinel-2 SWIR hot spot
+Glogow (KGHM),Poland,51.6461,16.0816,yes,25,3,Sentinel-2 SWIR hot spot
+Ronnskar (Boliden),Sweden,64.6634,21.2826,yes,52,4,Sentinel-2 SWIR hot spot
+Mount Isa (Glencore),Australia,-20.7347,139.4764,yes,158,4,Sentinel-2 SWIR hot spot
+Olympic Dam (BHP),Australia,-30.4452,136.8602,yes,88,4,Sentinel-2 SWIR hot spot
+Garfield (Rio Tinto Kennecott),USA,40.7224,-112.2059,yes,24,3,Sentinel-2 SWIR hot spot
+Miami (Freeport),USA,33.4192,-110.8608,yes,98,4,Sentinel-2 SWIR hot spot
+Balkhash (Kazakhmys),Kazakhstan,46.823,74.93,yes,151,4,Sentinel-2 SWIR hot spot
+Kansanshi (First Quantum),Zambia,-12.0778,26.397,yes,117,4,Sentinel-2 SWIR hot spot
+Mufulira (Mopani),Zambia,-12.54,28.235,yes,113,4,Sentinel-2 SWIR hot spot
+"Tuticorin (Sterlite, closed 2018)",India,8.7583,78.1563,no,77,4,"negative control: closed since 2018, hot spot is other industry"

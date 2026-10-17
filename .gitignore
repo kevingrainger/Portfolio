@@ -39,3 +39,9 @@ _planning/
 003-po-valley-downscaling/results/q_training.npz
 003-po-valley-downscaling/results/xgb_q_*.json
 003-po-valley-downscaling/results_smoke/
+
+# 013-016: downloaded data and caches, rebuilt by each project's fetch script
+013-coffee-forward-curves/data/
+014-copper-satellite-signals/data/
+015-commodity-option-hedging/data/
+016-sahel-desertification/data/

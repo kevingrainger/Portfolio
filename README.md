@@ -1,6 +1,6 @@
 # Kevin Grainger: projects
 
-Nine side projects across earth systems, signal processing, energy markets and network risk, plus three from my undergraduate physics degree. Most start from a published model and try to add one honest result. They're built for fun; the write-ups are short, and the graphics do most of the talking.
+Thirteen side projects across earth systems, signal processing, commodity and energy markets and network risk, plus three from my undergraduate physics degree. Most start from a published model and try to add one honest result. They're built for fun; the write-ups are short, and the graphics do most of the talking.
 
 | | Project | In one line |
 |:-:|---|---|
@@ -13,11 +13,15 @@ Nine side projects across earth systems, signal processing, energy markets and n
 | <img src="007-italian-power-volatility/figures/cover.png" width="320"> | **[007 · Italian power volatility](007-italian-power-volatility)** | How far ahead can a weather forecast see a power-price storm? |
 | <img src="008-spanish-solar-portfolio/figures/cover.png" width="320"> | **[008 · Spanish solar portfolio](008-spanish-solar-portfolio)** | How far does a cloud reach, from an ML-ready ERA5 dataset built with ECMWF's Anemoi? |
 | <img src="012-percolation-tranche-loss/figures/cover.gif" width="320"> | **[012 · Ecology for bankers, revisited](012-percolation-tranche-loss)** | May's stability bound and percolation thresholds, turned on the Rhine low water and on structured credit. A maths note. |
+| <img src="013-coffee-forward-curves/figures/fig1_frost_2021.png" width="320"> | **[013 · Coffee, frost and the forward curve](013-coffee-forward-curves)** | Does coffee move with the frost forecast or with the frost? Archived ECMWF and GFS forecasts against arabica futures and a Schwartz two-factor curve. |
+| <img src="014-copper-satellite-signals/figures/fig3_smelters.png" width="320"> | **[014 · Copper seen from space](014-copper-satellite-signals)** | Ships at copper ports and furnaces in shortwave infrared: the supply is visible, and already in the price. |
+| <img src="015-commodity-option-hedging/figures/fig2_copper_2025.png" width="320"> | **[015 · Hedging commodity options through a shock](015-commodity-option-hedging)** | Eight hedges on six commodities: in a shock, how you hedge barely matters; the volatility you sold at does. |
+| <img src="016-sahel-desertification/figures/fig1_hysteresis.png" width="320"> | **[016 · Desertification in the Sahel](016-sahel-desertification)** | Plants that help plants: a lattice model that tips, signals it from space first, and is driven by real Sahel rainfall. |
 | <img src="earlier-work/pde-solvers-cpp/figures/cover.png" width="320"> | **[009 · PDEs by over-relaxation](earlier-work/pde-solvers-cpp)** | Laplace's equation in C++ and a cost surface for SOR, then the same solver pricing American options. *Undergraduate.* |
 | <img src="earlier-work/potts-monte-carlo-cpp/figures/cover.png" width="320"> | **[010 · The Potts model](earlier-work/potts-monte-carlo-cpp)** | Monte Carlo through a phase transition, and the seed of the coral reef model. *Undergraduate.* |
 | <img src="earlier-work/higher-order-odes-cpp/figures/cover.png" width="320"> | **[011 · Higher-order ODEs](earlier-work/higher-order-odes-cpp)** | Runge–Kutta by hand, fourth-order convergence, and the shooting method. *Undergraduate.* |
 
-**Running it.** Each folder has its notebooks with outputs saved; `pip install -r requirements.txt` covers projects 001–007. Project 008's dataset pipeline has its own environment (`008-spanish-solar-portfolio/iberia_datasets/requirements.txt`) and runs in Docker. CI runs the `corrlib` tests, the Po Valley solver tests and the dataset-pipeline tests on every push.
+**Running it.** Each folder has its notebooks with outputs saved; `pip install -r requirements.txt` covers projects 001–007 and 013–016 (014's smelter time series also needs `earthengine-api`). Project 008's dataset pipeline has its own environment (`008-spanish-solar-portfolio/iberia_datasets/requirements.txt`) and runs in Docker. CI runs the `corrlib` tests, the Po Valley solver tests and the dataset-pipeline tests on every push.
 
 **Figures** live in each project's `figures/` folder: a `cover` image (made by `make_covers.py`, about 2,600 px wide) plus numbered figures in PNG and PDF, all in one shared style (`figstyle.py`). Figures made from simulated data carry a small footnote saying so.
 
