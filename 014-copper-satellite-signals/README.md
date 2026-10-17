@@ -22,11 +22,19 @@ $$\frac{\rho_{12}}{\rho_{11}} \ge 1.4, \qquad \frac{\rho_{12}}{\rho_{8A}} \ge 1.
 |:-:|:-:|
 | ![Peru validation](figures/fig1_validation.png) | ![Grasberg](figures/fig2_grasberg.png) |
 
-**Smelter activity over time** runs on Google Earth Engine (`smelter_heat.py`). It covers Sentinel-2 hot pixels, Landsat surface temperature and FIRMS active fire, reduced to a small table per site on Google's side. It needs a one-time free non-commercial sign-in, and has not been run yet.
+**Smelter heat over time.** Every Sentinel-2 pass with under 20% cloud over the 24 sites from 2019 to 2026 (9,900 passes, from Microsoft Planetary Computer with no account) is reduced to a hot-pixel count and a clear-sky share, and averaged by month over clear passes.
+- **The heat is visible and steady where it should be.** Caletones and Mount Isa hover around their averages, month after month.
+- **Ventanas cannot be the check it was meant to be.** Codelco closed the Ventanas smelter at the end of May 2023, but it showed almost no heat before then either (0 to 1.5 hot pixels per clear pass), so its furnaces are not visible from above and there is nothing to see switch off.
+- **Some sites are seasonal for reasons that are not production.** Xiangguang, in Shandong, reads near zero every winter, from haze or the low winter sun. The indices are therefore compared year on year.
+- **No skill for the price either.** The year-on-year change in the worldwide heat index does not predict next month's copper price out of sample (R² −7%). The Chinese index scores +4.6% over 47 months but with no correlation at all (r = 0.006), which is indistinguishable from chance.
 
-**Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; and an Earth Engine pipeline for the smelter time series.
+![Smelter heat by month at six sites](figures/fig4_smelter_heat.png)
 
-`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_heat.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
+The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to live and with Landsat and FIRMS added. It needs a free non-commercial sign-in.
+
+**Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.
+
+`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
 
 **Limits:** PortWatch does not say what a ship carries, so dry-bulk tonnes at a copper port is a proxy. Only Peru publishes a free monthly series to check it against. Which mine ships through which port is marked "check" where uncertain. The hot-spot check proves heat near a site, not that the heat is the smelter's.
 

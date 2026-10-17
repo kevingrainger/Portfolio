@@ -18,7 +18,7 @@ Every project's `data/README.md` has the details.
 | 008 Spanish solar | the pipeline, recipe and test fixtures; AIFS and IFS solar forecasts and ERA5 daily solar energy at the 25 sites (`aifs/data/`, Open-Meteo, CC BY 4.0) | **the ERA5 Iberia dataset for 2023 (Anemoi Zarr, 279 MB): GitHub Release `data-v1`, file `iberia-era5-2023.zarr.zip` (232 MB), checksum below**; or rebuild it with `python download_era5.py 2023-01 2023-12` then `anemoi-datasets create recipes/iberia-era5.yaml data/iberia-era5.zarr` (free CDS key) |
 | 012 Percolation | — (generated networks) | — |
 | 013 Coffee | ERA5, GFS and ECMWF temperatures at 8 regions (`data/`) | coffee futures (Yahoo): `python fetch_data.py prices` |
-| 014 Copper | PortWatch ports, BCRP copper exports, smelter hot spots | copper futures (Yahoo): fetched by `analyse_ports.py` |
+| 014 Copper | PortWatch ports, BCRP copper exports, smelter hot spots, smelter heat by Sentinel-2 pass 2019–2026 (`data/smelter_passes.csv`) | copper futures (Yahoo): fetched by `analyse_ports.py` |
 | 015 Hedging | — | six commodity futures (Yahoo): fetched by `backtest.py` |
 | 016 Sahel | ERA5 rain, MODIS NDVI, Sentinel-2 patches at Gourma and Fakara (`data/`) | — |
 
