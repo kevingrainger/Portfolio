@@ -11,6 +11,7 @@ Three notebooks, one idea: let volatility change through time, then check every 
 - **03 · Asian options on softs.** These pay on the *average* price, the way commodity buyers actually hedge. A control variate cuts Monte Carlo noise by 1,100–7,200×.
   - **The surprise:** the Asian's delta fades as fixings lock in, yet it isn't easier to hedge. Its risk concentrates just before the averaging starts.
   - **Seasonality:** ignoring seasonal volatility changes the price, but not how well the hedge works.
+  - **A third method, a PDE.** Večeř (2001) turns the Asian option into a PDE in one space variable, however many fixings it has. With volatility that changes through time, it matches the control-variate Monte Carlo to within one standard error (about 0.0003 on a price near 8) for in-, at- and out-of-the-money strikes (`vecer.py`).
 
 | | |
 |:-:|:-:|
@@ -19,8 +20,8 @@ Three notebooks, one idea: let volatility change through time, then check every 
 | ![Seasonal volatility](figures/fig8_seasonal_vol.png) | ![Where hedging risk lives](figures/fig10_hedging_risk_timing.png) |
 | ![Delta through time](figures/hero.png) | |
 
-**Built:** a put–call-parity extraction; σ(t) Black–Scholes; a Crank–Nicolson / SOR solver with Rannacher start-up; a binomial tree; the exact geometric-Asian price; moment matching; a hedging simulator.
+**Built:** a put–call-parity extraction; σ(t) Black–Scholes; a Crank–Nicolson / SOR solver with Rannacher start-up; Večeř's one-dimensional Asian PDE; a binomial tree; the exact geometric-Asian price; moment matching; a hedging simulator.
 
-`spx_chain.py` · `options_01_solver_european.ipynb` · `options_02_set50.ipynb` · `options_03_asian_softs.ipynb`
+`spx_chain.py` · `vecer.py` · `options_01_solver_european.ipynb` · `options_02_set50.ipynb` · `options_03_asian_softs.ipynb`
 
 *A side project, built for fun. The SET50 work uses index prices; calibrating to TFEX option quotes is the next step. Data isn't redistributed here: put the S&P 500 option chain (4 January 2023), the SET50 history from Investing.com and the Yahoo Finance price files (via yfinance) in `data/` to re-run.*
