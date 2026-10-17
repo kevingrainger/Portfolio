@@ -1,0 +1,5 @@
+target,model,rmse
+log_price,linear,0.2546121591531244
+log_price,XGBoost,0.3731199145719021
+log_price_over_gas,linear,0.2546121591531207
+log_price_over_gas,XGBoost,0.17429059486074855
