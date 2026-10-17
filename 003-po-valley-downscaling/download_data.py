@@ -203,6 +203,71 @@ def modis_lst(grid):
     out.flush()
 
 
+def modis_lst_pc(grid):
+    """The same MYD11A1 daytime LST and quality rule as modis_lst, from Microsoft Planetary
+    Computer instead of Earth Engine: no account needed. One sinusoidal tile (h18v04)
+    covers the whole domain; each day's tile is resampled to the 1 km grid (nearest)."""
+    import json
+    import urllib.request
+    import rasterio
+    from rasterio.warp import Resampling, reproject
+    from rasterio.transform import from_origin
+    stac = "https://planetarycomputer.microsoft.com/api/stac/v1/search"
+    import time
+
+    def patient(fn, *a):                                 # the free service rate-limits: back off and retry
+        for k in range(8):
+            try:
+                return fn(*a)
+            except Exception:
+                if k == 7:
+                    raise
+                time.sleep(15 * (k + 1))
+
+    def signed(href):                                    # a read URL for one file, signed anonymously
+        q = urllib.request.quote(href, safe="")
+        return json.loads(urllib.request.urlopen(f"https://planetarycomputer.microsoft.com/api/sas/v1/sign?href={q}",
+                                                 timeout=60).read())["href"]
+    dst_transform = from_origin(grid.x0 * 1000, (grid.y0 + grid.ny * grid.dx) * 1000, grid.dx * 1000, grid.dx * 1000)
+    bbox = [BBOX["lon0"], BBOX["lat0"], BBOX["lon1"], BBOX["lat1"]]
+    path = os.path.join(REAL, "lst_1km.npy")
+    if os.path.exists(path):                             # resume: keep the days already fetched
+        out = np.lib.format.open_memmap(path, "r+")
+    else:
+        out = np.lib.format.open_memmap(path, "w+", np.float32, (len(DAYS),) + grid.shape)
+        out[:] = np.nan
+    done = np.isfinite(out).any(axis=(1, 2))
+
+    def on_grid(href, dtype):
+        with rasterio.open(signed(href)) as src:
+            a = np.zeros(grid.shape, dtype=dtype)
+            reproject(rasterio.band(src, 1), a, dst_transform=dst_transform, dst_crs=f"EPSG:{EPSG}",
+                      resampling=Resampling.nearest, src_nodata=0, dst_nodata=0)
+        return a[::-1]                                   # row 0 in the south, as the rest of the project
+
+    def search(body):
+        req = urllib.request.Request(stac, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+        return json.load(urllib.request.urlopen(req, timeout=120))["features"]
+
+    for i, day in enumerate(DAYS):
+        if done[i]:
+            continue
+        body = {"collections": ["modis-11A1-061"], "bbox": bbox, "limit": 20,
+                "datetime": f"{day:%Y-%m-%d}T00:00:00Z/{day:%Y-%m-%d}T23:59:59Z"}
+        items = [f for f in patient(search, body) if f["id"].startswith("MYD11A1")]
+        if not items:
+            continue
+        lst = patient(on_grid, items[0]["assets"]["LST_Day_1km"]["href"], np.uint16).astype(np.float32)
+        qc = patient(on_grid, items[0]["assets"]["QC_Day"]["href"], np.uint8).astype(np.int32)
+        time.sleep(1.0)
+        good = ((qc & 3) == 0) | (((qc & 3) == 1) & (((qc >> 6) & 3) <= 1))
+        out[i] = np.where(good & (lst > 0), lst * 0.02 - 273.15, np.nan)
+        if i % 30 == 0:
+            out.flush()
+            print("  MODIS (Planetary Computer)", day.date(), f"{np.isfinite(out[i]).mean():.0%} clear", flush=True)
+    out.flush()
+
+
 #-------- E-OBS --------------------------------------------------------------------------------
 def eobs(grid, version):
     import cdsapi
@@ -211,15 +276,30 @@ def eobs(grid, version):
     if not os.path.exists(target):
         cdsapi.Client().retrieve("insitu-gridded-observations-europe", dict(
             product_type="ensemble_mean", variable=["maximum_temperature", "land_surface_elevation"],
-            grid_resolution="0_1deg", period="2011_2023", version=[version]), target)
+            grid_resolution="0_1deg", period="2011_2024", version=[version]), target)
     with zipfile.ZipFile(target) as z:
         z.extractall(RAW)
         names = z.namelist()
     box = dict(latitude=slice(AREA[2], AREA[0]), longitude=slice(AREA[1], AREA[3]))
     tx = xr.open_dataset(os.path.join(RAW, next(n for n in names if n.startswith("tx_")))).tx.sel(**box)
-    el = xr.open_dataset(os.path.join(RAW, next(n for n in names if n.startswith("elev_")))).elevation.sel(**box)
+    elev_file = next((n for n in names if n.startswith("elev_")), None)
+    if elev_file:
+        elev = np.nan_to_num(xr.open_dataset(os.path.join(RAW, elev_file)).elevation.sel(**box).values, nan=0.0)
+    else:
+        # recent CDS deliveries hold tx only: average the project's 1 km elevation over each
+        # 0.1 degree E-OBS cell instead (it is only used to reduce tx to sea level)
+        static = np.load(os.path.join(REAL if have("static_1km.npz") else os.path.join(HERE, "data", "estimated"), "static_1km.npz"))
+        lon2, lat2 = grid.lonlat()
+        la, lo = tx.latitude.values, tx.longitude.values
+        iy = np.clip(np.searchsorted(la - 0.05, lat2.ravel()) - 1, 0, len(la) - 1)
+        ix = np.clip(np.searchsorted(lo - 0.05, lon2.ravel()) - 1, 0, len(lo) - 1)
+        tot = np.zeros((len(la), len(lo)))
+        cnt = np.zeros_like(tot)
+        np.add.at(tot, (iy, ix), static["elevation_km"].ravel() * 1000)
+        np.add.at(cnt, (iy, ix), 1)
+        elev = np.where(cnt > 0, tot / np.maximum(cnt, 1), 0.0)
     np.savez_compressed(os.path.join(REAL, "eobs.npz"), lat=tx.latitude.values, lon=tx.longitude.values,
-                        tx=tx.sel(time=DAYS.values).values.astype(np.float32), elevation_m=np.nan_to_num(el.values, nan=0.0))
+                        tx=tx.sel(time=DAYS.values).values.astype(np.float32), elevation_m=elev)
     print("E-OBS:", tx.sel(time=DAYS.values).shape)
 
 
@@ -227,7 +307,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--ee-project", default=os.environ.get("EE_PROJECT"))
     ap.add_argument("--eobs-version", default="30_0e")
-    ap.add_argument("--only", nargs="*", default=["static", "stations", "era5", "modis", "eobs"])
+    ap.add_argument("--only", nargs="*", default=["static", "stations", "era5", "modis", "eobs"],
+                    help="add modis-pc to fetch MODIS from Planetary Computer instead (no Earth Engine account)")
     args = ap.parse_args()
     os.makedirs(RAW, exist_ok=True)
     grid = Grid()
@@ -241,6 +322,7 @@ if __name__ == "__main__":
             ee.Initialize(project=args.ee_project)
     steps = [("static", "static_1km.npz", lambda: static_fields(grid)), ("stations", "station_tmax.csv", lambda: stations(grid)),
              ("era5", "era5land.npz", lambda: era5land(grid)), ("modis", "lst_1km.npy", lambda: modis_lst(grid)),
+             ("modis-pc", "lst_1km.npy", lambda: modis_lst_pc(grid)),
              ("eobs", "eobs.npz", lambda: eobs(grid, args.eobs_version))]
     for name, output, run in steps:
         if name not in args.only:
