@@ -33,6 +33,6 @@ A frost lifts $\delta$. The loading $(1 - e^{-\kappa\tau})/\kappa$ says how far 
 
 `fetch_data.py` · `coffee_regions.py` · `coffee_data.py` · `schwartz.py` · `run_analysis.py` · `make_figures.py` · Python, NumPy, SciPy, pandas
 
-**Limits:** Yahoo lists only contracts still trading, so full curves start in January 2024. Before 2025 the curve has just the front month and contracts three to four years out. The regional weights are rough shares of Brazil's arabica output, still to be checked against CONAB. Five warnings and three frost nights are few events.
+**Limits:** Yahoo lists only contracts still trading, so full curves start in January 2024. Before 2025 the curve has just the front month and contracts three to four years out. The regional weights are rough shares of Brazil's arabica output, partly checked against CONAB (Sul de Minas is over-weighted at 40% against about 29%). The timing result holds with equal weights. Five warnings and three frost nights are few events.
 
 *A side project, built for fun. Credits: Roll (1984), Am. Econ. Rev. 74, 861; Schwartz (1997), J. Finance 52, 923; Gibson & Schwartz (1990), J. Finance 45, 959; Working (1949), Am. Econ. Rev. 39, 1254; Newey & West (1987), Econometrica 55, 703. Weather: ECMWF IFS and NOAA GFS forecasts via the Open-Meteo forecast archive, and ERA5 (Hersbach et al. 2020, QJRMS 146, 1999), CC BY 4.0. Prices: ICE arabica futures via Yahoo Finance.*

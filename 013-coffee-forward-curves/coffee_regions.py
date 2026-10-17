@@ -3,10 +3,14 @@
 # Brazil's arabica belt as a handful of weighted points, one per producing region.
 #
 # Weights are rough shares of Brazil's arabica output, renormalised over the regions
-# listed. TO CHECK against CONAB's harvest survey (Acompanhamento da Safra Brasileira
-# de Café) before any result is quoted. Frost and drought indices are
-# weighted means over these points, so a frost in the Sul de Minas counts for more
-# than one in Paraná.
+# listed. Partly checked against CONAB (Acompanhamento da Safra Brasileira de Café):
+# arabica was 39.6 million bags in 2024, of which the Cerrado Mineiro about 5.3 million
+# (13%; weight here 15%) and, in 2025, Sul de Minas about 11.6 million (29%; the two Sul
+# de Minas points here carry 40%). The timing test does not depend on them: with equal
+# weights no lagged reaction is significant either (t = 1.5, -0.2, 1.1).
+#
+# Frost and drought indices are weighted means over these points, so a frost in the
+# Sul de Minas counts for more than one in Paraná.
 
 # name: (latitude, longitude, weight)
 REGIONS = {
