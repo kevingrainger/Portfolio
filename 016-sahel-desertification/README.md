@@ -21,7 +21,12 @@ $b$ is environmental quality (rainfall). $f$ is the neighbour coupling, the same
 
 ![Sentinel-2 NDVI at the two sites beside the model lattice](figures/fig4_patterns.png)
 
-**Next: real rainfall at two real sites.** Gourma (Mali) re-greened after the droughts; Fakara (Niger), with similar rain, kept losing vegetation under heavy cropping and grazing (Dardel et al. 2014). `run_sites.py` drives the lattice with each site's 1950–2025 rainy-season rain and compares it with MODIS greenness from 2000, at two degradation rates. The question is whether land use alone, through $d$, separates the two fates.
+**Two real sites: rain is not the whole story.** Gourma (Mali) re-greened after the droughts. Fakara (Niger) did not, under heavy cropping and grazing (Dardel et al. 2014). The lattice is driven with each site's rainy-season rain from 1950 to 2025 (ERA5), scaled so the wet 1950s and 60s sit at $b = 0.75$, and compared with MODIS greenness from 2000.
+- **The real droughts never push the model over its edge.** Smoothed over three years, the 1980s take $b$ down only to about 0.35. Model cover falls from about 0.75 to 0.5 and never collapses.
+- **Gourma's vegetation follows its rain; Fakara's has stopped.** At Gourma, the growing-season peak of greenness tracks each year's rain (r = 0.54). It has risen since 2000 although the rain barely changed (200 mm a season in 2000–12, 208 mm in 2013–25). At Fakara, rain rose by 42% (234 to 332 mm) while greenness stayed flat and stopped tracking it at all (r = 0.02).
+- **So the model cannot tell the sites apart, and should not be able to.** With the same rules and a degradation rate fixed in time ($d$ = 0.2 or 0.3), the lattice cannot separate them. Its correlation with greenness is −0.15 to −0.23 at Gourma and 0.39 to 0.42 at Fakara. What separates the two sites is something rain cannot supply: at Fakara, how the land is used now decides the vegetation more than the climate does. Writing that in means a degradation rate that rises with cropping and grazing over time, the obvious next step.
+
+![Rainfall, model cover and MODIS greenness at Gourma and Fakara](figures/fig5_sites.png)
 
 **Built:** a Numba lattice with asynchronous updates and periodic edges; patch labelling across the periodic boundary and a spanning-cluster test; mean-field and pair-approximation ODEs swept by continuation; early-warning statistics; Sentinel-2 NDVI patch maps from Planetary Computer; MODIS NDVI from the ORNL DAAC service; and rainfall-driven runs at two sites.
 

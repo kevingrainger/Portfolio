@@ -131,7 +131,7 @@ def fig5_sites():
         if j == 0:
             h1, l1 = ax.get_legend_handles_labels()
             h2, l2 = tw.get_legend_handles_labels()
-            ax.legend(h1 + h2, l1 + l2, loc="upper left", fontsize=8)
+            ax.legend(h1 + h2, l1 + l2, loc="lower left", fontsize=8)
     fig.tight_layout()
     figstyle.save(fig, os.path.join(FIG, "fig5_sites"))
 
