@@ -9,18 +9,18 @@ Every project's `data/README.md` has the details.
 | Project | In the repo | Not in the repo, and how to get it |
 |---|---|---|
 | 001 Coral | NOAA Coral Reef Watch DHW, Scott–Ashmore 2015–16; Global Coral Bleaching Database, Scott Reef 2016 (`data/`) | `Coral temps.xlsx`, the old hand-drawn curve: no longer used |
-| 002 Olive | — (simulation only) | — |
-| 003 Po Valley | static 1 km fields and station list (`data/estimated/`) | real ERA5-Land, E-OBS, MODIS, terrain and station inputs: `python download_data.py --ee-project YOUR_PROJECT` (needs a free [Copernicus CDS key](https://cds.climate.copernicus.eu/how-to-api) and an Earth Engine sign-in); the 1.6 GB training cache is rebuilt by `run_pinn.py` |
+| 002 Olive | the model runs on the paper's rates (no observed outbreak data); the next-steps figure of a real grove near Gallipoli, 2014 and 2026 (`figures/fig_real_grove.png`) | the two Esri World Imagery Wayback images behind it: `python real_grove.py` |
+| 003 Po Valley | the estimated static fields and station list used by the simulated method check (`data/estimated/`); results of the real-data run (`results_real/`) | real ERA5-Land, E-OBS, MODIS, Meteostat stations, and terrain and land cover from Earth Engine (Copernicus DEM, ESA WorldCover): `python download_data.py --ee-project YOUR_PROJECT` (needs a free [Copernicus CDS key](https://cds.climate.copernicus.eu/how-to-api) and an Earth Engine sign-in); the 1.6 GB training cache is rebuilt by `run_pinn.py` |
 | 004 corrlib | — | stock closes (Yahoo): re-downloaded by `corrlib_showcase.ipynb` |
 | 005 Seismic | — | SCSN labelled waveforms (HDF5, about 6 GB): Ross, Meier & Hauksson (2018), via the SCEDC, [doi:10.7909/C3WD3xH1](https://doi.org/10.7909/C3WD3xH1) |
 | 006 Options | — | softs futures (Yahoo, re-downloaded by `options_03_asian_softs.ipynb`); S&P 500 option chain for 4 January 2023 and SET50 history (Investing.com), which can't be redistributed: put them in `data/` to re-run |
 | 007 Italian power | Italy North day-ahead prices, Italian load, wind and solar (Energy-Charts, CC BY 4.0), eight-city ERA5 temperature (`data/`) | TTF gas (Yahoo) and the joined table: `python fetch_real.py` |
 | 008 Spanish solar | the pipeline, recipe and test fixtures; AIFS and IFS solar forecasts and ERA5 daily solar energy at the 25 sites (`aifs/data/`, Open-Meteo, CC BY 4.0) | **the ERA5 Iberia dataset for 2023 (Anemoi Zarr, 279 MB): GitHub Release `data-v1`, file `iberia-era5-2023.zarr.zip` (232 MB), checksum below**; or rebuild it with `python download_era5.py 2023-01 2023-12` then `anemoi-datasets create recipes/iberia-era5.yaml data/iberia-era5.zarr` (free CDS key) |
 | 012 Percolation | — (generated networks) | — |
-| 013 Coffee | ERA5, GFS and ECMWF temperatures at 8 regions (`data/`) | coffee futures (Yahoo): `python fetch_data.py prices` |
+| 013 Coffee | ERA5, GFS and ECMWF temperatures at 8 regions; ERA5 rain and heat in Vietnam's Central Highlands (`data/`) | coffee futures and the Brazilian real (Yahoo): `python fetch_data.py prices` and `python fetch_data.py drivers` |
 | 014 Copper | PortWatch ports, BCRP copper exports, smelter hot spots, smelter heat by Sentinel-2 pass 2019–2026 (`data/smelter_passes.csv`) | copper futures (Yahoo): fetched by `analyse_ports.py` |
 | 015 Hedging | — | six commodity futures (Yahoo): fetched by `backtest.py` |
-| 016 Sahel | ERA5 rain, MODIS NDVI, Sentinel-2 patches at Gourma and Fakara (`data/`) | — |
+| 016 Sahel | CHIRPS daily and IMERG monthly rain (via Earth Engine), ERA5 rain, MODIS NDVI, Sentinel-2 patches at Gourma and Fakara (`data/`) | — |
 
 ## The 008 dataset from the Release
 

@@ -56,5 +56,7 @@ release-assets/
 007-italian-power-volatility/data/real_daily.csv
 # 008: rebuilt in seconds by aifs/score_forecasts.py
 008-spanish-solar-portfolio/aifs/results/scored_days.csv
+# 002: Esri satellite tiles, re-downloaded by real_grove.py (only the attributed figure is committed)
+002-olive-grove-xylella/data/satellite/
 # 008: OMIE market prices, rebuilt by prices/fetch_omie.py
 008-spanish-solar-portfolio/prices/data/

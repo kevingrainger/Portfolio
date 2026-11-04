@@ -1,6 +1,6 @@
-# Ecology for bankers, revisited
+# Supply chain risk on networks: percolation and stability
 
-**In 2008 May, Levin and Sugihara asked what bankers could learn from ecologists. This note derives the ecologists' tools (May's stability bound, percolation thresholds, disassortative wiring) and turns them on two systems: German industry when the Rhine runs dry, and a structured credit portfolio.**
+**How far does one failure spread through a connected supply network? In 2008 May, Levin and Sugihara asked what bankers could learn from ecologists. This note derives the ecologists' tools (May's stability bound, percolation thresholds, disassortative wiring) and turns them on two systems: German industry when the Rhine runs dry, and a structured credit portfolio.**
 
 ![A cascade spreading through a supply network](figures/cover.gif)
 

@@ -14,7 +14,7 @@ Where this portfolio stands, and how to pick it up on any machine. Read this fir
 | 006 Option pricer | 97% | optional: calibrate SET50 to TFEX option quotes |
 | 007 Italian power | 85% | SEAS5 seasonal forecasts, regime model (N4), regime and fan figures |
 | 008 Spanish solar | 55% | CERRA at 5.5 km; prices and cannibalisation (needs an ENTSO-E key: Energy-Charts' Spanish prices are private-use only); strategy arms A1–A4; hedging rules H1–H3; the map |
-| 012 Ecology for bankers | 95% | optional: graph neural network appendix |
+| 012 Supply chain risk on networks | 95% | optional: graph neural network appendix |
 | 013 Coffee | 90% | hedge application (plan step 6); a curve test needs a frost after 2024 |
 | 014 Copper from space | 95% | Earth Engine version for near-live data (`smelter_heat.py`) |
 | 015 Hedging | 95% | minimum-variance delta needs implied volatilities (not free) |

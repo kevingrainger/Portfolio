@@ -202,8 +202,10 @@ def summary():
     tab.to_csv(os.path.join(RES, "pinn_skill_table.csv"), index=False, float_format="%.3f")
     def opt(f):                                          # empty on real data: there is no hidden truth
         p = os.path.join(RES, f)
-        return pd.read_csv(p) if os.path.getsize(p) > 2 else None
+        t = pd.read_csv(p) if os.path.getsize(p) > 2 else None
+        return t if t is not None and len(t) else None
     truth, tu = opt("pinn_truth_check.csv"), opt("unet_truth_check.csv")
+    truth = truth if tu is not None else None
     tr = pd.read_csv(os.path.join(RES, "pinn_training.csv"))
     info = dict(n=int(len(m)), n_far=int(far.sum()),
                 truth_rmse=None if truth is None else
