@@ -1,13 +1,13 @@
 {
- "forecast_skill": {
+ "forecast_correlation": {
   "brazil_dry": 0.1204805640673786,
-  "vietnam_dry": 0.46422896330897173,
-  "vietnam_heat": 0.6320117551925831
+  "vietnam_dry": 0.36215630505936,
+  "vietnam_heat": 0.6429356211956231
  },
- "persistence_skill": {
-  "brazil_dry": 0.10507908575922671,
-  "vietnam_dry": 0.22201540020367425,
-  "vietnam_heat": 0.45133501734061066
+ "skill_score_vs_climatology": {
+  "brazil_dry": 0.020205424217548895,
+  "vietnam_dry": 0.13145499717151587,
+  "vietnam_heat": 0.41337073968429705
  },
  "results": {
   "arabica|forecast": {
@@ -20,35 +20,35 @@
    "saving_when_hedged": 0.00179877219766135,
    "saving_when_waited": 0.021981631384522877
   },
-  "arabica|persistence": {
+  "arabica|climatology": {
    "decisions": 75,
-   "hedged_share": 0.37333333333333335,
-   "hit_rate": 0.48,
+   "hedged_share": 0.3466666666666667,
+   "hit_rate": 0.4266666666666667,
    "base_rate_up": 0.49333333333333335,
-   "mean_saving_vs_wait": -0.00276641578134272,
+   "mean_saving_vs_wait": -0.005191105035009264,
    "mean_saving_always_hedge": 0.011687338709661882,
-   "saving_when_hedged": -0.007410042271453714,
-   "saving_when_waited": 0.02306450184734777
+   "saving_when_hedged": -0.014974341447142107,
+   "saving_when_waited": 0.02583435267041502
   },
   "robusta|forecast": {
-   "decisions": 36,
-   "hedged_share": 0.6388888888888888,
-   "hit_rate": 0.4444444444444444,
-   "base_rate_up": 0.4722222222222222,
-   "mean_saving_vs_wait": -0.010178789837491311,
-   "mean_saving_always_hedge": 0.002427550614305832,
-   "saving_when_hedged": -0.015932018876073362,
-   "saving_when_waited": 0.03490986586651517
+   "decisions": 72,
+   "hedged_share": 0.7222222222222222,
+   "hit_rate": 0.5,
+   "base_rate_up": 0.5277777777777778,
+   "mean_saving_vs_wait": -0.0003028303763623526,
+   "mean_saving_always_hedge": 0.009175857297436902,
+   "saving_when_hedged": -0.0004193035980401806,
+   "saving_when_waited": 0.03412327562567732
   },
-  "robusta|persistence": {
+  "robusta|climatology": {
    "decisions": 75,
-   "hedged_share": 0.5466666666666666,
-   "hit_rate": 0.49333333333333335,
+   "hedged_share": 0.6133333333333333,
+   "hit_rate": 0.4,
    "base_rate_up": 0.52,
-   "mean_saving_vs_wait": 0.0018284068144636368,
+   "mean_saving_vs_wait": -0.007229565758757303,
    "mean_saving_always_hedge": 0.006737748059311333,
-   "saving_when_hedged": 0.0033446466118237255,
-   "saving_when_waited": 0.0108294292165758
+   "saving_when_hedged": -0.011787335476234733,
+   "saving_when_waited": 0.036122363322591285
   }
  }
 }

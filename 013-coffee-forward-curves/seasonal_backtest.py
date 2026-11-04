@@ -13,8 +13,8 @@
 #              now (lock today's price), otherwise wait and buy in three months
 #   scoring    hit rate against the actual three-month price change, and the average
 #              saving per decision against always waiting; compared with the same rule
-#              driven by persistence (the last three months' observed weather) instead of
-#              the forecast, so the forecast's own contribution shows
+#              driven by climatology (a normal month for the time of year) instead of the
+#              forecast, so the forecast's own contribution shows
 #
 # Decisions are made every three months so outcomes don't overlap. Tested 2008-2026.
 #
@@ -80,7 +80,7 @@ def build():
     obs = pd.DataFrame({"brazil_dry": br.dry, "vietnam_dry": vn.dry, "vietnam_heat": vn.heat})
     for c in obs:
         df[f"{c}_next3"] = obs[c].shift(-3)            # observed weather of the next three months
-        df[f"{c}_last3"] = obs[c]                      # persistence: the last three months
+        df[f"{c}_clim"] = 0.0                          # climatology: a normal month (anomaly zero)
     fb, fv = load_seas5("brazil"), load_seas5("vietnam")
     df["brazil_dry_fc"] = -fb.brazil_rain_z
     df["vietnam_dry_fc"] = -fv.vietnam_rain_z
@@ -89,7 +89,7 @@ def build():
 
 
 def backtest(df, bean, hazards, source):
-    """Expanding-window relation on observed weather; decide on `source` (fc or last3)."""
+    """Expanding-window relation on observed weather; decide on `source` (fc or clim)."""
     dates = df[TEST_START:].index[::3]
     rows = []
     for t in dates:
@@ -116,17 +116,23 @@ def backtest(df, bean, hazards, source):
 
 def main():
     df = build()
-    skill = {h: float(df[[f"{h}_fc", f"{h}_next3"]].dropna().corr().iloc[0, 1])
-             for h in ["brazil_dry", "vietnam_dry", "vietnam_heat"]}
-    skill_persist = {h: float(df[[f"{h}_last3", f"{h}_next3"]].dropna().corr().iloc[0, 1])
-                     for h in ["brazil_dry", "vietnam_dry", "vietnam_heat"]}
-    out = dict(forecast_skill=skill, persistence_skill=skill_persist, results={})
+    skill, msss = {}, {}
+    for h in ["brazil_dry", "vietnam_dry", "vietnam_heat"]:
+        d = df[[f"{h}_fc", f"{h}_next3"]].dropna()
+        skill[h] = float(d.corr().iloc[0, 1])
+        # skill score against climatology (a normal month, anomaly zero); the forecast is
+        # first rescaled by regression on earlier years so its units match the observed index
+        b = np.polyfit(d.iloc[:, 0], d.iloc[:, 1], 1)
+        mse_fc = ((np.polyval(b, d.iloc[:, 0]) - d.iloc[:, 1]) ** 2).mean()
+        mse_clim = (d.iloc[:, 1] ** 2).mean()
+        msss[h] = float(1 - mse_fc / mse_clim)
+    out = dict(forecast_correlation=skill, skill_score_vs_climatology=msss, results={})
     keep = []
     setups = {"arabica": ["brazil_dry"], "robusta": ["vietnam_heat", "vietnam_dry"]}
     for bean, hz in setups.items():
-        for source in ["fc", "last3"]:
+        for source in ["fc", "clim"]:
             d, s = backtest(df, bean, hz, source)
-            out["results"][f"{bean}|{'forecast' if source == 'fc' else 'persistence'}"] = s
+            out["results"][f"{bean}|{'forecast' if source == 'fc' else 'climatology'}"] = s
             keep.append(d.assign(bean=bean, source=source))
     pd.concat(keep).to_csv(os.path.join(RES, "seasonal_decisions.csv"), index=False)
     json.dump(out, open(os.path.join(RES, "seasonal_backtest.json"), "w"), indent=1)

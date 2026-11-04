@@ -282,14 +282,14 @@ def seasonal_figure():
     hz = ["vietnam_heat", "vietnam_dry", "brazil_dry"]
     lab = ["Vietnam heat", "Vietnam dryness", "Brazil dryness"]
     y = np.arange(len(hz)); h = 0.38
-    ax.barh(y - h / 2, [o["forecast_skill"][k] for k in hz], h, color=NAVY, label="ECMWF SEAS5 forecast")
-    ax.barh(y + h / 2, [o["persistence_skill"][k] for k in hz], h, color=LIGHT, label="persistence (last 3 months)")
+    ax.barh(y, [o["skill_score_vs_climatology"][k] for k in hz], 0.55, color=NAVY)
+    ax.axvline(0, color=GREY, lw=0.8)
     ax.set_yticks(y, lab); ax.invert_yaxis()
-    ax.set_xlabel("correlation with the next three months' observed weather")
-    ax.set_title("Seasonal forecast skill", loc="left"); ax.legend(frameon=False, fontsize=9, loc="lower right")
+    ax.set_xlabel("skill score against climatology (0 = no better than a normal month)")
+    ax.set_title("ECMWF SEAS5 forecast skill", loc="left")
     ax = axes[1]
-    keys = ["arabica|forecast", "arabica|persistence", "robusta|forecast", "robusta|persistence"]
-    names = ["Arabica, forecast", "Arabica, persistence", "Robusta, forecast", "Robusta, persistence"]
+    keys = ["arabica|forecast", "arabica|climatology", "robusta|forecast", "robusta|climatology"]
+    names = ["Arabica, forecast", "Arabica, climatology", "Robusta, forecast", "Robusta, climatology"]
     vals = [100 * o["results"][k]["hit_rate"] for k in keys]
     ax.barh(range(4), vals, color=[NAVY, LIGHT, NAVY, LIGHT], height=0.6)
     for i, k in enumerate(keys):

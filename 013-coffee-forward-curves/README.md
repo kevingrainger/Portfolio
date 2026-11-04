@@ -55,17 +55,17 @@ The two beans themselves spike together. A Gumbel copula of arabica against robu
 
 A Kalman filter tracks two hidden states from each day's arabica futures curve since 2024: the spot price and the convenience yield (the benefit of holding physical coffee rather than a contract), with Schwartz's (1997) two-factor dynamics. Adding Vietnam heat as a push on the convenience yield improves the fit significantly (likelihood ratio 8.4, p = 0.004); Brazilian dryness doesn't (p = 0.53). The heat push peaks in mid-2024, ahead of the yield's early-2025 high. A frost term, tried first, had nothing to find: no damaging frost fell in the window.
 
-## Can the seasonal forecast tell an importer when to buy?
+## Does the seasonal forecast help an importer with the coffee price?
 
-![Seasonal forecast skill, and how often the importer's calls were right](figures/fig16_seasonal.png)
+![ECMWF forecast skill against climatology, and how often the importer's calls were right](figures/fig16_seasonal.png)
 
-Each quarter since 2008, the ECMWF forecast issued that month is fed through the weather-price relationship, learned only from earlier years. If it predicts a rise, the importer buys forward; otherwise it waits three months. The same rule driven by persistence (assuming the last three months' weather continues) is the benchmark.
+Each quarter from 2008 to 2025, the ECMWF forecast issued that month is fed through the weather-price relationship, learned only from earlier years. If it predicts a rise, the importer buys forward; otherwise it waits three months and buys at the market. The benchmark is the same rule fed climatology: a normal season for the time of year.
 
-- **The forecast sees Vietnam's weather well.** Its correlation with the next three months' observed heat in Vietnam is 0.63, against 0.45 for persistence, and 0.46 against 0.22 for dryness. For Brazil's dryness it barely beats persistence (0.12 against 0.11).
-- **That doesn't yet turn into good buying calls.** The rule was right 49% of the time for arabica and 44% for robusta, about a coin flip, with no reliable saving. A weather-price correlation of about 0.15 is too weak for a simple quarterly buy-or-wait rule, even with a good weather forecast.
-- **So the forecast's value is in the tail, not the average.** Weather moves coffee mainly through rare joint extremes, so the next test is a rule that hedges only when the forecast puts both origins in their extreme tail.
+- **The forecast beats climatology on the weather.** Its skill score against climatology is 0.41 for Vietnam's heat and 0.13 for Vietnam's dryness (0 would mean no better than a normal season). For Brazil's dryness it is close to zero (0.02).
+- **It helps with the price, a little.** Driven by the forecast, the importer's calls were right 49% of the time for arabica and 50% for robusta, against 43% and 40% with climatology. On average the forecast-driven rule did about 0.6 percentage points of the purchase price better per quarter for arabica and 0.7 for robusta than the climatology rule.
+- **But not enough to rely on alone.** Half the calls were still wrong, and the average saving against simply waiting is close to zero. The weather-price link, a correlation of about 0.15, is too weak for a simple buy-or-wait rule; the forecast's value is in flagging the rare joint extremes, which is the next test.
 
-The robusta test currently runs to 2016, where the downloaded Vietnam forecasts end; 2017-2026 are being added. `seasonal_backtest.py`
+`seasonal_backtest.py`
 
 ## Earlier findings kept
 
