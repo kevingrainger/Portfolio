@@ -12,6 +12,8 @@
 #                       correlation through time from DCC-GARCH, weather events shaded
 #   fig12_bean_tail     arabica against robusta with joint spikes marked, and the Gumbel tail
 #                       dependence between them on a rolling eight-year window
+#   fig13_copula        the fitted Gumbel and Gaussian copulas of arabica against robusta as
+#                       density rings in normal-score space, the months on top, joint spikes red
 #
 #   python make_weather_figures.py
 
@@ -89,7 +91,7 @@ def scatter(df):
                         xytext=(5, 4), textcoords="offset points", fontsize=8.5, color=NAVY)
         ax.axhline(0, color="0.85", lw=0.8); ax.axvline(0, color="0.85", lw=0.8)
         ax.set_xlabel("Vietnam heat, three months (z)")
-        ax.set_title(bean.capitalize(), loc="left")
+        ax.set_title(f"{bean.capitalize()} return (real removed) vs weather", loc="left")
     axes[0].set_ylabel("Brazil dryness, three months (z)")
     fig.colorbar(sc, ax=axes, shrink=0.85, label="log return, real removed")
     fig.savefig(os.path.join(FIG, "fig9_scatter.png"), dpi=170, bbox_inches="tight")
@@ -109,7 +111,7 @@ def lag_plot(lags):
             ax.plot(g.lag, g.r, marker="o", ms=4, color=cols[h], lw=1.5, label=names[h])
         ax.axhline(0, color="0.6", lw=0.8)
         ax.set_xlabel("months the weather leads the price")
-        ax.set_title(bean.capitalize(), loc="left")
+        ax.set_title(f"{bean.capitalize()}: correlation with weather by lag", loc="left")
     axes[0].set_ylabel("Gaussian-rank correlation")
     axes[1].legend(frameon=False, fontsize=9, loc="upper right")
     fig.savefig(os.path.join(FIG, "fig10_lags.png"), dpi=170, bbox_inches="tight")
@@ -149,7 +151,7 @@ def dependence_figure():
     ax.axvline(0.10, color=GREY, lw=1, ls=":", label="chance (empirical)")
     ax.set_yticks(y, [names[k] for k in keys]); ax.invert_yaxis()
     ax.set_xlabel("upper-tail dependence")
-    ax.set_title("Tail dependence", loc="left")
+    ax.set_title("Tail dependence, weather vs price", loc="left")
     ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(0.45, -0.18), ncol=3)
     ax = fig.add_subplot(gs[1])
     s = pd.read_csv(os.path.join(RES, "dcc.csv"), index_col=0, parse_dates=True)
@@ -157,7 +159,7 @@ def dependence_figure():
     ax.axhline(s.dcc.mean(), color=GREY, lw=0.9, ls="--")
     shade(ax, label=False)
     ax.set_ylabel("correlation")
-    ax.set_title("Arabica and robusta, DCC-GARCH", loc="left")
+    ax.set_title("Arabica-robusta correlation (DCC-GARCH)", loc="left")
     fig.savefig(os.path.join(FIG, "fig11_dependence.png"), dpi=170, bbox_inches="tight")
     plt.close(fig)
 
@@ -178,17 +180,62 @@ def bean_tail_figure():
             ax.annotate(t.strftime("%b %Y"), (x[t], y[t]), xytext=(4, 3), textcoords="offset points", fontsize=8.5, color=NAVY)
     ax.axvline(x.quantile(0.9), color=GREY, lw=0.8, ls=":"); ax.axhline(y.quantile(0.9), color=GREY, lw=0.8, ls=":")
     ax.set_xlabel("arabica, log return (real removed)"); ax.set_ylabel("robusta, log return (real removed)")
-    ax.set_title("Arabica and robusta", loc="left"); ax.legend(frameon=False, fontsize=8.5, loc="upper left")
+    ax.set_title("Arabica vs robusta monthly returns", loc="left"); ax.legend(frameon=False, fontsize=8.5, loc="upper left")
     ax = axes[1]
     ax.plot(r.month, r.tail_lambda, color=NAVY, lw=1.6)
     ax.axhline(d["tail_lambda"], color=GREY, lw=0.9, ls="--")
     shade(ax)
     ax.set_ylabel("upper-tail dependence (Gumbel)")
-    ax.set_title("Rolling eight-year tail dependence", loc="left")
+    ax.set_title("Arabica-robusta tail dependence, rolling 8 years", loc="left")
     fig.savefig(os.path.join(FIG, "fig12_bean_tail.png"), dpi=170, bbox_inches="tight")
+    plt.close(fig)
+
+
+def copula_figure():
+    """Copula density rings in normal-score space, Gumbel against Gaussian, months on top."""
+    import json
+    from scipy.stats import norm, multivariate_normal, rankdata
+    d = json.load(open(os.path.join(RES, "dependence.json")))["beans_tail"]
+    df = pd.read_csv(os.path.join(RES, "weather_monthly.csv"), index_col=0, parse_dates=True)
+    u = rankdata(df.arabica_res) / (len(df) + 1); v = rankdata(df.robusta_res) / (len(df) + 1)
+    zu, zv = norm.ppf(u), norm.ppf(v)
+    g = np.linspace(-3.2, 3.2, 241); X, Y = np.meshgrid(g, g)
+    U, V = norm.cdf(X), norm.cdf(Y)
+    th, rho = d["theta"], d["gaussian_rho"]
+
+    def gumbel_density(U, V):
+        a, b = -np.log(U), -np.log(V); sm = a ** th + b ** th; A = sm ** (1 / th)
+        c = np.exp(-A + np.log(A + th - 1) + (1 - 2 * th) / th * np.log(sm) + (th - 1) * (np.log(a) + np.log(b)) + a + b)
+        return c * norm.pdf(X) * norm.pdf(Y)
+
+    gauss = multivariate_normal([0, 0], [[1, rho], [rho, 1]])
+    dens = {"Gumbel copula": gumbel_density(U, V), "Gaussian copula": gauss.pdf(np.dstack([X, Y]))}
+    q = 0.9
+    p_both = {"Gumbel copula": 1 - 2 * q + np.exp(-(2 * (-np.log(q)) ** th) ** (1 / th)),
+              "Gaussian copula": 1 - 2 * q + gauss.cdf([norm.ppf(q), norm.ppf(q)])}
+    emp = float(((u > q) & (v > q)).mean())
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5.6), sharey=True)
+    for ax, (name, Z) in zip(axes, dens.items()):
+        ax.contourf(X, Y, Z, levels=12, cmap="Blues", alpha=0.9)
+        ax.contour(X, Y, Z, levels=12, colors=NAVY, linewidths=0.5, alpha=0.6)
+        k = norm.ppf(q)
+        ax.add_patch(plt.Rectangle((k, k), 3.2 - k, 3.2 - k, color=RED, alpha=0.15, lw=0))
+        both = (u > q) & (v > q)
+        ax.scatter(zu[~both], zv[~both], s=9, color="white", edgecolor=NAVY, lw=0.4)
+        ax.scatter(zu[both], zv[both], s=26, color=RED, edgecolor="white", lw=0.5)
+        ax.text(0.03, 0.97, f"chance both are top 10%:\n  {name.split()[0]} {p_both[name]:.1%}\n"
+                            f"  observed {emp:.1%}\n  independent 1.0%",
+                transform=ax.transAxes, va="top", fontsize=9, color=NAVY,
+                bbox=dict(facecolor="white", alpha=0.8, edgecolor="none"))
+        ax.set_xlim(-3.2, 3.2); ax.set_ylim(-3.2, 3.2); ax.set_aspect("equal")
+        ax.set_xlabel("arabica return, normal score")
+        ax.set_title(f"{name}, arabica vs robusta", loc="left")
+    axes[0].set_ylabel("robusta return, normal score")
+    fig.savefig(os.path.join(FIG, "fig13_copula.png"), dpi=170, bbox_inches="tight")
     plt.close(fig)
 
 
 if __name__ == "__main__":
     dependence_figure()
     bean_tail_figure()
+    copula_figure()
