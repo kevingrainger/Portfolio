@@ -8,6 +8,8 @@
 #                       move once the real is out; the largest moves outlined and labelled
 #   fig10_lags          correlation of each hazard with each bean against lag, with the
 #                       95% band from the effective sample size
+#   fig11_dependence    tail dependence (empirical and Gumbel copula), and the arabica-robusta
+#                       correlation through time from DCC-GARCH, weather events shaded
 #
 #   python make_weather_figures.py
 
@@ -129,32 +131,31 @@ if __name__ == "__main__":
 def dependence_figure():
     import json
     d = json.load(open(os.path.join(RES, "dependence.json")))
-    fig = plt.figure(figsize=(13, 4.8))
-    gs = fig.add_gridspec(1, 3, width_ratios=[0.9, 1.2, 1.2], wspace=0.32)
+    fig = plt.figure(figsize=(13, 4.6))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.5], wspace=0.45)
     ax = fig.add_subplot(gs[0])
     names = {"robusta|vietnam_heat": "Robusta, Vietnam heat", "arabica|vietnam_heat": "Arabica, Vietnam heat",
              "arabica|brazil_dry": "Arabica, Brazil dryness", "robusta|brazil_dry": "Robusta, Brazil dryness"}
     keys = list(names)
-    vals = [d["tail"][k]["tail"] for k in keys]
-    ax.barh(range(len(keys)), vals, color=[RED, RED, BLUE, BLUE], height=0.6)
-    ax.axvline(0.10, color=GREY, lw=1, ls=":", label="independent")
-    ax.axvline(d["tail"][keys[0]]["null_95"], color=NAVY, lw=1, ls="--", label="95% of shuffles")
-    ax.set_yticks(range(len(keys)), [names[k] for k in keys]); ax.invert_yaxis()
-    ax.set_xlabel("share of extreme-weather months\nthat were top-10% price rises")
-    ax.set_title("Tail dependence", loc="left"); ax.legend(frameon=False, fontsize=8.5, loc="lower right")
-    for i, (pair, title) in enumerate([("robusta_vietnam_heat", "Robusta and Vietnam heat"),
-                                       ("arabica_brazil_dry", "Arabica and Brazil dryness")]):
-        z = np.load(os.path.join(RES, f"coherence_{pair}.npz"))
-        t = pd.to_datetime(z["time"]); P = z["periods"]
-        ax = fig.add_subplot(gs[i + 1])
-        m = ax.pcolormesh(t, P, z["R2"], cmap="Blues", vmin=0, vmax=1, shading="auto")
-        ax.contour(t, P, z["R2"] / z["sig95"], levels=[1], colors=RED, linewidths=1.1)
-        ax.fill_between(t, z["coi"], P.max(), color="white", alpha=0.55, lw=0)
-        ax.set_yscale("log"); ax.set_ylim(P.min(), P.max()); ax.invert_yaxis()
-        ax.set_yticks([6, 12, 24, 48, 96], ["6", "12", "24", "48", "96"])
-        ax.set_ylabel("period (months)"); ax.set_title(title, loc="left")
-        ax.spines[["top", "right"]].set_visible(True)
-    fig.colorbar(m, ax=fig.axes[1:], shrink=0.85, label="wavelet coherence")
+    y = np.arange(len(keys))
+    ax.barh(y, [d["tail"][k]["tail"] for k in keys], color=[RED, RED, BLUE, BLUE], height=0.55, alpha=0.85,
+            label="empirical, top 10%")
+    lam = np.array([d["copula"][k]["tail_lambda"] for k in keys])
+    lo = np.array([d["copula"][k]["tail_lambda_90"][0] for k in keys])
+    hi = np.array([d["copula"][k]["tail_lambda_90"][1] for k in keys])
+    ax.errorbar(lam, y, xerr=[lam - lo, hi - lam], fmt="D", color=NAVY, ms=5, capsize=3, label="Gumbel copula, 90% interval")
+    ax.axvline(0.10, color=GREY, lw=1, ls=":", label="chance (empirical)")
+    ax.set_yticks(y, [names[k] for k in keys]); ax.invert_yaxis()
+    ax.set_xlabel("upper-tail dependence")
+    ax.set_title("Tail dependence", loc="left")
+    ax.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(0.45, -0.18), ncol=3)
+    ax = fig.add_subplot(gs[1])
+    s = pd.read_csv(os.path.join(RES, "dcc.csv"), index_col=0, parse_dates=True)
+    ax.plot(s.index, s.dcc, color=NAVY, lw=1.5)
+    ax.axhline(s.dcc.mean(), color=GREY, lw=0.9, ls="--")
+    shade(ax, label=False)
+    ax.set_ylabel("correlation")
+    ax.set_title("Arabica and robusta, DCC-GARCH", loc="left")
     fig.savefig(os.path.join(FIG, "fig11_dependence.png"), dpi=170, bbox_inches="tight")
     plt.close(fig)
 
