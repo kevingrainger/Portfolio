@@ -1,70 +1,74 @@
-# How much of the coffee price is weather?
+# Weather and coffee price correlation
 
-![Arabica since 2000, with every frost night and dry spell marked](figures/fig4_timeline.png)
+![Arabica and robusta with the real, Brazil's dryness, Vietnam's heat and dryness and El Niño, 2004-2026](figures/fig8_stacked.png)
 
-## Why I asked this
+## Why I did this
 
-I started from the frost of July 2021, when arabica rose by a third in a week, and from Richard Roll's (1984) finding that orange-juice futures forecast Florida's weather better than the weather service did. The first version of this project asked whether the coffee market reads frost forecasts as promptly. It does, but that turned out to be the smaller question. Looking at 26 years of prices, the frost nights barely register, so the project now asks how much of the price weather explains at all, and what explains the rest.
+There is a large literature on weather and coffee prices. I started from the Brazilian frost of July 2021, when arabica rose by a third in a week, and from Richard Roll's (1984) finding that orange-juice futures forecast Florida's weather. Frost turned out to be rare, so the project widened: how much do the weather risks of the two main origins, Brazil (arabica) and Vietnam (robusta), move both beans, how do those risks combine, and can a seasonal forecast tell a European importer when to buy forward? Coffee buyers hedge, so this is written from the importer's side.
 
-## The idea, from one frost
+## Data
 
-Frost damages coffee at ground level in hollows on clear nights, several degrees colder than the 2 m air temperature a 25 km model cell reports, so a grid-cell minimum near 5 °C is already frost weather. Over eight producing regions in Brazil, weighted by output, our frost index can be written as such:
+- **Prices.** World Bank Pink Sheet, monthly arabica and robusta, 2004-2026, as log returns.
+- **The standard driver, stripped out first.** Each bean's return is regressed on the month's change in Brazilian reais per dollar and only the residual is kept, as gas was taken out of the Italian power price (009). On these monthly prices the real explains about 4% of each bean's moves.
+- **Weather.** ERA5 for each origin: the worst frost night and three-month dryness over eight producing regions of Brazil, weighted by output; three-month heat and dryness in Vietnam's Central Highlands. El Niño from NOAA's Oceanic Niño Index.
+- **Seasonal forecasts.** ECMWF SEAS5, issued every month since 1993, rain and temperature over both origins for the next three months.
 
-$$C(\text{day}) = \sum_r w_r \max\big(0,\ 5 - T^{\min}_r(\text{day})\big), \qquad W(t) = \max_{n = 1..7} C(t+n \mid \text{issued } t).$$
+## Weather moves both beans, in both regions
 
-Where C is the frost that actually happened (ERA5) and W(t) is the frost warning in the forecasts issued on day t (GFS archived by lead time from 2021, ECMWF from 2024). The interactive map on the website shows our eight regions and the worst frost nights since 1990, one layer per night.
+![Correlation of each hazard with each bean against lag](figures/fig10_lags.png)
 
-![The frost calendar, 1990-2026](figures/fig6_frost_calendar.png)
+A single correlation coefficient undersells weather, which rarely matters and then matters a lot, so four measures are used:
 
-The calendar is the first surprise. Damaging frost comes a handful of nights a decade (1994, 2000, 2019 and 2021), and most winters have none.
+- **Partial correlation** (Gaussian-rank, the real held fixed): Vietnam heat is about 0.17 with each bean, Brazilian dryness 0.13 with robusta.
+- **Lags:** Vietnam heat moves robusta in the same month and leads arabica by about five months.
+- **Tail dependence:** of the hottest tenth of months in Vietnam, 32% were also top-10% price rises for each bean, against 10% by chance (p ≈ 0.003 from block-shuffled prices). Brazilian dryness doesn't pass this test.
+- **A Gumbel copula,** which models extremes arriving together, fits Vietnam heat against each bean better than a Gaussian copula and puts the tail dependence at about 0.15 (90% interval 0.05-0.24). A Gaussian copula has none by construction.
 
-## What I expected, and what happened
+![Tail dependence of weather and price, and the arabica-robusta correlation through time](figures/fig11_dependence.png)
 
-I expected frost to be the main weather risk in coffee, since it is the one that makes the news. We can test that two ways.
+## The risk compounds across origins
 
-We can start with daily data since 2000. The days from two before to five after an ERA5 frost night are 0.5% of trading days and carry 3% of the price variance. Of the fifteen largest weekly moves since 2000 only one, July 2021, follows a frost. The largest of all, +19% in February 2014, came from a drought in Minas Gerais with no frost anywhere near it.
+![Compound weather events and the price moves that followed](figures/fig14_compound.png)
 
-Next we need the other candidates, so I regressed each month's change in the front-month price, 2004 to 2026 (255 months), on four drivers. These are the month's worst frost, Brazilian dryness (three-month rain against the same months of other years), dryness and heat in Vietnam's Central Highlands (where most of the world's robusta grows), and the month's change in the Brazilian real against the dollar. To split the explained variance fairly between drivers that overlap I used Shapley values, which give each driver its average gain in R² over every order of adding them, so the shares add up to the total.
+A month is a weather hit in Brazil if it is unusually dry or has a damaging frost, and in Vietnam if it is unusually hot or dry. Hits in the two regions come together about as often as chance would give (6.3% of months against 6.1%), but the price impact compounds:
 
-![What moves arabica month to month](figures/fig7_drivers.png)
+| Weather hit | Arabica | Robusta | Months |
+|---|:-:|:-:|:-:|
+| Neither | -0.8% | -0.4% | 144 |
+| Brazil only | +0.3% | -0.3% | 49 |
+| Vietnam only | +1.0% | +0.4% | 45 |
+| Both at once | +3.5% | +3.4% | 16 |
 
-We see all four together explain 10% of the monthly moves, and the Brazilian real alone explains 9%. This is because when the real weakens, a Brazilian farmer earns more reais per dollar of coffee and sells more, and the dollar price falls (a correlation of −0.29). Vietnam's weather adds 0.9%, Brazil's dryness 0.5% and frost 0.07%. This means the currency matters more than all the weather put together, and most of what moves coffee (stocks, demand, positioning) is not in our data.
+The both-at-once months are significant against block-shuffled prices (p = 0.02 for arabica, 0.009 for robusta). Seven of the sixteen fall in 2024.
 
-There is an honest caveat, and it is one I only saw once I looked at 2024. A monthly regression credits a driver only in the month it moves. Through 2024 Brazil stayed dry and Vietnam stayed hot for most of the year while the price doubled, and the real weakened at the same time, which by itself would have pushed the price down. Weather that builds slowly is undercounted by this test, so 2% is a floor for weather rather than a ceiling.
+![Gumbel and Gaussian copulas of arabica against robusta](figures/fig13_copula.png)
 
-## How I checked it
+The two beans themselves spike together. A Gumbel copula of arabica against robusta gives an upper-tail coefficient of 0.46 (90% interval 0.39-0.51): when one bean has a top-10% month, the other does too about half the time, about five times what independence would give. The Gaussian copula fits the bulk of the months slightly better but puts the chance of a joint spike at 4.0% against 5.1% observed. On a rolling eight-year window the tail coefficient has risen from about 0.31 in 2013 to 0.55 now (with only about ten extreme months per window, so the line is noisy). DCC-GARCH puts the arabica-robusta correlation between 0.39 and 0.75, with its low point as Vietnam's 2023-24 heat began, when robusta broke away from arabica for a few months.
 
-The frost-timing test is the one from the first version, and it still stands. In the frost seasons of 2021 to 2026 the day's price change does not depend on the previous two days' changes in the warning (t-statistics between −1.3 and 1.4, with Newey–West standard errors). This agrees with Roll: the forecasts are read the same day. In July 2021 the first warning moved the price 3%, but the largest move (+25% over three days) came as the damage reports arrived, which no forecast carries.
+![Arabica-robusta tail dependence, rolling eight years](figures/fig12_bean_tail.png)
 
-![July 2021](figures/fig1_frost_2021.png)
+**So what for an importer:** buying from the other origin is a hedge that works in ordinary months and fails in the months that matter, and it has been failing more. A global hedge has to be sized for joint weather risk, not for the average correlation.
 
-The forward curve gives a second view. Schwartz's (1997) two-factor model treats the spot price and the convenience yield (the benefit of holding physical coffee rather than a contract) as hidden states, and a Kalman filter recovers them from each day's curve. In our case κ = 0.22, so a shock to the convenience yield has a half-life of about three years, and a contract four years out still feels two-thirds of it.
+## A weather-informed forward curve
 
-![The forward curve, 2024-2026](figures/fig5_curve_heatmap.png)
+![Arabica convenience yield from the Kalman filter, and the push on it from Vietnam heat](figures/fig15_kalman.png)
 
-We see in the heatmap each live contract against the front month. Through the 2024–25 rally our curve sat in deep backwardation, with coffee for delivery two to three years out up to 40% cheaper than coffee now. This is what a shortage looks like on a curve. It eased through 2026 as the price fell back.
+A Kalman filter tracks two hidden states from each day's arabica futures curve since 2024: the spot price and the convenience yield (the benefit of holding physical coffee rather than a contract), with Schwartz's (1997) two-factor dynamics. Adding Vietnam heat as a push on the convenience yield improves the fit significantly (likelihood ratio 8.4, p = 0.004); Brazilian dryness doesn't (p = 0.53). The heat push peaks in mid-2024, ahead of the yield's early-2025 high. A frost term, tried first, had nothing to find: no damaging frost fell in the window.
 
-## What went wrong, and what I learned
+## In progress: can the seasonal forecast tell an importer when to buy?
 
-The first version answered its question well and still felt thin, because frost is a rare event and a rare event cannot carry a whole price. Yahoo lists only contracts that are still trading, so our curves start in January 2024 and the heatmap is a diagonal band rather than a full surface. The regional weights are rough shares of Brazil's arabica output, partly checked against CONAB, and Vietnam is only two points. Five frost warnings and four damaging frost nights are few events for any test.
+Each quarter since 2008, the ECMWF forecast issued that month is fed through the relationship above, learned only from earlier years. If it predicts a rise, the importer buys forward; otherwise it waits three months. It is scored on how often the call was right and the average saving, against the same rule driven by persistence (assuming the last three months' weather continues), so the forecast's own contribution shows. `seasonal_backtest.py`
 
-## What I'd do next
+## Earlier findings kept
 
-I'd like to add exchange stocks (the ICE certified stocks) and a crop-size forecast (CONAB's), since those are the obvious candidates for the missing 90%. A slower test, regressing six- or twelve-month returns on season-long dryness, would give the slow weather its due. The 2024 curve, deep in backwardation while the price doubled, is also a good case for a model where the convenience yield responds to stocks.
+The frost study that started this: across 2000-2026 the days around a frost night carry 3% of the price variance, and in July 2021 the forecasts were read the same day but the biggest move came with the damage reports. `run_analysis.py`, figures 1-7.
 
-## Reproducing it
+## Limits
 
-```
-pip install yfinance pandas numpy scipy folium
-python fetch_data.py
-python run_analysis.py
-python drivers.py
-python make_figures.py
-python make_map.py
-```
+Monthly prices smooth short spikes. ERA5 rain over coffee regions is coarse (about 30 km). Only two origins are modelled. The forward curve covers 2024-2026 only, because free data lists only live contracts.
 
-`fetch_data.py` downloads the prices, ERA5, the forecasts, Vietnam's weather and the real in a few minutes. `run_analysis.py` runs the event study, the timing test and the Schwartz fit, `drivers.py` the monthly decomposition, and `make_map.py` the interactive coffee-belt map. Python, NumPy, SciPy, pandas, folium.
+## Code
 
-## Credits
+`weather_signal.py` (the real out, lags, events) · `dependence.py` (partial, tail, copulas, DCC) · `compound.py` · `kalman_weather.py` · `seasonal_backtest.py` · `fetch_prices_enso.py` · `fetch_seas5.py` · `make_weather_figures.py` · earlier: `fetch_data.py`, `run_analysis.py`, `schwartz.py`, `drivers.py` · Python, NumPy, SciPy, arch, xarray, cfgrib, corrlib
 
-Roll (1984), Am. Econ. Rev. 74, 861. Schwartz (1997), J. Finance 52, 923. Gibson & Schwartz (1990), J. Finance 45, 959. Working (1949), Am. Econ. Rev. 39, 1254. Newey & West (1987), Econometrica 55, 703. Shapley (1953) for the decomposition. Weather: ECMWF IFS and NOAA GFS forecasts via the Open-Meteo forecast archive, and ERA5 (Hersbach et al. 2020, QJRMS 146, 1999), CC BY 4.0. Prices and the Brazilian real: Yahoo Finance.
+*A side project, built for fun. Credits: Roll (1984); Schwartz (1997); Engle (2002) for DCC; Joe (1997) for copulas; Newey & West (1987). Data: World Bank Pink Sheet; NOAA CPC Oceanic Niño Index; ERA5 (Hersbach et al. 2020) via Open-Meteo; ECMWF SEAS5 via the Copernicus Climate Data Store; Brazilian real and arabica futures via Yahoo Finance.*
