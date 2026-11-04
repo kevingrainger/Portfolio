@@ -63,6 +63,32 @@ def to_table():
     return out
 
 
+def fetch_batch(origin, years, client):
+    """Several years in one request: the CDS queue, not the size, is the slow part."""
+    path = os.path.join(OUT, f"{origin}_{years[0]}-{years[-1]}.grib")
+    if os.path.exists(path) and os.path.getsize(path) > 0:
+        return path
+    client.retrieve("seasonal-monthly-single-levels", {
+        "originating_centre": "ecmwf", "system": "51",
+        "variable": ["total_precipitation", "2m_temperature"],
+        "product_type": ["monthly_mean"], "year": [str(y) for y in years],
+        "month": [f"{m:02d}" for m in range(1, 13)],
+        "leadtime_month": ["1", "2", "3"], "data_format": "grib", "area": BOXES[origin]}, path)
+    return path
+
+
+def main_batched(origin, start):
+    import cdsapi
+    c = cdsapi.Client(quiet=True)
+    now = int(time.strftime("%Y"))
+    for years in [list(range(start, 2017)), list(range(2017, now))]:
+        if years:
+            fetch_batch(origin, years, c)
+            print(origin, years[0], years[-1], "ok", flush=True)
+    fetch(origin, now, c)
+    print(origin, now, "ok", flush=True)
+
+
 def main():
     import cdsapi
     os.makedirs(OUT, exist_ok=True)
@@ -83,4 +109,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 2 and sys.argv[1] == "--batch":      # e.g. --batch vietnam 2001
+        main_batched(sys.argv[2], int(sys.argv[3]))
+    else:
+        main()

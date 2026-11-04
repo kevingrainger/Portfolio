@@ -272,3 +272,35 @@ def kalman_figure():
 
 if __name__ == "__main__":
     kalman_figure()
+
+
+def seasonal_figure():
+    import json
+    o = json.load(open(os.path.join(RES, "seasonal_backtest.json")))
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.4), gridspec_kw=dict(wspace=0.35))
+    ax = axes[0]
+    hz = ["vietnam_heat", "vietnam_dry", "brazil_dry"]
+    lab = ["Vietnam heat", "Vietnam dryness", "Brazil dryness"]
+    y = np.arange(len(hz)); h = 0.38
+    ax.barh(y - h / 2, [o["forecast_skill"][k] for k in hz], h, color=NAVY, label="ECMWF SEAS5 forecast")
+    ax.barh(y + h / 2, [o["persistence_skill"][k] for k in hz], h, color=LIGHT, label="persistence (last 3 months)")
+    ax.set_yticks(y, lab); ax.invert_yaxis()
+    ax.set_xlabel("correlation with the next three months' observed weather")
+    ax.set_title("Seasonal forecast skill", loc="left"); ax.legend(frameon=False, fontsize=9, loc="lower right")
+    ax = axes[1]
+    keys = ["arabica|forecast", "arabica|persistence", "robusta|forecast", "robusta|persistence"]
+    names = ["Arabica, forecast", "Arabica, persistence", "Robusta, forecast", "Robusta, persistence"]
+    vals = [100 * o["results"][k]["hit_rate"] for k in keys]
+    ax.barh(range(4), vals, color=[NAVY, LIGHT, NAVY, LIGHT], height=0.6)
+    for i, k in enumerate(keys):
+        ax.text(vals[i] + 0.8, i, f"{o['results'][k]['decisions']} decisions", va="center", fontsize=8.5, color=GREY)
+    ax.axvline(50, color=RED, lw=1, ls="--")
+    ax.set_yticks(range(4), names); ax.invert_yaxis(); ax.set_xlim(0, 75)
+    ax.set_xlabel("buy-forward-or-wait calls that were right (%)")
+    ax.set_title("Importer decisions, 2008 on", loc="left")
+    fig.savefig(os.path.join(FIG, "fig16_seasonal.png"), dpi=170, bbox_inches="tight")
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    seasonal_figure()

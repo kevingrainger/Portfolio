@@ -122,7 +122,7 @@ def main():
                      for h in ["brazil_dry", "vietnam_dry", "vietnam_heat"]}
     out = dict(forecast_skill=skill, persistence_skill=skill_persist, results={})
     keep = []
-    setups = {"arabica": ["brazil_dry", "vietnam_heat"], "robusta": ["vietnam_heat", "vietnam_dry", "brazil_dry"]}
+    setups = {"arabica": ["brazil_dry"], "robusta": ["vietnam_heat", "vietnam_dry"]}
     for bean, hz in setups.items():
         for source in ["fc", "last3"]:
             d, s = backtest(df, bean, hz, source)
