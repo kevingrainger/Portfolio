@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 #-------- wheat_2010.py -------------------------------------------------------------
 #-----------------------------------------------------------------------------
-# A wheat producer's hedge through Russia's 2010 drought and export ban.
+# An Italian wheat producer's hedge through Russia's 2010 drought and export ban.
 #
-# The producer: a US winter-wheat farm that, on 3 May 2010, hedges the harvest it will
-# sell on 31 August 2010. CBOT wheat futures (front month, Yahoo ZW=F) stand in for the
-# cash price, so basis is ignored; all revenue is per bushel. Options are European, expire
-# on the sale date and are priced by Black (1976) at the 60-day volatility seen before
-# 3 May (no option quotes are free for 2010), with r = 0.2%.
+# The producer: an Italian soft-wheat farm that, on 3 May 2010, hedges the harvest it will
+# sell on 31 August 2010. It would hedge on Euronext (MATIF) milling wheat, whose daily
+# 2010 history isn't freely available, so CBOT wheat (front month, Yahoo ZW=F) converted to
+# euros per tonne at each day's EUR/USD rate stands in for it; the two moved together on
+# the Russian ban. Basis to the Italian cash price is ignored; all revenue is in euros per
+# tonne. Options are European, expire on the sale date and are priced by Black (1976) at
+# the 60-day volatility seen before 3 May (no option quotes are free for 2010), r = 0.7%
+# (euro rates in 2010).
 #
 # The shock: a record heatwave in western Russia through July 2010, then the grain
-# export ban announced on 5 August. Wheat rose from about $4.60 to $6.60 a bushel.
+# export ban announced on 5 August. Wheat rose from about 135 to 190 euros a tonne.
 #
 # The eight standard producer hedges:
 #   no hedge         sell at harvest at whatever the price is
@@ -45,17 +48,24 @@ RES = os.path.join(HERE, "results")
 DATA = os.path.join(HERE, "data")
 START, SALE = "2010-05-03", "2010-08-31"
 LAYERS = ["2010-05-03", "2010-06-01", "2010-07-01", "2010-08-02"]
-R = 0.002
+R = 0.007
+BU_PER_TONNE = 36.744
 EVENTS = {"2010-07-01": "Russian heatwave builds", "2010-08-05": "Russia bans grain exports"}
 
 
 def prices():
+    """CBOT wheat in euros per tonne."""
     path = os.path.join(DATA, "wheat_2009_2011.csv")
-    if not os.path.exists(path):
+    fxp = os.path.join(DATA, "eurusd_2009_2011.csv")
+    if not os.path.exists(path) or not os.path.exists(fxp):
         import yfinance as yf
         d = yf.download("ZW=F", start="2009-06-01", end="2011-03-01", progress=False, auto_adjust=False)
         (d["Close"].squeeze() / 100).rename("wheat").to_csv(path)       # cents to dollars a bushel
-    return pd.read_csv(path, index_col=0, parse_dates=True).squeeze()
+        e = yf.download("EURUSD=X", start="2009-06-01", end="2011-03-01", progress=False, auto_adjust=True)
+        e["Close"].squeeze().rename("eurusd").to_csv(fxp)
+    usd = pd.read_csv(path, index_col=0, parse_dates=True).squeeze()
+    fx = pd.read_csv(fxp, index_col=0, parse_dates=True).squeeze().reindex(usd.index).ffill()
+    return (usd * BU_PER_TONNE / fx).dropna().rename("wheat_eur_t")
 
 
 def put(F, K, tau, s):
@@ -76,7 +86,7 @@ def setup(F0, tau, s):
 
 
 def revenue(F0, FT, layers, k):
-    """Revenue per bushel at sale for each strategy; FT can be an array of outcomes."""
+    """Revenue per tonne at sale for each strategy; FT can be an array of outcomes."""
     put_pay = lambda K: np.maximum(K - FT, 0)
     call_pay = lambda K: np.maximum(FT - K, 0)
     return {

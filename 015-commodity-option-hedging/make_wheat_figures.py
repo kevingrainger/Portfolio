@@ -37,7 +37,7 @@ def main():
     ax.axvspan(pd.Timestamp(START), pd.Timestamp(SALE), color=LIGHT, alpha=0.18, lw=0)
     for j, (d, name) in enumerate(EVENTS.items()):
         ax.axvline(pd.Timestamp(d), color=RED, lw=1, ls="--")
-        ax.text(pd.Timestamp(d), 8.05 - 0.3 * j, name + " ", color=RED, fontsize=9, ha="right")
+        ax.text(pd.Timestamp(d), 224 - 9 * j, name + " ", color=RED, fontsize=9, ha="right")
     for K, name, c in [(F0, "futures sold / put strike", BLUE), (0.95 * F0, "95% put", LIGHT), (0.85 * F0, "85% put", LIGHT),
                        (k["Kc_collar"], "collar call", RED), (k["Kc_fence"], "three-way call", RED)]:
         ax.hlines(K, pd.Timestamp(START), pd.Timestamp(SALE), color=c, lw=1, ls=":")
@@ -48,8 +48,8 @@ def main():
                 arrowprops=dict(arrowstyle="-", color=GREY), fontsize=9)
     ax.annotate("crop sold", (pd.Timestamp(SALE), o["FT"]), xytext=(15, 20), textcoords="offset points",
                 arrowprops=dict(arrowstyle="-", color=GREY), fontsize=9)
-    ax.set_ylabel("$ per bushel"); ax.set_ylim(4, 8.2)
-    ax.set_title("CBOT wheat, 2010", loc="left")
+    ax.set_ylabel("€ per tonne"); ax.set_ylim(110, 230)
+    ax.set_title("Wheat, euros per tonne, 2010", loc="left")
     fig.savefig(os.path.join(FIG, "fig5_wheat_2010.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
     names = list(o["realised"])
@@ -60,11 +60,11 @@ def main():
     ax.plot([o["realised"][s] for s in names], y, "D", color=NAVY, ms=7, label="2010")
     ax.axvline(F0, color=GREY, lw=0.8, ls=":")
     ax.set_yticks(y, names); ax.invert_yaxis()
-    ax.set_xlabel("revenue at sale, $ per bushel")
+    ax.set_xlabel("revenue at sale, € per tonne")
     ax.set_title("Producer revenue by hedge", loc="left"); ax.legend(frameon=False, fontsize=9, loc="upper center", bbox_to_anchor=(0.5, -0.15), ncol=2)
     fig.savefig(os.path.join(FIG, "fig6_wheat_revenue.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
-    FT = np.linspace(3.2, 7.2, 200)
+    FT = np.linspace(90, 200, 200)
     rev = revenue(F0, FT, np.full_like(FT, np.mean(o["layer_prices"])), k)
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), sharey=True)
     groups = [["no hedge", "short futures", "50% futures", "long put"], ["zero-cost collar", "put spread", "three-way"]]
@@ -72,9 +72,9 @@ def main():
     for ax, g, cset in zip(axes, groups, [cols[:4], cols[4:]]):
         for s, c in zip(g, cset):
             ax.plot(FT, rev[s], color=c, lw=1.8, label=s)
-        ax.axvline(o["FT"], color=RED, lw=0.8, ls="--"); ax.text(o["FT"], 3.3, " Aug 2010", color=RED, fontsize=8.5)
-        ax.set_xlabel("wheat price at sale, $ per bushel"); ax.legend(frameon=False, fontsize=9)
-    axes[0].set_ylabel("revenue, $ per bushel")
+        ax.axvline(o["FT"], color=RED, lw=0.8, ls="--"); ax.text(o["FT"], 92, " Aug 2010", color=RED, fontsize=8.5)
+        ax.set_xlabel("wheat price at sale, € per tonne"); ax.legend(frameon=False, fontsize=9)
+    axes[0].set_ylabel("revenue, € per tonne")
     axes[0].set_title("Futures and puts", loc="left"); axes[1].set_title("Option structures", loc="left")
     fig.savefig(os.path.join(FIG, "fig7_wheat_payoffs.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
     print("figures written")
