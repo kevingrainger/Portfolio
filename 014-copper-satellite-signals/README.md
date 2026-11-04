@@ -30,6 +30,17 @@ $$\frac{\rho_{12}}{\rho_{11}} \ge 1.4, \qquad \frac{\rho_{12}}{\rho_{8A}} \ge 1.
 
 ![Smelter heat by month at six sites](figures/fig4_smelter_heat.png)
 
+## A disruption up close: the central Chile storm of July 2026
+
+![COMEX copper, port exports and smelter heat around the July 2026 storm](figures/fig5_chile_2026.png)
+
+A winter storm hit central Chile on 15-21 July 2026 (CRU). Codelco halted Andina's surface operations and El Teniente's open pit stopped shipping ore while the underground mine kept running. Northern Chile was unaffected, so it serves as the control.
+
+- **The ports saw it at once.** Dry-bulk exports from the central ports (San Antonio, Quintero) fell to zero from the first day of the storm and stayed there until about 25 July, then recovered to their pre-storm level by 26 July. The northern copper ports kept shipping.
+- **The price moved within the week.** COMEX copper rose about 3% over the storm and 4.6% by 4 August.
+- **The satellites went blind.** Caletones, which smelts El Teniente's ore, had its last clear Sentinel-2 pass on 11 July and its next on 19 August, a 39-day gap, because cloud and snow covered it. After the storm its heat ran at about 57% of the June level, against a usual summer ratio of about 1.1. Optical imagery can't see a storm while it happens, which is why radar (Sentinel-1) or night-time thermal (VIIRS) is the next step for disruption monitoring.
+- **So detection and price were close together here.** Ships showed the stop the same day and the price moved the same week; the gap between seeing and pricing a disruption was days, not weeks.
+
 The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to live and with Landsat and FIRMS added. It needs a free non-commercial sign-in.
 
 **Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.

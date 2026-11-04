@@ -1,0 +1,44 @@
+{
+ "storm": [
+  "2026-07-15",
+  "2026-07-21"
+ ],
+ "ports": {
+  "central_min": 0.0,
+  "central_min_date": "2026-07-19",
+  "north_min": 0.2175968002837847,
+  "first_day_below_half": "2026-07-03",
+  "recovered_to_90pct": "2026-07-26"
+ },
+ "heat": {
+  "central": {
+   "pre_mean": 54.0,
+   "post_mean": 30.636363636363637,
+   "ratio_2026": 0.5673400673400674,
+   "ratio_2019_2025": 1.1028422272926055,
+   "passes_pre": 11,
+   "passes_post": 11,
+   "longest_gap_days": 39,
+   "last_clear_before": "2026-07-11",
+   "first_clear_after": "2026-08-19"
+  },
+  "north": {
+   "pre_mean": 6.636363636363637,
+   "post_mean": 13.875,
+   "ratio_2026": 2.0907534246575343,
+   "ratio_2019_2025": 0.9629383645713556,
+   "passes_pre": 11,
+   "passes_post": 8,
+   "longest_gap_days": 20,
+   "last_clear_before": "2026-07-14",
+   "first_clear_after": "2026-07-23"
+  }
+ },
+ "price": {
+  "before": 6.329999923706055,
+  "storm_end": 6.511000156402588,
+  "two_weeks_after": 6.618500232696533,
+  "storm_return": 0.02859403394598492,
+  "return_to_aug4": 0.045576668636287954
+ }
+}
