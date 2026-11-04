@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ba9e7a1a13b4594625a13843df1faf07 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_ba9e7a1a13b4594625a13843df1faf07" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_ba9e7a1a13b4594625a13843df1faf07 = L.map(
+                "map_ba9e7a1a13b4594625a13843df1faf07",
+                {
+                    center: [-20.2, -45.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_ba9e7a1a13b4594625a13843df1faf07);
+
+            
+
+        
+    
+            var tile_layer_6efb755f6699550561d5fc8d4900c233 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 10,
+  "maxNativeZoom": 10,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri, HERE, Garmin, OpenStreetMap contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_6efb755f6699550561d5fc8d4900c233.addTo(map_ba9e7a1a13b4594625a13843df1faf07);
+        
+    
+            var feature_group_223f538425006292a15c08e9c4691f75 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_69888e5edc6ca045cb4f083e51f4e9e4 = L.circleMarker(
+                [-21.55, -45.43],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d02690", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.90890230020664, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_69888e5edc6ca045cb4f083e51f4e9e4.bindTooltip(
+                `<div>
+                     Sul de Minas (Varginha): 30% of the index; ERA5 minimum 3.1 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a54cd4b880a44a9a764432e6634340a0 = L.circleMarker(
+                [-21.3, -46.71],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd1186", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_a54cd4b880a44a9a764432e6634340a0.bindTooltip(
+                `<div>
+                     Sul de Minas (Guaxupe): 10% of the index; ERA5 minimum 2.5 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1254b57b767d80fbf8617a54f9c55fdb = L.circleMarker(
+                [-18.94, -46.99],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e7489b", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.491933384829668, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_1254b57b767d80fbf8617a54f9c55fdb.bindTooltip(
+                `<div>
+                     Cerrado Mineiro (Patrocinio): 15% of the index; ERA5 minimum 4.1 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7840ae37f0dfb2684da00932e1623fd2 = L.circleMarker(
+                [-20.26, -42.03],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fde5e2", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.492422502470642, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_7840ae37f0dfb2684da00932e1623fd2.bindTooltip(
+                `<div>
+                     Matas de Minas (Manhuacu): 17% of the index; ERA5 minimum 9.8 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_359e7493d72311e3d63583b3f20830b0 = L.circleMarker(
+                [-20.54, -47.4],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96017b", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.31370849898476, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_359e7493d72311e3d63583b3f20830b0.bindTooltip(
+                `<div>
+                     Mogiana (Franca): 8% of the index; ERA5 minimum 1.3 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_21cddb32ce4337212a9d6c4185a2f4c8 = L.circleMarker(
+                [-20.34, -41.13],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fef0ec", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_21cddb32ce4337212a9d6c4185a2f4c8.bindTooltip(
+                `<div>
+                     Espirito Santo highlands: 10% of the index; ERA5 minimum 10.5 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bbb3e60e6917c333788ee65bc4319edb = L.circleMarker(
+                [-14.86, -40.84],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7f3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_bbb3e60e6917c333788ee65bc4319edb.bindTooltip(
+                `<div>
+                     Bahia plateau (Vitoria da Conquista): 5% of the index; ERA5 minimum 15.2 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_612f30316d3954cc3480a980f6d50d7a = L.circleMarker(
+                [-23.31, -51.16],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#91017a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_223f538425006292a15c08e9c4691f75);
+        
+    
+            circle_marker_612f30316d3954cc3480a980f6d50d7a.bindTooltip(
+                `<div>
+                     Parana (Londrina): 5% of the index; ERA5 minimum 1.2 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_70eaf86fc9469b2f9489f02285ae8517 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_b156a49f360ad3c4b7381733d768ca84 = L.circleMarker(
+                [-21.55, -45.43],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c01588", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.90890230020664, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_b156a49f360ad3c4b7381733d768ca84.bindTooltip(
+                `<div>
+                     Sul de Minas (Varginha): 30% of the index; ERA5 minimum 2.6 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3451c217d93084f376d18fbf6720492d = L.circleMarker(
+                [-21.3, -46.71],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f87aa8", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_3451c217d93084f376d18fbf6720492d.bindTooltip(
+                `<div>
+                     Sul de Minas (Guaxupe): 10% of the index; ERA5 minimum 5.5 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_78ff98b7828c670b5556dd316493b9cc = L.circleMarker(
+                [-18.94, -46.99],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f98dae", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.491933384829668, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_78ff98b7828c670b5556dd316493b9cc.bindTooltip(
+                `<div>
+                     Cerrado Mineiro (Patrocinio): 15% of the index; ERA5 minimum 6.0 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c9d67cab48807b73fa3794b1d2064b61 = L.circleMarker(
+                [-20.26, -42.03],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fcd1cd", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.492422502470642, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_c9d67cab48807b73fa3794b1d2064b61.bindTooltip(
+                `<div>
+                     Matas de Minas (Manhuacu): 17% of the index; ERA5 minimum 8.7 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_17b58f7b8a7e06dc5ed717a5d94d4d9c = L.circleMarker(
+                [-20.54, -47.4],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f25d9f", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.31370849898476, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_17b58f7b8a7e06dc5ed717a5d94d4d9c.bindTooltip(
+                `<div>
+                     Mogiana (Franca): 8% of the index; ERA5 minimum 4.7 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4f9ec4c8be6494d3e3f8bf36b199b2a5 = L.circleMarker(
+                [-20.34, -41.13],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fdd7d4", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_4f9ec4c8be6494d3e3f8bf36b199b2a5.bindTooltip(
+                `<div>
+                     Espirito Santo highlands: 10% of the index; ERA5 minimum 9.0 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9d3e4d4a2698528daae1d819ffa11104 = L.circleMarker(
+                [-14.86, -40.84],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7f3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_9d3e4d4a2698528daae1d819ffa11104.bindTooltip(
+                `<div>
+                     Bahia plateau (Vitoria da Conquista): 5% of the index; ERA5 minimum 15.5 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8cce6057a560ac8d43d629871d44b025 = L.circleMarker(
+                [-23.31, -51.16],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d32992", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_70eaf86fc9469b2f9489f02285ae8517);
+        
+    
+            circle_marker_8cce6057a560ac8d43d629871d44b025.bindTooltip(
+                `<div>
+                     Parana (Londrina): 5% of the index; ERA5 minimum 3.2 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_d923cd4d54ad0aaf5873f8579b68e0c4 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_eaa03955ebab10e687ea9f4a8911d74d = L.circleMarker(
+                [-21.55, -45.43],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e4429a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.90890230020664, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_eaa03955ebab10e687ea9f4a8911d74d.bindTooltip(
+                `<div>
+                     Sul de Minas (Varginha): 30% of the index; ERA5 minimum 3.9 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_169d1b92c08bac0653bc3e9021498a88 = L.circleMarker(
+                [-21.3, -46.71],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c71d8c", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_169d1b92c08bac0653bc3e9021498a88.bindTooltip(
+                `<div>
+                     Sul de Minas (Guaxupe): 10% of the index; ERA5 minimum 2.8 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_95c20d0f792bcf8bb4d1ea682b0102e5 = L.circleMarker(
+                [-18.94, -46.99],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f770a4", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.491933384829668, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_95c20d0f792bcf8bb4d1ea682b0102e5.bindTooltip(
+                `<div>
+                     Cerrado Mineiro (Patrocinio): 15% of the index; ERA5 minimum 5.2 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e91be04df0fce7dfe01ce7fdac238e7c = L.circleMarker(
+                [-20.26, -42.03],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fddedb", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.492422502470642, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_e91be04df0fce7dfe01ce7fdac238e7c.bindTooltip(
+                `<div>
+                     Matas de Minas (Manhuacu): 17% of the index; ERA5 minimum 9.4 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cc5882cf932fcf09ff6bf4dd7a0e0840 = L.circleMarker(
+                [-20.54, -47.4],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e4429a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.31370849898476, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_cc5882cf932fcf09ff6bf4dd7a0e0840.bindTooltip(
+                `<div>
+                     Mogiana (Franca): 8% of the index; ERA5 minimum 3.9 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1ae4268e16550792256729b9d223f11a = L.circleMarker(
+                [-20.34, -41.13],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee6e3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_1ae4268e16550792256729b9d223f11a.bindTooltip(
+                `<div>
+                     Espirito Santo highlands: 10% of the index; ERA5 minimum 9.9 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7b52dd9fb34b3365c9aabf1ba0708dfb = L.circleMarker(
+                [-14.86, -40.84],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7f3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_7b52dd9fb34b3365c9aabf1ba0708dfb.bindTooltip(
+                `<div>
+                     Bahia plateau (Vitoria da Conquista): 5% of the index; ERA5 minimum 14.9 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ff02976cccf09277889069e574812723 = L.circleMarker(
+                [-23.31, -51.16],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eb509c", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_d923cd4d54ad0aaf5873f8579b68e0c4);
+        
+    
+            circle_marker_ff02976cccf09277889069e574812723.bindTooltip(
+                `<div>
+                     Parana (Londrina): 5% of the index; ERA5 minimum 4.3 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_1cccb6a3a6ac7670b7d3676ff5769195 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_ebfa5cdfe8da11bda58df40178fce050 = L.circleMarker(
+                [-21.55, -45.43],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d32992", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.90890230020664, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_ebfa5cdfe8da11bda58df40178fce050.bindTooltip(
+                `<div>
+                     Sul de Minas (Varginha): 30% of the index; ERA5 minimum 3.2 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ef5ce04e37b0278251d9e83fc40734f6 = L.circleMarker(
+                [-21.3, -46.71],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b10580", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_ef5ce04e37b0278251d9e83fc40734f6.bindTooltip(
+                `<div>
+                     Sul de Minas (Guaxupe): 10% of the index; ERA5 minimum 2.1 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2bcd056242fedf40e4938dfd1279176c = L.circleMarker(
+                [-18.94, -46.99],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f881aa", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.491933384829668, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_2bcd056242fedf40e4938dfd1279176c.bindTooltip(
+                `<div>
+                     Cerrado Mineiro (Patrocinio): 15% of the index; ERA5 minimum 5.7 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_12f3f910702ab1f6b10ebbbfd211259d = L.circleMarker(
+                [-20.26, -42.03],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fcc2bf", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.492422502470642, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_12f3f910702ab1f6b10ebbbfd211259d.bindTooltip(
+                `<div>
+                     Matas de Minas (Manhuacu): 17% of the index; ERA5 minimum 7.9 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_51f5b3bb3e132a1b574ca04e5ceda2f5 = L.circleMarker(
+                [-20.54, -47.4],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e7489b", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.31370849898476, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_51f5b3bb3e132a1b574ca04e5ceda2f5.bindTooltip(
+                `<div>
+                     Mogiana (Franca): 8% of the index; ERA5 minimum 4.1 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_86c01e80c5882f67a949b0e490abaf6d = L.circleMarker(
+                [-20.34, -41.13],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fcbebe", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_86c01e80c5882f67a949b0e490abaf6d.bindTooltip(
+                `<div>
+                     Espirito Santo highlands: 10% of the index; ERA5 minimum 7.7 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e6c40d90f3c15e7863b235ba297d32e3 = L.circleMarker(
+                [-14.86, -40.84],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7f3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_e6c40d90f3c15e7863b235ba297d32e3.bindTooltip(
+                `<div>
+                     Bahia plateau (Vitoria da Conquista): 5% of the index; ERA5 minimum 13.7 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9076e7731317abec67babb6e7414d27a = L.circleMarker(
+                [-23.31, -51.16],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b70b83", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_1cccb6a3a6ac7670b7d3676ff5769195);
+        
+    
+            circle_marker_9076e7731317abec67babb6e7414d27a.bindTooltip(
+                `<div>
+                     Parana (Londrina): 5% of the index; ERA5 minimum 2.3 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_9db024583dd300df142b9c31635f8298 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_fc1735b0bd676fb47e2c85edc4fb1785 = L.circleMarker(
+                [-21.55, -45.43],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f986ac", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.90890230020664, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_fc1735b0bd676fb47e2c85edc4fb1785.bindTooltip(
+                `<div>
+                     Sul de Minas (Varginha): 30% of the index; ERA5 minimum 5.8 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f46fc16f69d57aa2d5e9033939ac5412 = L.circleMarker(
+                [-21.3, -46.71],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#df3898", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_f46fc16f69d57aa2d5e9033939ac5412.bindTooltip(
+                `<div>
+                     Sul de Minas (Guaxupe): 10% of the index; ERA5 minimum 3.6 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6004859d2466af142313d5228a4b268c = L.circleMarker(
+                [-18.94, -46.99],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f87aa8", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.491933384829668, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_6004859d2466af142313d5228a4b268c.bindTooltip(
+                `<div>
+                     Cerrado Mineiro (Patrocinio): 15% of the index; ERA5 minimum 5.5 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8a3542d8ca86ca2ee16fe462ad39cee8 = L.circleMarker(
+                [-20.26, -42.03],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fbbbbd", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.492422502470642, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_8a3542d8ca86ca2ee16fe462ad39cee8.bindTooltip(
+                `<div>
+                     Matas de Minas (Manhuacu): 17% of the index; ERA5 minimum 7.6 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ef4b19143759ea8c50847a9c7aa32c2e = L.circleMarker(
+                [-20.54, -47.4],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#df3898", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.31370849898476, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_ef4b19143759ea8c50847a9c7aa32c2e.bindTooltip(
+                `<div>
+                     Mogiana (Franca): 8% of the index; ERA5 minimum 3.6 C (frost weather)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4e5ddbc67755ead80eeb6ffc7309a628 = L.circleMarker(
+                [-20.34, -41.13],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7f3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.64911064067352, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_4e5ddbc67755ead80eeb6ffc7309a628.bindTooltip(
+                `<div>
+                     Espirito Santo highlands: 10% of the index; ERA5 minimum 11.1 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b6f5bd8c11aa00d48c1a2050de902f0f = L.circleMarker(
+                [-14.86, -40.84],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7f3", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_b6f5bd8c11aa00d48c1a2050de902f0f.bindTooltip(
+                `<div>
+                     Bahia plateau (Vitoria da Conquista): 5% of the index; ERA5 minimum 11.3 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f711f30217ab5d1fd77c1b1f429a0454 = L.circleMarker(
+                [-23.31, -51.16],
+                {"bubblingMouseEvents": true, "color": "#333333", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f770a4", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9db024583dd300df142b9c31635f8298);
+        
+    
+            circle_marker_f711f30217ab5d1fd77c1b1f429a0454.bindTooltip(
+                `<div>
+                     Parana (Londrina): 5% of the index; ERA5 minimum 5.2 C (above the 5 C line)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_9db024583dd300df142b9c31635f8298.addTo(map_ba9e7a1a13b4594625a13843df1faf07);
+        
+    
+            var layer_control_d75697d01942e0b0abcdc7d29a319d03_layers = {
+                base_layers : {
+                    "light grey base" : tile_layer_6efb755f6699550561d5fc8d4900c233,
+                },
+                overlays :  {
+                    "27 Jun 1994: frost index 1.44" : feature_group_223f538425006292a15c08e9c4691f75,
+                    "18 Jul 2000: frost index 0.83" : feature_group_70eaf86fc9469b2f9489f02285ae8517,
+                    "07 Jul 2019: frost index 0.67" : feature_group_d923cd4d54ad0aaf5873f8579b68e0c4,
+                    "30 Jul 2021: frost index 1.04" : feature_group_1cccb6a3a6ac7670b7d3676ff5769195,
+                    "20 May 2022: frost index 0.25" : feature_group_9db024583dd300df142b9c31635f8298,
+                },
+            };
+            let layer_control_d75697d01942e0b0abcdc7d29a319d03 = L.control.layers(
+                layer_control_d75697d01942e0b0abcdc7d29a319d03_layers.base_layers,
+                layer_control_d75697d01942e0b0abcdc7d29a319d03_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_ba9e7a1a13b4594625a13843df1faf07);
+
+        
+</script>
+</html>

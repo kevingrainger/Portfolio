@@ -14,6 +14,8 @@
 #             The forecast archives keep the value forecast for each hour as issued
 #             n days earlier ("previous_dayN"), which is exactly what a trader saw.
 #
+#   drivers   ERA5 for Vietnam's robusta highlands, and the Brazilian real (BRL=X)
+#
 #   python fetch_data.py            # all of it, a few minutes
 #   python fetch_data.py prices     # one part
 #
@@ -110,6 +112,32 @@ def fetch_forecasts(model, start):
     pd.concat(frames).to_csv(path, index=False)
 
 
+#-------- the other candidate drivers --------------------------------------------------
+# Vietnam's Central Highlands grow most of the world's robusta, and a robusta shortfall
+# pulls arabica up with it; the Brazilian real sets what a Brazilian farmer earns per
+# dollar of coffee sold.
+VIETNAM = {"Dak Lak (Buon Ma Thuot)": (12.67, 108.05, 0.6), "Lam Dong (Bao Loc)": (11.55, 107.81, 0.4)}
+
+
+def fetch_drivers(start="1990-01-01"):
+    path = os.path.join(DATA, "weather_vietnam.csv")
+    if not os.path.exists(path):
+        frames = []
+        for name, (lat, lon, _) in VIETNAM.items():
+            q = dict(latitude=lat, longitude=lon, start_date=start, end_date=str(TODAY - datetime.timedelta(days=6)),
+                     daily="temperature_2m_max,precipitation_sum", timezone="Asia/Bangkok")
+            r = get_json("https://archive-api.open-meteo.com/v1/archive?" + urllib.parse.urlencode(q))
+            frames.append(pd.DataFrame(r["daily"]).assign(region=name))
+            print(f"era5 {name}: {len(frames[-1])} days")
+        pd.concat(frames).to_csv(path, index=False)
+    brl = os.path.join(DATA, "brl_usd.csv")
+    if not os.path.exists(brl):
+        import yfinance as yf
+        s = yf.download("BRL=X", start="2000-01-01", progress=False, auto_adjust=False)["Close"].squeeze()
+        s.rename("BRL").to_csv(brl)
+        print(f"BRL per USD: {len(s)} days")
+
+
 def main():
     os.makedirs(DATA, exist_ok=True)
     part = sys.argv[1] if len(sys.argv) > 1 else "all"
@@ -119,6 +147,8 @@ def main():
         fetch_era5()
         fetch_forecasts("ecmwf_ifs025", "2024-02-01")
         fetch_forecasts("gfs_seamless", "2021-03-23")
+    if part in ("all", "drivers"):
+        fetch_drivers()
 
 
 if __name__ == "__main__":
