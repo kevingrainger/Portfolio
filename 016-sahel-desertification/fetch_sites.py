@@ -15,9 +15,16 @@
 #           is already the clearest view of its 16 days, and the median over 400 pixels
 #           shrugs off what cloud is left.
 #
-#   python fetch_sites.py
+# A second, gauge-based rain source (needs an Earth Engine account):
+#   CHIRPS  daily rainfall, 0.05 deg, 1981- (UCSB-CHG/CHIRPS/DAILY; Funk et al. 2015),
+#           the mean over the same 0.5 x 0.5 deg box as the ERA5 points
+#   IMERG   monthly rainfall, 0.1 deg, 2000- (NASA/GPM_L3/IMERG_MONTHLY_V07; Huffman et
+#           al.), satellite only, as an independent check on CHIRPS
 #
-# Output: data/rain_<site>.csv, data/ndvi_<site>.csv
+#   python fetch_sites.py
+#   python fetch_sites.py --chirps     also CHIRPS and IMERG (earthengine authenticate first; EE_PROJECT)
+#
+# Output: data/rain_<site>.csv, data/ndvi_<site>.csv, data/chirps_<site>.csv, data/imerg_<site>.csv
 
 import json
 import os
@@ -80,11 +87,56 @@ def fetch_ndvi(site, lat, lon):
     print(f"ndvi {site}: {len(rows)} composites")
 
 
+def fetch_chirps(site, lat, lon):
+    path = os.path.join(DATA, f"chirps_{site}.csv")
+    if os.path.exists(path):
+        return
+    import ee
+    ee.Initialize(project=os.environ.get("EE_PROJECT", "zinc-interface-468219-a4"))
+    box = ee.Geometry.Rectangle([lon - 0.25, lat - 0.25, lon + 0.25, lat + 0.25])
+    rows = []
+    for y in range(1981, 2026):                              # one small table per year
+        col = ee.ImageCollection("UCSB-CHG/CHIRPS/DAILY").filterDate(f"{y}-01-01", f"{y + 1}-01-01")
+        def mean(img):
+            v = img.reduceRegion(ee.Reducer.mean(), box, 5566).get("precipitation")
+            return ee.Feature(None, {"date": img.date().format("YYYY-MM-dd"), "precip_mm": v})
+        for f in ee.FeatureCollection(col.map(mean)).getInfo()["features"]:
+            rows.append(f["properties"])
+        print(f"chirps {site}: {y}", flush=True)
+    pd.DataFrame(rows).set_index("date").sort_index().to_csv(path)
+    print(f"chirps {site}: done")
+
+
+def fetch_imerg(site, lat, lon):
+    """IMERG V07 monthly rain over the same box, 2000-, as a satellite check on CHIRPS
+    (CHIRPS blends satellite with gauges; IMERG is satellite and radar only)."""
+    path = os.path.join(DATA, f"imerg_{site}.csv")
+    if os.path.exists(path):
+        return
+    import ee
+    ee.Initialize(project=os.environ.get("EE_PROJECT", "zinc-interface-468219-a4"))
+    box = ee.Geometry.Rectangle([lon - 0.25, lat - 0.25, lon + 0.25, lat + 0.25])
+    col = ee.ImageCollection("NASA/GPM_L3/IMERG_MONTHLY_V07").filterDate("2000-06-01", "2026-01-01").select("precipitation")
+    def mean(img):
+        v = img.reduceRegion(ee.Reducer.mean(), box, 5000).get("precipitation")
+        return ee.Feature(None, {"month": img.date().format("YYYY-MM"), "mm_per_hr": v})
+    rows = [f["properties"] for f in ee.FeatureCollection(col.map(mean)).getInfo()["features"]]
+    df = pd.DataFrame(rows).set_index("month").sort_index()
+    m = pd.PeriodIndex(df.index, freq="M")
+    df["precip_mm"] = df.mm_per_hr * 24 * m.days_in_month          # monthly mean rate to a monthly total
+    df[["precip_mm"]].to_csv(path)
+    print(f"imerg {site}: {len(df)} months")
+
+
 def main():
+    import sys
     os.makedirs(DATA, exist_ok=True)
     for site, (lat, lon) in SITES.items():
         fetch_rain(site, lat, lon)
         fetch_ndvi(site, lat, lon)
+        if "--chirps" in sys.argv:
+            fetch_chirps(site, lat, lon)
+            fetch_imerg(site, lat, lon)
 
 
 if __name__ == "__main__":

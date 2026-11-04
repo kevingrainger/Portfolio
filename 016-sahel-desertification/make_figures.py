@@ -9,6 +9,7 @@
 #   fig3_early_warning   the vegetation stops connecting long before it disappears
 #   fig4_patterns        Sentinel-2 at the two sites beside the model lattice
 #   fig5_sites           rainfall-driven model against MODIS greenness, Gourma and Fakara
+#   fig6_rain_sources    the rainy season in ERA5, CHIRPS and IMERG at each site
 
 import os
 import sys
@@ -105,20 +106,24 @@ def fig4_patterns():
 
 
 def fig5_sites():
-    s = pd.read_csv(os.path.join(RES, "sites.csv"))
+    """CHIRPS-driven model (ERA5 years before 1981, scaled) against MODIS, with the ERA5-driven run for comparison."""
+    s = pd.read_csv(os.path.join(RES, "sites_chirps.csv"))
+    e = pd.read_csv(os.path.join(RES, "sites.csv"))
     nd = pd.read_csv(os.path.join(RES, "ndvi_annual.csv"))
     fig, axes = plt.subplots(2, 2, figsize=(10.0, 5.6), sharex=True, gridspec_kw=dict(height_ratios=[1, 1.3]))
     for j, site in enumerate(["gourma", "fakara"]):
         g = s[s.site == site]
         r = g[g.d == g.d.min()]
         ax = axes[0, j]
-        ax.bar(r.year, r.rain_mm, color=SAND, width=0.85)
-        ax.set_title(f"{site.capitalize()}: rainy-season rain (ERA5)", loc="left", fontsize=10)
+        ax.bar(r.year, r.rain_mm, color=[SAND if y >= 1981 else "#eee6c2" for y in r.year], width=0.85)
+        ax.set_title(f"{site.capitalize()}: rainy-season rain (CHIRPS from 1981, scaled ERA5 before)", loc="left", fontsize=9.5)
         ax.set_ylabel("mm, June-September" if j == 0 else "")
         ax = axes[1, j]
         for d, ls in zip(sorted(g.d.unique()), ["-", "--"]):
             x = g[g.d == d]
             ax.plot(x.year, x.cover, ls, color=GREEN, label=f"model cover, degradation d = {d}")
+        x = e[(e.site == site) & (e.d == e.d.min())]
+        ax.plot(x.year, x.cover, ":", color=GREY, lw=1.2, label="the same driven by ERA5, d = 0.2")
         ax.set_ylabel("model vegetation cover" if j == 0 else "")
         ax.set_ylim(0, 0.8)
         tw = ax.twinx()
@@ -136,10 +141,29 @@ def fig5_sites():
     figstyle.save(fig, os.path.join(FIG, "fig5_sites"))
 
 
+def fig6_rain_sources():
+    """The rainy season at each site in three products: ERA5 is too dry and follows the satellites poorly."""
+    r = pd.read_csv(os.path.join(RES, "rain_sources.csv"))
+    fig, axes = plt.subplots(1, 2, figsize=(10.0, 3.6), sharey=True)
+    for ax, site in zip(axes, ["gourma", "fakara"]):
+        t = r[(r.site == site) & (r.year >= 1981)].set_index("year")
+        ax.bar(t.index, t.chirps, color=SAND, width=0.85, label="CHIRPS (satellite and gauges)")
+        ax.plot(t.index, t.imerg, "o-", ms=3, lw=1.1, color=WINE, label="IMERG (satellite only)")
+        ax.plot(t.index, t.era5, "-", lw=1.4, color=GREY, label="ERA5 (reanalysis)")
+        o = t.loc[2001:2025]
+        ax.set_title(f"{site.capitalize()}: CHIRPS-IMERG r = {o.chirps.corr(o.imerg):.2f}, "
+                     f"ERA5-IMERG r = {o.era5.corr(o.imerg):.2f} (2001-25)", loc="left", fontsize=9.5)
+    axes[0].set_ylabel("rain, June-September (mm)")
+    axes[0].legend(loc="upper left", fontsize=8)
+    fig.tight_layout()
+    figstyle.save(fig, os.path.join(FIG, "fig6_rain_sources"))
+
+
 if __name__ == "__main__":
     figstyle.apply()
     fig2_theory()
     fig3_early_warning()
     fig4_patterns()
-    if os.path.exists(os.path.join(RES, "sites.csv")):
+    if os.path.exists(os.path.join(RES, "sites_chirps.csv")):
         fig5_sites()
+        fig6_rain_sources()
