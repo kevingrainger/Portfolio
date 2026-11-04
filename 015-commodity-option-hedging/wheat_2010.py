@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 #-------- wheat_2010.py -------------------------------------------------------------
 #-----------------------------------------------------------------------------
-# An Italian wheat producer's hedge through Russia's 2010 drought and export ban.
+# Both sides of an Italian wheat hedge through Russia's 2010 drought and export ban:
+# a producer selling its harvest, and a miller (flour and pasta) buying wheat.
 #
 # The producer: an Italian soft-wheat farm that, on 3 May 2010, hedges the harvest it will
 # sell on 31 August 2010. It would hedge on Euronext (MATIF) milling wheat, whose daily
@@ -85,6 +86,30 @@ def setup(F0, tau, s):
     return dict(P_atm=P_atm, P95=P95, P85=P85, Kc_collar=Kc_collar, Kc_fence=Kc_fence)
 
 
+def setup_buyer(F0, tau, s):
+    """The miller's mirror image: calls bought for protection, puts sold to pay for them."""
+    C_atm, C105, C115 = call(F0, F0, tau, s), call(F0, 1.05 * F0, tau, s), call(F0, 1.15 * F0, tau, s)
+    Kp_collar = brentq(lambda K: put(F0, K, tau, s) - C105, 0.3 * F0, F0)
+    Kp_fence = brentq(lambda K: put(F0, K, tau, s) - (C105 - C115), 0.3 * F0, F0)
+    return dict(C_atm=C_atm, C105=C105, C115=C115, Kp_collar=Kp_collar, Kp_fence=Kp_fence)
+
+
+def cost(F0, FT, layers, k):
+    """What the miller pays per tonne at purchase for each strategy (lower is better)."""
+    put_pay = lambda K: np.maximum(K - FT, 0)
+    call_pay = lambda K: np.maximum(FT - K, 0)
+    return {
+        "no hedge": FT,
+        "long futures": np.full_like(FT, F0),
+        "50% futures": 0.5 * F0 + 0.5 * FT,
+        "long call": FT - call_pay(F0) + k["C_atm"],
+        "zero-cost collar": FT - call_pay(1.05 * F0) + put_pay(k["Kp_collar"]),
+        "call spread": FT - call_pay(F0) + call_pay(1.15 * F0) + (k["C_atm"] - k["C115"]),
+        "three-way": FT - call_pay(1.05 * F0) + call_pay(1.15 * F0) + put_pay(k["Kp_fence"]),
+        "layered": layers,
+    }
+
+
 def revenue(F0, FT, layers, k):
     """Revenue per tonne at sale for each strategy; FT can be an array of outcomes."""
     put_pay = lambda K: np.maximum(K - FT, 0)
@@ -127,14 +152,25 @@ def main():
         ex_ante[s] = dict(mean=float(v.mean()), p5=float(np.quantile(v, 0.05)), p95=float(np.quantile(v, 0.95)),
                           cvar5=float(v[v <= np.quantile(v, 0.05)].mean()),
                           percentile_2010=float((v <= real[s]).mean()))
+    kb = setup_buyer(F0, tau, sigma)
+    real_b = {s_: float(v) for s_, v in cost(F0, np.array(FT), np.mean(layer_prices), kb).items()}
+    ex_b = {}
+    for s_, v in cost(F0, paths[:, -1], lay, kb).items():
+        v = np.asarray(v)
+        ex_b[s_] = dict(mean=float(v.mean()), p5=float(np.quantile(v, 0.05)), p95=float(np.quantile(v, 0.95)),
+                        cvar95=float(v[v >= np.quantile(v, 0.95)].mean()),
+                        saving_vs_no_hedge_2010=float(real_b["no hedge"] - real_b[s_]))
     out = dict(F0=F0, FT=FT, change=FT / F0 - 1, sigma=sigma, tau_years=tau, setup=k, layer_prices=layer_prices,
-               realised=real, ex_ante=ex_ante,
+               realised=real, ex_ante=ex_ante, buyer=dict(setup=kb, realised=real_b, ex_ante=ex_b),
                best_in_hindsight=max(real, key=real.get),
                sale_price_percentile=float((paths[:, -1] <= FT).mean()))
     json.dump(out, open(os.path.join(RES, "wheat_2010.json"), "w"), indent=1)
     F["2010-01":"2010-12"].to_csv(os.path.join(RES, "wheat_2010_prices.csv"))
     print(json.dumps({k_: out[k_] for k_ in ["F0", "FT", "change", "sigma", "setup", "realised",
                                              "best_in_hindsight", "sale_price_percentile"]}, indent=1))
+    print("buyer", json.dumps(out["buyer"]["setup"]), json.dumps({a: round(b, 1) for a, b in real_b.items()}))
+    for s_ in ex_b:
+        print(f"  {s_:18s} worst5% {ex_b[s_]['cvar95']:.1f}  saving2010 {ex_b[s_]['saving_vs_no_hedge_2010']:.1f}")
     for s in ex_ante:
         print(f"{s:18s} mean {ex_ante[s]['mean']:.2f}  5% {ex_ante[s]['p5']:.2f}  CVaR {ex_ante[s]['cvar5']:.2f}  2010 at {ex_ante[s]['percentile_2010']:.0%}")
 

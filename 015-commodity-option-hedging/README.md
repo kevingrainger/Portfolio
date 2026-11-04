@@ -1,4 +1,4 @@
-# Hedging an Italian wheat harvest through Russia's 2010 export ban
+# Hedging Italian wheat through Russia's 2010 export ban: producer and miller
 
 ![Wheat in euros per tonne through 2010, with the hedge window, the heatwave, the export ban and every strike](figures/fig5_wheat_2010.png)
 
@@ -27,11 +27,11 @@ The eight hedges are the ones producers use day to day:
 | Three-way (fence) | A 95% / 85% put spread paid for by selling a call at €152. |
 | Layered | Sell a quarter of the crop forward at the start of May, June, July and August. |
 
-![Revenue at sale against the wheat price, for each hedge](figures/fig7_wheat_payoffs.png)
+![Producer revenue and miller cost against the wheat price, for each hedge](figures/fig7_wheat_payoffs.png)
 
 ## What happened
 
-![Revenue by hedge: 2010 against the range expected on 3 May](figures/fig6_wheat_revenue.png)
+![Producer revenue and miller cost by hedge: 2010 against the range expected on 3 May](figures/fig6_wheat_revenue.png)
 
 | Hedge | Revenue in 2010 (€/t) | Average of the worst 5% expected on 3 May (€/t) |
 |---|:-:|:-:|
@@ -48,6 +48,25 @@ The eight hedges are the ones producers use day to day:
 - **Of the hedges, the ones that kept the upside won.** The put spread and the long put lost only their premium. Short futures gave up the whole rally, and the collar and the three-way were capped at their call strikes.
 - **Before the event, the ranking reverses.** Judged on 3 May by the worst 5% of outcomes, short futures and the collar protected the producer best, and no hedge was the most dangerous. The put sits in between: a decent floor at a known cost, with the upside kept.
 - **So the right hedge depends on what the producer can't afford.** A farm that must cover its costs whatever happens should lock in a price; one that can stand a bad year but hates missing a rally should buy puts. In 2010 the second kind did well, but that was about a 1-in-30 outcome.
+
+## The other side: an Italian miller
+
+The same shock looks opposite to a buyer. An Italian miller (flour and pasta) that must buy wheat on 31 August can hedge on 3 May with the mirror-image tools: buy futures, buy a call, a zero-cost collar (buy a 105% call, sell a put at €131), a call spread (buy the at-the-money call, sell a 115% call), a three-way (a 105% / 115% call spread paid for by selling a put at €122), or layer its purchases.
+
+| Hedge | Cost in 2010 (€/t) | Saved against no hedge (€/t) | Average of the worst 5% expected on 3 May (€/t) |
+|---|:-:|:-:|:-:|
+| No hedge | 189 | 0 | 195 |
+| Long futures | 136 | 53 | 136 |
+| Zero-cost collar | 143 | 46 | 143 |
+| Long call | 146 | 43 | 146 |
+| Layered | 152 | 38 | 162 |
+| 50% futures | 163 | 26 | 166 |
+| Call spread | 175 | 14 | 181 |
+| Three-way | 176 | 14 | 182 |
+
+- **For the miller, hedging paid.** Buying forward saved €53 a tonne, 28% of the cost, and the collar and the call saved €43-46.
+- **The cheap structures failed in the shock.** The call spread and the three-way cut the premium by capping the protection at +15%, and the price rose 39%, so they saved only €14.
+- **One shock, two lessons.** The producer regretted hedging and the miller was saved by it. Which side of the market a firm is on decides whether a weather shock in another country is a windfall or a loss, and so which hedge it should hold.
 
 ## Before this: the option seller's side
 
@@ -67,6 +86,6 @@ Add yield risk, so the producer's revenue is price times an uncertain harvest, w
 
 ## Code
 
-`wheat_2010.py` (the producer hedge) · `make_wheat_figures.py` · `hedging.py` (Black-76 and the delta-hedging rules) · `backtest.py` · `monte_carlo.py` · `make_figures.py` · Python, NumPy, SciPy, pandas
+`wheat_2010.py` (both sides of the hedge) · `make_wheat_figures.py` · `hedging.py` (Black-76 and the delta-hedging rules) · `backtest.py` · `monte_carlo.py` · `make_figures.py` · Python, NumPy, SciPy, pandas
 
 *A side project, built for fun. Credits: Black (1976), J. Financ. Econ. 3, 167; Leland (1985), J. Finance 40, 1283; Whalley & Wilmott (1997), Math. Finance 7, 307; Hull & White (2017), J. Bank. Finance 82, 180. Prices: CBOT, COMEX and ICE futures and EUR/USD via Yahoo Finance.*
