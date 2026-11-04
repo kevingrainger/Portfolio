@@ -1,38 +1,72 @@
-# Hedging commodity options through a shock
+# Hedging a wheat harvest through Russia's 2010 export ban
 
-**Sell an option, hedge it with futures, and in theory you carry no risk. In practice you choose how often to trade, which volatility to trust and how much to spend on trading. Eight ways of hedging, six commodities, 24 years: which ones survive a shock?**
+![CBOT wheat through 2010, with the hedge window, the heatwave, the export ban and every strike](figures/fig5_wheat_2010.png)
 
-![Copper's tariff summer of 2025, hedged four ways](figures/fig2_copper_2025.png)
+## Why I did this
 
-On 8 July 2025 COMEX copper jumped 13% on a tariff announcement. Three weeks later it fell 22% in a day when refined copper was exempted. Anyone short a copper option was hedging through both.
+In commodities the hedger who matters most is often the producer: a farm that knows roughly how much it will harvest but not what it will be paid. The standard tools are futures, puts and a handful of option structures, and a producer has to choose between them months before the price is known. I wanted to test those choices against one real shock, set up the way a producer would have set them up beforehand, and then see in hindsight what each would have paid. The options are priced with the same Black (1976) model used in the Asian option pricer (014).
 
-**The trade.** Each month since 2002, sell a 3-month at-the-money call on the futures of copper, gold, wheat, corn, arabica coffee or cocoa. No energy. Price it by Black (1976) at the trailing 60-day volatility, and hedge it to expiry. The error is what remains:
+## The shock
 
-$$\text{error} = C_0 - (F_T - K)^+ + \sum_t h_t\,(F_{t+1} - F_t) - k \sum_t |h_t - h_{t-1}|\,F_t, \qquad \Delta = e^{-r\tau} N(d_1).$$
+Russia had its worst heatwave on record through July 2010. On 5 August it banned grain exports. CBOT wheat went from $4.90 a bushel on 3 May to $6.53 on 31 August, up 33%. Seen from May, with the volatility the market had shown, a price that high had about a 5% chance.
 
-**The eight strategies:** no hedge; static delta; weekly; on every 2% move; daily; daily with a GARCH(1,1) volatility; Leland's cost-adjusted volatility; and the Whalley–Wilmott no-trade band, $|h - \Delta| \le (3 e^{-r\tau} k F \Gamma^2 / 2\gamma)^{1/3}$.
+## The setup
 
-A trade counts as a **shock** when realised volatility over its life comes in at least 1.5 times the volatility it was sold at. The same rule applies to every commodity.
+A US winter-wheat producer hedges on 3 May 2010 the crop it will sell on 31 August. CBOT front-month futures stand in for the cash price (basis is ignored) and everything is per bushel. Options are European, expire on the sale date and are priced by Black (1976) at the 60-day volatility before 3 May (31% a year), since free option quotes for 2010 don't exist.
 
-**What the data say:**
-- **In calm markets, trading more pays.** Daily delta misses by 23% of the premium (one standard deviation) for a cost of 3%. The Whalley–Wilmott band gets within a point (24%) at three-quarters of the cost. Weekly hedging misses by 33%, and no hedge by 175%.
-- **In a shock, how you hedge barely matters.** Every dynamic hedge lands between 52% and 54%, and on average each loses 70% of the premium. Hedging daily instead of on 2% moves buys almost nothing.
-- **The reason is one line of algebra.** For a continuously hedged at-the-money option,
+The eight hedges are the ones producers use day to day:
 
-  $$\frac{\text{error}}{\text{premium}} \approx -\tfrac{1}{2}\,\frac{\sigma_\text{realised}^2 - \sigma_\text{sold}^2}{\sigma_\text{sold}^2}.$$
+| Hedge | What it is |
+|---|---|
+| No hedge | Sell at harvest at whatever the price is. |
+| Short futures | Sell the whole crop forward on 3 May at $4.90. |
+| 50% futures | Sell half forward, leave half open. |
+| Long put | Buy an at-the-money put ($0.35): a floor at $4.90 less the premium, upside kept. |
+| Zero-cost collar | Buy a 95% put and pay for it by selling a call at $5.19: a floor and a cap. |
+| Put spread | Buy the at-the-money put and sell an 85% put: a cheaper floor that only covers a fall to $4.17. |
+| Three-way (fence) | A 95% / 85% put spread paid for by selling a call at $5.46. |
+| Layered | Sell a quarter of the crop forward at the start of May, June, July and August. |
 
-  The 1,738 real trades sit on that line. A hedge can only remove the price risk. The volatility the option was sold at is a bet the hedge cannot undo.
-- **Simulations show what does the damage.** In Black's world of constant volatility, daily hedging cuts the error to 11% of the premium. Random jumps raise it to 20%. Volatility that wanders (Heston) lifts every strategy to 52–57%, the same picture as the real shocks. One 15% jump on a known day costs about 34% of the premium whatever the dynamic hedge, 45% hedged weekly, and over 100% with a static delta.
+![Revenue at sale against the wheat price, for each hedge](figures/fig7_wheat_payoffs.png)
+
+## What happened
+
+![Revenue by hedge: 2010 against the range expected on 3 May](figures/fig6_wheat_revenue.png)
+
+| Hedge | Revenue in 2010 ($/bu) | Average of the worst 5% expected on 3 May ($/bu) |
+|---|:-:|:-:|
+| No hedge | 6.53 | 3.35 |
+| Put spread | 6.26 | 3.82 |
+| Long put | 6.18 | 4.55 |
+| 50% futures | 5.71 | 4.13 |
+| Three-way | 5.46 | 3.84 |
+| Layered | 5.30 | 4.15 |
+| Zero-cost collar | 5.19 | 4.66 |
+| Short futures | 4.90 | 4.90 |
+
+- **In hindsight the producer did best unhedged.** A price spike is good news for a seller, and every hedge gave some of it away.
+- **Of the hedges, the ones that kept the upside won.** The put spread and the long put lost only their premium. Short futures gave up the whole rally, and the collar and the three-way were capped at their call strikes.
+- **Before the event, the ranking reverses.** Judged on 3 May by the worst 5% of outcomes, short futures and the collar protected the producer best, and no hedge was the most dangerous. The put sits in between: a decent floor at a known cost, with the upside kept.
+- **So the right hedge depends on what the producer can't afford.** A farm that must cover its costs whatever happens should lock in a price; one that can stand a bad year but hates missing a rally should buy puts. In 2010 the second kind did well, but that was a 1-in-20 outcome.
+
+## Before this: the option seller's side
+
+The first version of this project took the other side: sell a 3-month at-the-money call on copper, gold, wheat, corn, coffee or cocoa every month since 2002, and delta-hedge it eight ways (static, weekly, on 2% moves, daily, daily with GARCH volatility, Leland's cost adjustment and the Whalley–Wilmott band). In calm markets hedging daily tracks best, and the band comes within a point at three-quarters of the cost. In a shock every dynamic hedge lands within two points of the others, because the loss is set by the volatility the option was sold at: error / premium ≈ −½ × (σ²_realised − σ²_sold) / σ²_sold, a well-known result that the 1,738 trades follow closely.
 
 | | |
 |:-:|:-:|
 | ![Error against cost](figures/fig1_frontier.png) | ![The variance surprise](figures/fig3_variance_surprise.png) |
-| ![Monte Carlo](figures/fig4_monte_carlo.png) | |
 
-**Built:** Black-76 pricing and Greeks; eight hedging rules, including the Whalley–Wilmott band and Leland's adjustment; GARCH(1,1) by maximum likelihood, refitted each January on five years of data; a rolling backtest over six commodities; Monte Carlo under GBM, Merton jumps, Heston and a scheduled jump.
+## Limits
 
-`hedging.py` · `backtest.py` · `monte_carlo.py` · `make_figures.py` · Python, NumPy, SciPy, pandas
+One shock, one producer and one sale date. Basis between the local cash price and CBOT is ignored, and so is yield risk: a Russian producer that lost its crop in 2010 faced a very different problem, because its quantity fell as the price rose. Options are priced at realised volatility, not market quotes. The continuous front-month series jumps slightly at each roll.
 
-**Limits:** free histories of commodity option prices don't exist, so options are sold at realised volatility, not at market implied volatility. The test measures hedging, not pricing. Continuous front-month series jump a little at each roll; the jump is the same for every strategy. Trading cost is a flat 5 bp of notional.
+## What I'd do next
 
-*A side project, built for fun. Credits: Black (1976), J. Financ. Econ. 3, 167; Boyle & Emanuel (1980), J. Financ. Econ. 8, 259; Leland (1985), J. Finance 40, 1283; Whalley & Wilmott (1997), Math. Finance 7, 307; Hull & White (2017), J. Bank. Finance 82, 180; Merton (1976), J. Financ. Econ. 3, 125; Heston (1993), Rev. Financ. Stud. 6, 327; Bollerslev (1986), J. Econometrics 31, 307. Prices: COMEX, CBOT and ICE futures via Yahoo Finance.*
+Add yield risk, so the producer's revenue is price times an uncertain harvest, which changes the best hedge ratio. Repeat the test across several shocks (the 2012 US drought, the 2022 invasion) to see whether the ranking holds. And price the options at market implied volatility where it can be found.
+
+## Code
+
+`wheat_2010.py` (the producer hedge) · `make_wheat_figures.py` · `hedging.py` (Black-76 and the delta-hedging rules) · `backtest.py` · `monte_carlo.py` · `make_figures.py` · Python, NumPy, SciPy, pandas
+
+*A side project, built for fun. Credits: Black (1976), J. Financ. Econ. 3, 167; Leland (1985), J. Finance 40, 1283; Whalley & Wilmott (1997), Math. Finance 7, 307; Hull & White (2017), J. Bank. Finance 82, 180. Prices: CBOT, COMEX and ICE futures via Yahoo Finance.*
