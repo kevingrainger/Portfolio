@@ -12,6 +12,9 @@
 #                         distribution taken out (ranks), fitted by maximum likelihood. The
 #                         Gumbel family has upper-tail dependence lambda = 2 - 2^(1/theta),
 #                         the chance one is extreme given the other is; Gaussian has none.
+#   bean tail             the same copula on arabica against robusta: if both spike together,
+#                         buying the other bean doesn't hedge. Refitted on a rolling eight-year
+#                         window as a time-varying risk indicator.
 #   DCC-GARCH             the correlation between arabica and robusta as a time series of its
 #                         own (Engle 2002): GARCH(1,1) for each bean, then a dynamic
 #                         conditional correlation fitted to the standardised returns. Does the
@@ -118,6 +121,27 @@ def copulas(p, n_boot=500):
     return out
 
 
+#-------- the two beans together: does the origin hedge fail in the tail? ----------------
+def bean_tail(p, window=96, n_boot=500):
+    x, y = p.arabica_res.values, p.robusta_res.values
+    theta, nll_g, rho, nll_n = fit_gumbel(x, y)
+    boot = []
+    for _ in range(n_boot):
+        i = block_resample(len(x))
+        boot.append(2 - 2 ** (1 / fit_gumbel(x[i], y[i])[0]))
+    roll = []
+    for end in range(window, len(x) + 1, 3):
+        th = fit_gumbel(x[end - window:end], y[end - window:end])[0]
+        roll.append((p.index[end - 1], 2 - 2 ** (1 / th)))
+    pd.DataFrame(roll, columns=["month", "tail_lambda"]).to_csv(os.path.join(RES, "bean_tail_rolling.csv"), index=False)
+    both = (x >= np.quantile(x, 0.9)) & (y >= np.quantile(y, 0.9))
+    return dict(theta=float(theta), tail_lambda=float(2 - 2 ** (1 / theta)),
+                tail_lambda_90=[float(np.quantile(boot, 0.05)), float(np.quantile(boot, 0.95))],
+                gaussian_rho=float(rho), aic_gumbel=float(2 + 2 * nll_g), aic_gaussian=float(2 + 2 * nll_n),
+                empirical_top10=float(cm.tail_dependence(x, y, quantile=0.10, lower=False)),
+                months_both_top10=[str(t.date())[:7] for t in p.index[both]])
+
+
 #-------- DCC-GARCH ----------------------------------------------------------------------
 def dcc(p):
     from arch import arch_model
@@ -158,9 +182,9 @@ def dcc(p):
 
 def main():
     p = panel()
-    out = dict(months=len(p), partial=partials(p), tail=tails(p), copula=copulas(p), dcc=dcc(p))
+    out = dict(months=len(p), partial=partials(p), tail=tails(p), copula=copulas(p), beans_tail=bean_tail(p), dcc=dcc(p))
     json.dump(out, open(os.path.join(RES, "dependence.json"), "w"), indent=1)
-    print(json.dumps({k: out[k] for k in ["copula", "dcc"]}, indent=1, default=str))
+    print(json.dumps({k: out[k] for k in ["beans_tail", "dcc"]}, indent=1, default=str))
 
 
 if __name__ == "__main__":

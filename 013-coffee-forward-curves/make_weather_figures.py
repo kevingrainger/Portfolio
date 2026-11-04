@@ -10,6 +10,8 @@
 #                       95% band from the effective sample size
 #   fig11_dependence    tail dependence (empirical and Gumbel copula), and the arabica-robusta
 #                       correlation through time from DCC-GARCH, weather events shaded
+#   fig12_bean_tail     arabica against robusta with joint spikes marked, and the Gumbel tail
+#                       dependence between them on a rolling eight-year window
 #
 #   python make_weather_figures.py
 
@@ -160,5 +162,33 @@ def dependence_figure():
     plt.close(fig)
 
 
+def bean_tail_figure():
+    import json
+    d = json.load(open(os.path.join(RES, "dependence.json")))["beans_tail"]
+    r = pd.read_csv(os.path.join(RES, "bean_tail_rolling.csv"), parse_dates=["month"])
+    df = pd.read_csv(os.path.join(RES, "weather_monthly.csv"), index_col=0, parse_dates=True)
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4.6), gridspec_kw=dict(width_ratios=[1, 1.5], wspace=0.3))
+    ax = axes[0]
+    x, y = df.arabica_res, df.robusta_res
+    both = (x >= x.quantile(0.9)) & (y >= y.quantile(0.9))
+    ax.scatter(x, y, s=14, color=LIGHT, edgecolor="none")
+    ax.scatter(x[both], y[both], s=40, color=RED, edgecolor="none", label="both in their top 10%")
+    for t in x[both].index:
+        if t.year in (2014, 2024):
+            ax.annotate(t.strftime("%b %Y"), (x[t], y[t]), xytext=(4, 3), textcoords="offset points", fontsize=8.5, color=NAVY)
+    ax.axvline(x.quantile(0.9), color=GREY, lw=0.8, ls=":"); ax.axhline(y.quantile(0.9), color=GREY, lw=0.8, ls=":")
+    ax.set_xlabel("arabica, log return (real removed)"); ax.set_ylabel("robusta, log return (real removed)")
+    ax.set_title("Arabica and robusta", loc="left"); ax.legend(frameon=False, fontsize=8.5, loc="upper left")
+    ax = axes[1]
+    ax.plot(r.month, r.tail_lambda, color=NAVY, lw=1.6)
+    ax.axhline(d["tail_lambda"], color=GREY, lw=0.9, ls="--")
+    shade(ax)
+    ax.set_ylabel("upper-tail dependence (Gumbel)")
+    ax.set_title("Rolling eight-year tail dependence", loc="left")
+    fig.savefig(os.path.join(FIG, "fig12_bean_tail.png"), dpi=170, bbox_inches="tight")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     dependence_figure()
+    bean_tail_figure()
