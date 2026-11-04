@@ -20,8 +20,18 @@
 | ![Ensemble](figures/fig2_ensemble.png) | ![Vector control](figures/fig7_vector_control.png) |
 | ![Planting spacing](figures/fig_spacing_threshold.png) | |
 
+## What I'd do next
+
+The model is only as good as its rates, and every rate here comes from the original paper. The next step is to fit it to a real grove. This one, near Gallipoli in the zone where *Xylella* spread from 2013, is a regular planting of roughly 15 × 20 trees, close to our simulated 16 × 16 grove. In February 2014 every tree has a full canopy. By September 2026 the crowns are small and grey: the trees have died and been cut back, or been replaced with young ones, which a single image cannot tell apart.
+
+![A real grove near Gallipoli, 2014 and 2026](figures/fig_real_grove.png)
+
+A sequence of images like these, one tree at a time, is exactly what data-assimilation methods are built for. We could update the model's hidden state (which trees are infected but not yet showing it) each time a new image arrives, and learn the infection rate and the spittlebug season from how the dieback actually spreads, rather than taking them from the paper.
+
+*Imagery: Esri World Imagery Wayback (source: Esri, Maxar, Earthstar Geographics), releases of 20 February 2014 and 24 September 2026; `real_grove.py` downloads and draws them.*
+
 **Built:** a vectorised rewrite (`olive_model.py`), checked against my original model across 12 + 200 runs; four bug fixes; a transmission log; felling and detection policies; a planting-spacing sweep; and parallel ensembles.
 
-`olive_grove_01_model.ipynb` · `olive_grove_02_felling.ipynb` · Python, NumPy, multiprocessing
+`olive_grove_01_model.ipynb` · `olive_grove_02_felling.ipynb` · `real_grove.py` · Python, NumPy, multiprocessing
 
 *A side project, built for fun. These are model results, not policy advice.*
