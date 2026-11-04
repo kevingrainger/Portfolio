@@ -144,11 +144,25 @@ def ee_grid(grid):
                                      shearY=0, scaleY=-grid.dx * 1000, translateY=top))
 
 
-def ee_pixels(image, grid):
-    """An Earth Engine image sampled on the project grid, as (bands, ny, nx) with row 0 in the south."""
+def ee_pixels(image, grid, tile=None):
+    """An Earth Engine image sampled on the project grid, as (bands, ny, nx) with row 0 in the south.
+    tile: fetch in square blocks of this many cells, since reduceResolution over the whole
+    domain in one request is more than Earth Engine will compute."""
     import ee
-    arr = ee.data.computePixels(dict(expression=image, fileFormat="NUMPY_NDARRAY", grid=ee_grid(grid)))
-    return np.stack([arr[name].astype(np.float32) for name in arr.dtype.names])[:, ::-1, :]
+    base = ee_grid(grid)
+    t = base["affineTransform"]
+    tile = tile or max(grid.nx, grid.ny)
+    rows = []
+    for iy in range(0, grid.ny, tile):                       # from the north, as Earth Engine returns it
+        row = []
+        for ix in range(0, grid.nx, tile):
+            part = dict(base, dimensions=dict(width=min(tile, grid.nx - ix), height=min(tile, grid.ny - iy)),
+                        affineTransform=dict(t, translateX=t["translateX"] + ix * t["scaleX"],
+                                             translateY=t["translateY"] + iy * t["scaleY"]))
+            arr = ee.data.computePixels(dict(expression=image, fileFormat="NUMPY_NDARRAY", grid=part))
+            row.append(np.stack([arr[name].astype(np.float32) for name in arr.dtype.names]))
+        rows.append(np.concatenate(row, axis=2))
+    return np.concatenate(rows, axis=1)[:, ::-1, :]
 
 
 def ee_mean_on_grid(image, grid, source_projection):
@@ -164,7 +178,7 @@ def static_fields(grid):
     import ee
     dem_col = ee.ImageCollection("COPERNICUS/DEM/GLO30").select("DEM")
     dem = ee_mean_on_grid(dem_col.mosaic(), grid, dem_col.first().projection())
-    elev = np.nan_to_num(ee_pixels(dem.unmask(0), grid)[0], nan=0.0) / 1000.0
+    elev = np.nan_to_num(ee_pixels(dem.unmask(0), grid, tile=100)[0], nan=0.0) / 1000.0
 
     # ESA WorldCover 2021 (v200) codes -> the six classes
     codes = {"built-up": [50], "cropland": [40], "tree cover": [10, 95], "grass/shrub": [20, 30, 90, 100], "water": [80], "other": [60, 70]}
@@ -172,7 +186,7 @@ def static_fields(grid):
     wc = wc_col.mosaic().unmask(80)                                         # unmapped open sea counts as water
     bands = [ee_mean_on_grid(wc.remap(codes[c], [1] * len(codes[c]), 0).rename(f"c{i}").toFloat(), grid, wc_col.first().projection())
              for i, c in enumerate(CLASSES)]
-    frac = np.clip(ee_pixels(ee.Image.cat(bands), grid), 0, 1)
+    frac = np.clip(ee_pixels(ee.Image.cat(bands), grid, tile=50), 0, 1)     # 10 m source: smaller blocks
     frac = frac / np.maximum(frac.sum(0), 1e-6)
     sea = np.load(os.path.join(HERE, "data", "estimated", "static_1km.npz"))["sea"]     # coastline from Natural Earth
     np.savez_compressed(os.path.join(REAL, "static_1km.npz"), elevation_km=elev.astype(np.float32), fractions=frac.astype(np.float32), sea=sea)

@@ -1,0 +1,8 @@
+{
+  "coverage_90": 0.6255720823798627,
+  "mean_width_K": 2.8809171910755147,
+  "coverage_90_conformal": 0.9470823798627003,
+  "mean_width_conformal_K": 6.5830332144704515,
+  "n": 3496,
+  "truth_rmse": null
+}

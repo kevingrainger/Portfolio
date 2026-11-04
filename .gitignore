@@ -38,12 +38,15 @@ _planning/
 003-po-valley-downscaling/data/cache/
 003-po-valley-downscaling/results/q_training.npz
 003-po-valley-downscaling/results/xgb_q_*.json
+003-po-valley-downscaling/results_real/q_training.npz
+003-po-valley-downscaling/results_real/xgb_q_*.json
 003-po-valley-downscaling/results_smoke/
 003-po-valley-downscaling/results_smoke_real/
 
 # 013-016: open data (ERA5/Open-Meteo, PortWatch, BCRP, MODIS, Sentinel-2) is committed;
 # Yahoo Finance prices are not redistributable and are re-downloaded by each fetch script
 013-coffee-forward-curves/data/kc_*.csv
+013-coffee-forward-curves/data/brl_usd.csv
 014-copper-satellite-signals/data/hg_front.csv
 015-commodity-option-hedging/data/front_months.csv
 # archives built for GitHub Releases, too large for the repo
@@ -53,3 +56,5 @@ release-assets/
 007-italian-power-volatility/data/real_daily.csv
 # 008: rebuilt in seconds by aifs/score_forecasts.py
 008-spanish-solar-portfolio/aifs/results/scored_days.csv
+# 008: OMIE market prices, rebuilt by prices/fetch_omie.py
+008-spanish-solar-portfolio/prices/data/

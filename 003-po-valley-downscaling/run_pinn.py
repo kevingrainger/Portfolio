@@ -200,11 +200,14 @@ def summary():
         out.append(row)
     tab = pd.DataFrame(out)
     tab.to_csv(os.path.join(RES, "pinn_skill_table.csv"), index=False, float_format="%.3f")
-    truth = pd.read_csv(os.path.join(RES, "pinn_truth_check.csv"))
-    tu = pd.read_csv(os.path.join(RES, "unet_truth_check.csv"))
+    def opt(f):                                          # empty on real data: there is no hidden truth
+        p = os.path.join(RES, f)
+        return pd.read_csv(p) if os.path.getsize(p) > 2 else None
+    truth, tu = opt("pinn_truth_check.csv"), opt("unet_truth_check.csv")
     tr = pd.read_csv(os.path.join(RES, "pinn_training.csv"))
     info = dict(n=int(len(m)), n_far=int(far.sum()),
-                truth_rmse={**dict(B0=float(tu.B0.mean()), M2=float(tu.M2.mean()), U=float(tu.U.mean())),
+                truth_rmse=None if truth is None else
+                           {**dict(B0=float(tu.B0.mean()), M2=float(tu.M2.mean()), U=float(tu.U.mean())),
                             **{name(l): float(truth[name(l)].mean()) for l in LAMBDAS}},
                 inner_val_rmse={name(l): float(tr[tr.lam == l].inner_val_rmse.mean()) for l in LAMBDAS})
     json.dump(info, open(os.path.join(RES, "pinn_summary.json"), "w"), indent=2)
@@ -227,7 +230,8 @@ def figures():
     a1.plot(xs, [info["inner_val_rmse"][name(l)] for l in lams], "s--", color="#555555", mfc="white", mew=1.3, label="training stations, Aug 2022")
     a1.plot(xs, [tab.loc[name(l), "rmse"] for l in lams], "o-", color="#0072B2", mfc="white", mew=1.3, label="held-out stations, 2023")
     a1.plot(xs, [tab.loc[name(l), "rmse_far_60km"] for l in lams], "^-", color="#009E73", mfc="white", mew=1.3, label="held-out, > 60 km from an anchor")
-    a1.plot(xs, [info["truth_rmse"][name(l)] for l in lams], "D-", color="#CC79A7", mfc="white", mew=1.3, label="every land cell (hidden truth)")
+    if info["truth_rmse"]:
+        a1.plot(xs, [info["truth_rmse"][name(l)] for l in lams], "D-", color="#CC79A7", mfc="white", mew=1.3, label="every land cell (hidden truth)")
     a1.set_xticks(xs); a1.set_xticklabels(["0\n(data only)"] + [f"{l:g}" for l in lams[1:]])
     a1.set_xlabel(r"weight of the heat budget in the loss, $\lambda$"); a1.set_ylabel("RMSE (K)")
     a1.set_title("(a) Turning up the physics", loc="left")
@@ -286,5 +290,5 @@ def figures():
 
 
 if __name__ == "__main__":
-    for w in sys.argv[1:]:
+    for w in [a for a in sys.argv[1:] if not a.startswith("--")]:
         globals()[w]()

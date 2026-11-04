@@ -13,6 +13,8 @@
 #   figures
 #
 #   python run_unet.py [targets] [train] [evaluate] [figures]
+#   python run_unet.py --real ...     on the downloaded data, reading and writing results_real/
+#                                     (there is no hidden truth, so the every-cell check is skipped)
 
 import json
 import os
@@ -32,8 +34,9 @@ from tmax1km.data import Dataset
 from tmax1km.grid import CLASSES, GAMMA
 from tmax1km.pde import DaySystem, Params
 
-RES = os.path.join(HERE, "results")
-WORK = os.path.join(HERE, "data", "cache", "unet")
+REAL = "--real" in sys.argv
+RES = os.path.join(HERE, "results_real" if REAL else "results")
+WORK = os.path.join(HERE, "data", "cache", "unet_real" if REAL else "unet")
 os.makedirs(WORK, exist_ok=True)
 L_Q = json.load(open(os.path.join(RES, "run.json")))["l_q_km"]
 PAD = (248, 464)                        # the 245 x 460 grid padded to a multiple of 4
@@ -256,10 +259,11 @@ def summary():
         q = m.station.map(lambda i: Q[int(fold_of[i])])
         cover_cqr = float(((m.obs >= m.U_lo - q) & (m.obs <= m.U_hi + q)).mean())
         width_cqr = float((m.U_hi - m.U_lo + 2 * q).mean())
-    truth = pd.read_csv(os.path.join(RES, "unet_truth_check.csv"))
+    tp = os.path.join(RES, "unet_truth_check.csv")
+    truth = pd.read_csv(tp) if os.path.getsize(tp) > 2 else pd.DataFrame()
     info = dict(coverage_90=cover, mean_width_K=width, coverage_90_conformal=cover_cqr,
                 mean_width_conformal_K=width_cqr if cover_cqr is not None else None,
-                n=int(len(m)), truth_rmse=truth[["B0", "M2", "U"]].mean().to_dict())
+                n=int(len(m)), truth_rmse=truth[["B0", "M2", "U"]].mean().to_dict() if len(truth) else None)
     json.dump(info, open(os.path.join(RES, "unet_summary.json"), "w"), indent=2)
     print(tab.round(3).to_string(index=False)); print(info)
 
@@ -357,5 +361,5 @@ def figures():
 
 
 if __name__ == "__main__":
-    for w in sys.argv[1:]:
+    for w in [a for a in sys.argv[1:] if not a.startswith("--")]:
         globals()[w]()
