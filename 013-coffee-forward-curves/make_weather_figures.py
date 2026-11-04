@@ -239,3 +239,36 @@ if __name__ == "__main__":
     dependence_figure()
     bean_tail_figure()
     copula_figure()
+
+
+def kalman_figure():
+    import json
+    from fetch_data import VIETNAM
+    from weather_signal import rain_heat
+    s = pd.read_csv(os.path.join(RES, "kalman_states.csv"), index_col=0, parse_dates=True)
+    k = json.load(open(os.path.join(RES, "kalman_weather.json")))["weather"]["vietnam_heat"]
+    p = k["params"]
+    vn = rain_heat("weather_vietnam.csv", {a: b[2] for a, b in VIETNAM.items()}, 3).heat
+    W = vn.reindex(pd.date_range(vn.index.min(), s.index[-1], freq="D")).ffill().reindex(s.index)
+    delta = s.vietnam_heat
+    weather_push = p["beta"] * W
+    reversion = p["kappa"] * (p["alpha"] - delta)
+    fig, axes = plt.subplots(2, 1, figsize=(12, 6.4), sharex=True, gridspec_kw=dict(height_ratios=[1.2, 1], hspace=0.12))
+    ax = axes[0]
+    ax.plot(s.index, delta, color=NAVY, lw=1.6)
+    ax.set_ylabel("convenience yield")
+    ax.set_title("Arabica convenience yield, Kalman filter with Vietnam heat", loc="left")
+    shade(ax)
+    ax = axes[1]
+    ax.plot(s.index, weather_push, color=RED, lw=1.5, label="push from Vietnam heat")
+    ax.plot(s.index, reversion, color=BLUE, lw=1.5, label="pull back to the long-run level")
+    ax.axhline(0, color="0.8", lw=0.8)
+    ax.set_ylabel("drift of the convenience" + chr(10) + "yield (per year)"); ax.legend(frameon=False, fontsize=9, loc="upper right")
+    shade(ax)
+    ax.set_xlim(s.index[0], s.index[-1])
+    fig.savefig(os.path.join(FIG, "fig15_kalman.png"), dpi=170, bbox_inches="tight")
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    kalman_figure()
