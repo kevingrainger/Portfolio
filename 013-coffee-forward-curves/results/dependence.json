@@ -1,0 +1,49 @@
+{
+ "months": 273,
+ "partial": {
+  "arabica|brazil_dry": 0.05720878557177237,
+  "arabica|vietnam_dry": 0.14930519740523895,
+  "arabica|vietnam_heat": 0.17844404308357079,
+  "arabica|enso": -0.037108681938296174,
+  "robusta|brazil_dry": 0.12605810027090658,
+  "robusta|vietnam_dry": 0.08493556176648595,
+  "robusta|vietnam_heat": 0.17313964108392865,
+  "robusta|enso": -0.0697790496487414
+ },
+ "tail": {
+  "robusta|vietnam_heat": {
+   "tail": 0.32142857142857145,
+   "independent": 0.1,
+   "null_95": 0.21428571428571427,
+   "p_value": 0.0035
+  },
+  "arabica|brazil_dry": {
+   "tail": 0.17857142857142858,
+   "independent": 0.1,
+   "null_95": 0.21428571428571427,
+   "p_value": 0.159
+  },
+  "robusta|brazil_dry": {
+   "tail": 0.14285714285714285,
+   "independent": 0.1,
+   "null_95": 0.21428571428571427,
+   "p_value": 0.3415
+  },
+  "arabica|vietnam_heat": {
+   "tail": 0.32142857142857145,
+   "independent": 0.1,
+   "null_95": 0.21428571428571427,
+   "p_value": 0.0015
+  }
+ },
+ "wavelet": {
+  "robusta|vietnam_heat": {
+   "share_significant": 0.05075458138699245,
+   "periods_most_significant": 63.9843928466172
+  },
+  "arabica|brazil_dry": {
+   "share_significant": 0.05021559468199784,
+   "periods_most_significant": 17.705831106817758
+  }
+ }
+}
