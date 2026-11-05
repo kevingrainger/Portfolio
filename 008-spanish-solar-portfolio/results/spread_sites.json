@@ -1,0 +1,26 @@
+{
+ "25 southern and central regions": {
+  "sites": 25,
+  "effective_sites": 2.1361732994057916,
+  "worst5_per_mw": 1.484704426666667,
+  "worst5_if_independent": 1.720333778488889,
+  "mean_per_mw": 4.011788461153613,
+  "worst5_share_of_mean": 0.370085422260707
+ },
+ "the 25 plus six in other regimes": {
+  "sites": 31,
+  "effective_sites": 2.771230836333044,
+  "worst5_per_mw": 1.4239510250896061,
+  "worst5_if_independent": 1.6461781046594983,
+  "mean_per_mw": 3.9057640682374606,
+  "worst5_share_of_mean": 0.3645768152432687
+ },
+ "25 sites, six moved to other regimes": {
+  "sites": 25,
+  "effective_sites": 3.1380755195686003,
+  "worst5_per_mw": 1.4315902577777782,
+  "worst5_if_independent": 1.6253856730074077,
+  "mean_per_mw": 3.85988619346691,
+  "worst5_share_of_mean": 0.37088924025812753
+ }
+}

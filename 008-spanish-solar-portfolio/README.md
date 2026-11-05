@@ -27,6 +27,15 @@ Each site is given 1 MW of solar, its hourly output proxied by ERA5 irradiance, 
 - **Shared prices deepen them far more.** In revenue, the worst 5% of days earned about €350 against a €7,000 average, and about €2,500 if the sites were independent. Most of that gap is the price, which is the same for every site: on 36 days in 2023 the midday price was below €10 per MWh, and on those days the whole fleet earned almost nothing at once.
 - **So summing each site's P95 underprices a fleet twice:** once for weather the sites share, and more for the market they all sell into. `revenue_risk.py`, prices from OMIE.
 
+## Spreading the sites
+
+The 25 regions sit mostly in the dry south and centre. Six sites in other weather regimes were added (A Coruna, Porto, Bilbao, Barcelona, Girona, Lisbon), with each site again 1 MW and output from ERA5 irradiance through 2023.
+
+![The sites, and the fleet's diversification with and without the spread sites](figures/fig9_spread_sites.png)
+
+- **Spreading out buys diversification.** On daily output with the season removed, the 25 regions act like 2.1 independent sites; adding the six raises that to 2.8, and moving six of the most clustered southern sites to the new regimes, keeping 25 MW, raises it to 3.1, about half as much again.
+- **But not on the worst days.** The fleet's worst 5% of days stay at about 37% of an average day in every version. Those days are winter fronts that cover the whole peninsula, and the northern sites are cloudier anyway, so spreading lowers everyday correlation without lifting the tail. `spread_sites.py`
+
 ## Two forecast models: ECMWF IFS and AIFS
 
 ECMWF now runs two global models side by side: IFS, the physics model, and AIFS, an AI model trained on ERA5 and built with the same Anemoi tools as the dataset above. Both forecast surface solar radiation. Their daily solar-energy forecasts 1–7 days ahead at the 25 sites, from March 2025, are scored against ERA5. The test period runs from February to October 2026, and skill is measured against each site's climatology:
