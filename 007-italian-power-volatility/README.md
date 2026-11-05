@@ -1,14 +1,20 @@
-# Can a weather forecast see a power-price storm coming?
+# Weather and the Italian power price
 
 **A 2026 study found extreme weather to be the main driver of Italian power-price volatility. On the real Italy North prices of 2018–2026, the weather matters, but in the opposite direction: extreme months are calmer. Even a perfect forecast of them barely helps.**
 
-![Italy North power and TTF gas, 2018-2026, with extreme-weather days per month](figures/fig5_real_price.png)
+![Power and gas prices, power relative to gas, Italian temperature and extreme-weather days, 2018-2026](figures/fig8_stacked.png)
 
 Observed weather explains volatility after it has happened, but a hedger needs to know before. This project builds a three-stage version: what drives the price, what drives the volatility, and how much a weather forecast could add. It was first built and checked on simulated data with planted relationships (below), then run on the real series:
 - day-ahead prices for the Italy North zone (Energy-Charts, CC BY 4.0);
 - Italian load, wind and solar;
 - an eight-city ERA5 temperature;
 - Dutch TTF gas.
+
+**Taking gas out first.** Gas plants set the Italian price in most hours, so the price mostly follows TTF gas. Everything below works on power relative to gas, log(power / gas), so what is left can be tied to the weather.
+
+**The gas link and the weather link through time.** Weekly power and gas moved almost one for one through the 2022 gas crisis (a rolling correlation near 0.9), less closely afterwards, and hardly at all during the 2026 heatwave. The link between power relative to gas and the distance from a comfortable 21 °C averages 0.23 and rises to 0.33 in the three worst heatwave summers (2022, 2023, 2026).
+
+![Rolling correlation of power with gas, and of power relative to gas with temperature](figures/fig9_rolling.png)
 
 **On the real data, 2018–2026:**
 - **Gas first, then a U-shaped temperature effect.** Modelled as price relative to gas, XGBoost clearly beats a straight line on years it hasn't seen (RMSE 0.174 against 0.255), which it did not on the simulated data. SHAP finds the expected U: power is dearer relative to gas in cold weather and above about 27 °C, and cheapest around 18–25 °C. After gas, load matters most, then temperature.
@@ -29,7 +35,7 @@ Observed weather explains volatility after it has happened, but a hedger needs t
 
 **Built:** time-ordered cross-validation; XGBoost + SHAP; GARCH-MIDAS by maximum likelihood with beta-lag weights; GARCH(1,1); QLIKE scoring; Diebold–Mariano tests.
 
-`power.py` · `fetch_real.py` · `run_real.py` · `italian_power.ipynb` · `check_midas.py` · Python, XGBoost, SHAP, SciPy
+`power.py` · `fetch_real.py` · `run_real.py` · `make_power_figures.py` · `italian_power.ipynb` · `check_midas.py` · Python, XGBoost, SHAP, SciPy
 
 **Limits:** one bidding zone (Italy North) rather than the national PUN. A temperature-only definition of extreme weather. No archive of real seasonal forecasts, so stage 3 gives the upper bound only. TTF gas from Yahoo Finance is not redistributed; `fetch_real.py` downloads it again.
 
