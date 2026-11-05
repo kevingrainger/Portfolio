@@ -52,6 +52,10 @@ With the better rain, the 1980s take $b$ down to 0.30 at Gourma in 1986, just be
 
 The better rain also corrects one of my earlier claims. With ERA5, Fakara's rain seemed to rise by 88% between the early 2000s and the early 2020s while its greenness stayed flat. CHIRPS and IMERG show a rise of only 5 to 14%. The contrast between the sites survives the correction. At Gourma each year's peak greenness tracks that year's rain (r = 0.68 with CHIRPS, 0.60 with IMERG) and has risen by a quarter since 2000 while the rain barely changed. At Fakara greenness is flat and hardly tracks the rain at all (r = 0.13 and 0.20). With the same rules and a degradation rate fixed in time, our lattice cannot separate them, and should not be able to. What separates the sites is something rain cannot supply: at Fakara, how the land is used decides the vegetation more than the climate does.
 
+![The lattice year by year at both sites, beside the satellite pattern and record](figures/fig7_sites_animation.gif)
+
+Played year by year, each site is a strip of landscape (60 x 240 cells, a transect rather than a square) driven by its own rain, beside the real site's Sentinel-2 vegetation pattern and MODIS greenness. The model loses about a quarter of its cover through the 1980s at both sites and recovers only slightly afterwards. MODIS greenness at Gourma rises over the same years (a correlation of 0.21 with the model), while at Fakara it doesn't follow the model at all (-0.18): the same rain gives the same lattice, and land use makes the difference.
+
 The limits are worth stating. In our case $b$ is not millimetres of rain, the other rates are Kéfi's defaults rather than fitted values, and grazing and cropping enter only through $d$. A lattice cell also has no fixed size, so patch sizes can be compared in shape but not in metres.
 
 ## What I'd do next
@@ -60,7 +64,7 @@ A larger study across many Sahel sites, with a degradation rate that rises with 
 
 ## Code
 
-`sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
+`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
 
 ## Credits
 
