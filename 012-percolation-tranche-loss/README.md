@@ -21,6 +21,25 @@ Both are the inverse of a leading eigenvalue.
 - **The river saturates.** From 55 cm to 25 cm the monthly loss rises by at most 13%.
 - **The threshold is set on land.** If road and rail cannot replace the barges ($T = 1.25\,T_c$), the same low water costs about a third of output, and the cascade reaches Stuttgart, Munich and Berlin.
 
+**Three ways of modelling the same low water.** Each firm is simply disrupted or not for the month, and all three models give each firm the same chance of failing, so they agree on the average loss and differ only in how failures cluster.
+
+![The same low water modelled three ways: independent failures, a one-factor correlation model and the supply network](figures/fig8_three_models.png)
+
+| Kaub level | Model | Average loss | Worst 1% of months |
+|---|---|:-:|:-:|
+| 55 cm, as calibrated | independent | 1.0% | 1.8% |
+| | correlated (one-factor Gaussian, rho = 0.2) | 1.0% | 7.4% |
+| | supply network (percolation) | 1.0% | 2.3% |
+| 25 cm, road and rail strained | independent | 38% | 40% |
+| | correlated | 38% | 75% |
+| | supply network | 38% | 46% |
+
+- **Independent failures understate the tail.** Neighbouring suppliers fail together, which they ignore.
+- **A standard correlation model overstates it.** One common shock makes the whole economy fail at once, while in a supply chain the dependence is local, along the links.
+- **The real danger is the average moving.** Past the network's threshold the expected loss jumps from 1% to 38%. The independent and correlated models only reproduce that here because they were handed the network's failure probabilities; fitted to an ordinary low-water year, neither would predict it.
+
+`three_models.py`
+
 **Part II, case B: structured credit.** At the same 1.9% mean loss as a Vasicek model, the 15–30% tranche carries **46×** the expected loss and equity about 40% less. Risk moves up the capital structure.
 
 | | |
