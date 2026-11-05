@@ -39,6 +39,10 @@ Observed weather explains volatility after it has happened, but a hedger needs t
 | ![Estimator check](figures/fig3_midas_recovery.png) | ![Volatility components](figures/fig4_volatility_components.png) |
 | ![Forecast skill against lead time](figures/hero.png) | |
 
+**A real seasonal forecast, tested.** Each month from 2023, ECMWF's SEAS5 forecast of the next three months' temperature over northern Italy is fed through the temperature-price relationship learned on 2018-2022, and scored against climatology (a normal season) on the level of power relative to gas and on its volatility. The forecast itself is weak here (a correlation of 0.28 with the observed three-month temperature), and it adds nothing: no skill on volatility (-0.02) and clearly worse than climatology on the level (-3.9), because the relationship learned through the 2022 gas crisis doesn't carry into calmer years. That fits the ceiling found above, 0.7% even with perfect knowledge of the extremes; for Italian power, the weather's signal is day to day, not season to season. `seasonal_test.py`
+
+![The seasonal forecast against the next three months of power relative to gas, 2023-2026](figures/fig11_seasonal.png)
+
 **Built:** time-ordered cross-validation; XGBoost + SHAP; GARCH-MIDAS by maximum likelihood with beta-lag weights; GARCH(1,1); QLIKE scoring; Diebold–Mariano tests.
 
 `power.py` · `fetch_real.py` · `run_real.py` · `make_power_figures.py` · `italian_power.ipynb` · `check_midas.py` · Python, XGBoost, SHAP, SciPy

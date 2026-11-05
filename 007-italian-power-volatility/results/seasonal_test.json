@@ -1,0 +1,27 @@
+{
+ "train_months": 60,
+ "test_months": 36,
+ "forecast_temperature_correlation": 0.28072387944539867,
+ "targets": {
+  "level": {
+   "coef": [
+    -0.044173007410323484,
+    -0.1029766903431115,
+    -0.013675706121710998
+   ],
+   "skill_vs_climatology": -3.8591308061845995,
+   "direction_right": 0.16666666666666666,
+   "corr_forecast_actual": 0.15334495367665502
+  },
+  "vol": {
+   "coef": [
+    0.011805320245615468,
+    0.0012165478127103323,
+    -0.0023524904077890166
+   ],
+   "skill_vs_climatology": -0.022370242009112973,
+   "direction_right": 0.4444444444444444,
+   "corr_forecast_actual": -0.247148925062311
+  }
+ }
+}
