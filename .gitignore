@@ -60,3 +60,4 @@ release-assets/
 002-olive-grove-xylella/data/satellite/
 # 008: OMIE market prices, rebuilt by prices/fetch_omie.py
 008-spanish-solar-portfolio/prices/data/
+016-sahel-desertification/data/glw4/

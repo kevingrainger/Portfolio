@@ -62,13 +62,38 @@ Played year by year, each site is a strip of landscape (60 x 240 cells, a transe
 
 The limits are worth stating. In our case $b$ is not millimetres of rain, the other rates are Kéfi's defaults rather than fitted values, and grazing and cropping enter only through $d$. A lattice cell also has no fixed size, so patch sizes can be compared in shape but not in metres.
 
+## What else goes with land loss and recovery
+
+Rain alone predicted the two sites poorly, so the question moves from two sites to the whole Sahel. A grid of sites every 0.5° of latitude and 1° of longitude, from Senegal to Chad between 13° and 17° N, each a box of about 22 km, gives 297 sites. 223 are vegetated enough to measure, after dropping bare desert and open water. For each site, Earth Engine gives:
+
+- **Greenness:** MODIS NDVI at 250 m, the August-September mean, each year 2001-2024.
+- **Rain:** CHIRPS, the June-October total, each year 2001-2024.
+- **Cropping:** the share of the box mapped as cropland by ESA WorldCover 2021, at 10 m.
+- **Grazing:** livestock in 2015 from FAO's Gridded Livestock of the World (GLW4), as tropical livestock units per km² (cattle 0.7, sheep and goats 0.1).
+- **People:** population density in 2000 and its growth to 2020, from GPW v4.11.
+- **Soil:** topsoil sand and organic carbon, from OpenLandMap.
+
+**Removing the rain.** At each site greenness is regressed on that year's rain. The residual is the greenness rain doesn't explain, and its trend over the years (a Theil-Sen slope, as % of the site's mean NDVI per decade) is the land gain or loss beyond the weather. This is RESTREND (Evans and Geerken 2004), the usual way to separate land use from climate in the Sahel. The site trends are then regressed on the covariates, each scaled to one standard deviation so the effects compare directly, with mean rain and the rain trend as controls. Neighbouring sites share weather and land use, so the 90% intervals come from a block bootstrap that resamples 4° bands of longitude, and the out-of-sample fit from leaving one band out at a time.
+
+![The rain-adjusted greenness trend across the Sahel, the effect of each covariate, and the trend against cropland and livestock](figures/fig9_covariates.png)
+
+- **The Sahel kept re-greening.** 94% of the sites greened over 2001-2024 (median +8.0% a decade), and 89% greened by more than their rain explains (median +6.3%).
+- **The two field sites agree with Dardel et al.** The grid cell nearest Gourma greened +7.6% a decade beyond its rain, the one nearest Fakara +2.8%.
+- **More used land greened less.** Taken one at a time, the rain-adjusted trend falls with cropland share (Spearman −0.31), livestock density (−0.28) and population density (−0.41).
+- **The pressures can't be told apart.** Cropping, livestock and people rise together (rank correlations 0.6-0.8), and all three rise with rain towards the south. Combined into one land-use index (their first principal component, 74% of their variance), one standard deviation more land use goes with 1.1 points a decade less re-greening (90% interval 0.3 to 1.6). Fitted separately, only population density keeps a clear effect (−2.2, interval −3.2 to −0.7); cropland and livestock intervals span zero once it is in.
+- **Population growth points the other way** (+0.7, interval 0.2 to 1.1): sites whose population grew fastest greened slightly more, given their starting density. Farmer-managed tree regeneration in southern Niger is one known reason; this test can't say whether it is the reason here.
+- **Soil adds little.** Sand has no effect, and organic carbon a weak negative one whose interval reaches zero.
+- **Most of the variation is unexplained.** The covariates explain 31% of the differences between sites, and 19% when each band of longitude is predicted from the others.
+
+The limits are worth stating. The covariates are snapshots (cropland in 2021, livestock in 2015), not changes over the period, and the relations are correlations, not causes. The rain-trend control comes out negative: sites where rain rose most re-greened less than the linear fit expects, a known weakness of RESTREND when greenness saturates in wet years. And MODIS at 250 m mixes trees, grass and crops, so greening in cropland can be the crops themselves. `fetch_covariates.py` · `covariates.py`
+
 ## What I'd do next
 
-A larger study across many Sahel sites, with a degradation rate that rises with cropping and grazing over time. From there I would like to build a risk measure and a stochastic event set of droughts (many simulated rainfall histories, not just the one that happened), run the full lattice through them, and test how feasible different prevention methods are, such as rotating grazing or protecting the largest patches. I would also like to work on the pure mathematics of these models, as well as the applied side.
+Land-use change over time rather than snapshots (ESA CCI land cover runs from 1992), and a lattice whose degradation rate rises with the land-use index fitted above, run at every grid site. From there I would like to build a risk measure and a stochastic event set of droughts (many simulated rainfall histories, not just the one that happened), run the full lattice through them, and test how feasible different prevention methods are, such as rotating grazing or protecting the largest patches. I would also like to work on the pure mathematics of these models, as well as the applied side.
 
 ## Code
 
-`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
+`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `fetch_covariates.py` (Earth Engine and FAO GLW4) · `covariates.py` (RESTREND and the covariate fit) · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
 
 ## Credits
 
