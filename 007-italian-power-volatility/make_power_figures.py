@@ -80,3 +80,33 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def daily_summer(year=2026, a="06-01", b="09-30"):
+    """One summer, day by day: power, gas, power relative to gas and temperature, every
+    extreme-heat day (Italy-wide mean above 28 C) shaded through all four panels."""
+    d = pd.read_csv(os.path.join(HERE, "data", "real_daily.csv"), index_col=0, parse_dates=True)[f"{year}-{a}":f"{year}-{b}"]
+    rel = np.log(d.price / d.gas)
+    hot = d.index[d.temp > 28]
+    fig, axes = plt.subplots(4, 1, figsize=(12, 9), sharex=True, gridspec_kw=dict(height_ratios=[1.2, 1, 1, 1], hspace=0.35))
+    for ax in axes:
+        for t in hot:
+            ax.axvspan(t - pd.Timedelta(hours=12), t + pd.Timedelta(hours=12), color=RED, alpha=0.15, lw=0)
+    axes[0].plot(d.index, d.price, color=NAVY, lw=1.4, marker="o", ms=2.5); axes[0].set_ylabel("€ per MWh")
+    axes[0].set_title(f"Italy North day-ahead power, {year}", loc="left")
+    axes[1].plot(d.index, d.gas, color=LIGHT, lw=1.6, marker="o", ms=2.5); axes[1].set_ylabel("€ per MWh")
+    axes[1].set_title("TTF gas", loc="left")
+    axes[2].plot(d.index, rel, color=BLUE, lw=1.4, marker="o", ms=2.5); axes[2].set_ylabel("log(power / gas)")
+    axes[2].set_title("Power relative to gas", loc="left")
+    axes[3].plot(d.index, d.temp, color=RED, lw=1.4, marker="o", ms=2.5); axes[3].axhline(28, color=RED, lw=0.8, ls=":")
+    axes[3].set_ylabel("°C"); axes[3].set_title("Italian daily mean temperature (shaded: above 28 °C)", loc="left")
+    fig.align_ylabels(axes)
+    fig.savefig(os.path.join(FIG, f"fig10_daily_{year}.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
+    r = np.corrcoef(rel.dropna(), d.temp.reindex(rel.dropna().index))[0, 1]
+    print(year, "hot days", len(hot), "corr(power/gas, temp) daily", round(r, 2),
+          "mean rel hot", round(rel[hot].mean(), 3), "other", round(rel.drop(hot, errors="ignore").mean(), 3))
+
+
+if __name__ == "__main__":
+    daily_summer(2026)
+    daily_summer(2022)

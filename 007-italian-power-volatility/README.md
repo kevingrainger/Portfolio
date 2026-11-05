@@ -2,7 +2,7 @@
 
 **A 2026 study found extreme weather to be the main driver of Italian power-price volatility. On the real Italy North prices of 2018–2026, the weather matters, but in the opposite direction: extreme months are calmer. Even a perfect forecast of them barely helps.**
 
-![Power and gas prices, power relative to gas, Italian temperature and extreme-weather days, 2018-2026](figures/fig8_stacked.png)
+![Summer 2026 day by day: power, gas, power relative to gas and temperature, days above 28 °C shaded](figures/fig10_daily_2026.png)
 
 Observed weather explains volatility after it has happened, but a hedger needs to know before. This project builds a three-stage version: what drives the price, what drives the volatility, and how much a weather forecast could add. It was first built and checked on simulated data with planted relationships (below), then run on the real series:
 - day-ahead prices for the Italy North zone (Energy-Charts, CC BY 4.0);
@@ -11,6 +11,12 @@ Observed weather explains volatility after it has happened, but a hedger needs t
 - Dutch TTF gas.
 
 **Taking gas out first.** Gas plants set the Italian price in most hours, so the price mostly follows TTF gas. Everything below works on power relative to gas, log(power / gas), so what is left can be tied to the weather.
+
+**Day by day.** The relationship shows best at daily resolution, one summer at a time. Through June-September 2026, each hot spell lifted power above gas: the daily correlation of power relative to gas with temperature was 0.41, and on days above 28 °C power ran about 11% higher relative to gas than on other days. In summer 2022 the figures were 0.52 and about 19%.
+
+![Summer 2022 day by day](figures/fig10_daily_2022.png)
+
+![Power and gas prices, power relative to gas, Italian temperature and extreme-weather days, 2018-2026](figures/fig8_stacked.png)
 
 **The gas link and the weather link through time.** Weekly power and gas moved almost one for one through the 2022 gas crisis (a rolling correlation near 0.9), less closely afterwards, and hardly at all during the 2026 heatwave. The link between power relative to gas and the distance from a comfortable 21 °C averages 0.23 and rises to 0.33 in the three worst heatwave summers (2022, 2023, 2026).
 
