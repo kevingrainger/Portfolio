@@ -39,7 +39,7 @@ NOAA expects significant bleaching from about 4 DHW and mortality from about 8. 
 
 We needed two more pieces before our reef could tip at all. In my original code coral could never die: its death rule needed heat stress above a cap that the stress could never reach. This meant bleached coral always recovered, and nothing could get stuck. I added mortality, and macroalgae that colonise dead coral and are cleared by grazing fish. Grazing is diluted as coral dies, since the same fish are spread over more seaweed. This is the same feedback Mumby et al. use to make real reefs bistable.
 
-## Does the interaction range matter?
+## How far the interactions reach
 
 To look for a tipping point we warm the water slowly, hold it, then cool it back down, and track the coral cover. If our reef comes back along the same path, there is no tipping point. If it comes back along a different, lower path, the reef has hysteresis, ie. it got stuck.
 
@@ -79,7 +79,7 @@ The two reefs disagree earlier in the summer. By 1 February the sensitive reef h
 
 ![Posterior over tolerance and sensitivity](figures/fig9_tolerance.png)
 
-## Where does Scott Reef tip?
+## Where Scott Reef tips
 
 With our fitted parameters we can now ask the tipping question again, with error bars. For 40 parameter sets from the posterior, 20 from each mode, we hold the water at a fixed temperature above the warmest-month mean for 120 days, step it up 0.1 °C at a time, then step it back down.
 

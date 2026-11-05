@@ -55,7 +55,7 @@ The two beans themselves spike together. A Gumbel copula of arabica against robu
 
 A Kalman filter tracks two hidden states from each day's arabica futures curve since 2024: the spot price and the convenience yield (the benefit of holding physical coffee rather than a contract), with Schwartz's (1997) two-factor dynamics. Adding Vietnam heat as a push on the convenience yield improves the fit significantly (likelihood ratio 8.4, p = 0.004); Brazilian dryness doesn't (p = 0.53). The heat push peaks in mid-2024, ahead of the yield's early-2025 high. A frost term, tried first, had nothing to find: no damaging frost fell in the window.
 
-## Does the seasonal forecast help an importer with the coffee price?
+## The seasonal forecast as an importer's signal
 
 ![ECMWF forecast skill against climatology, and how often the importer's calls were right](figures/fig16_seasonal.png)
 
