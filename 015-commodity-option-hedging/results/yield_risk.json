@@ -1,0 +1,32 @@
+{
+ "0.0": {
+  "optimal_hedge_ratio": 1.0,
+  "sd_unhedged": 32.335743429120896,
+  "sd_full_hedge": 20.84606189313915,
+  "sd_optimal": 20.84606189313915
+ },
+ "-0.3": {
+  "optimal_hedge_ratio": 0.74,
+  "sd_unhedged": 26.986459971029475,
+  "sd_full_hedge": 20.948402372439304,
+  "sd_optimal": 19.90205657988763
+ },
+ "-0.6": {
+  "optimal_hedge_ratio": 0.48,
+  "sd_unhedged": 20.45533454417439,
+  "sd_full_hedge": 21.221536692067257,
+  "sd_optimal": 16.7532710078656
+ },
+ "hindsight_2010_eur_per_expected_tonne": {
+  "Italian producer, normal harvest": {
+   "0% sold forward": 189.29106610017595,
+   "50% sold forward": 162.84500311329907,
+   "100% sold forward": 136.39894012642216
+  },
+  "producer in the drought, harvest down a third": {
+   "0% sold forward": 126.8250142871179,
+   "50% sold forward": 100.378951300241,
+   "100% sold forward": 73.9328883133641
+  }
+ }
+}

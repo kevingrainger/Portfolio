@@ -68,6 +68,12 @@ The same shock looks opposite to a buyer. An Italian miller (flour and pasta) th
 - **The cheap structures failed in the shock.** The call spread and the three-way cut the premium by capping the protection at +15%, and the price rose 39%, so they saved only €14.
 - **One shock, two lessons.** The producer regretted hedging and the miller was saved by it. Which side of the market a firm is on decides whether a weather shock in another country is a windfall or a loss, and so which hedge it should hold.
 
+## Yield risk: when the harvest moves with the price
+
+A producer's revenue is price times harvest. If the drought that lifts the price also shrinks the harvest, as for a Russian farm in 2010, the crop partly hedges itself and selling the whole expected harvest forward over-hedges. With a yield volatility of 15% a year, the hedge ratio that minimises the spread of revenue is 100% of the expected harvest when yield and price are unrelated (the Italian producer), 74% at a correlation of -0.3 and 48% at -0.6, where a full hedge is riskier than none. In 2010 a producer inside the drought with a third of its harvest lost and everything sold forward ended with €74 per expected tonne against €127 unhedged: it had to buy back, at the spike, wheat it never grew. `yield_risk.py`
+
+![Revenue risk against hedge ratio for three yield-price correlations, and 2010 in hindsight](figures/fig8_yield_risk.png)
+
 ## Before this: the option seller's side
 
 The first version of this project took the other side: sell a 3-month at-the-money call on copper, gold, wheat, corn, coffee or cocoa every month since 2002, and delta-hedge it eight ways (static, weekly, on 2% moves, daily, daily with GARCH volatility, Leland's cost adjustment and the Whalley–Wilmott band). In calm markets hedging daily tracks best, and the band comes within a point at three-quarters of the cost. In a shock every dynamic hedge lands within two points of the others, because the loss is set by the volatility the option was sold at: error / premium ≈ −½ × (σ²_realised − σ²_sold) / σ²_sold, a well-known result that the 1,738 trades follow closely.
@@ -82,7 +88,7 @@ One shock, one producer and one sale date. CBOT in euros stands in for Euronext,
 
 ## What I'd do next
 
-Add yield risk, so the producer's revenue is price times an uncertain harvest, which changes the best hedge ratio. Repeat the test across several shocks (the 2018 northern European drought, the 2022 invasion of Ukraine) to see whether the ranking holds. Swap in Euronext milling wheat and the Italian cash price, and price the options at market implied volatility where it can be found.
+Repeat the test across several shocks (the 2018 northern European drought, the 2022 invasion of Ukraine) to see whether the ranking holds. Swap in Euronext milling wheat and the Italian cash price, and price the options at market implied volatility where it can be found.
 
 ## Code
 
