@@ -76,6 +76,12 @@ I also set an Fe=O porphyrin into a graphene nanoribbon (260 atoms). There the f
 
 ![Fe=O in a ribbon](figures/fig7_feo_ribbon_orbitals.png)
 
+## The design variables side by side
+
+![Ring spin by metal and arms, backbone spin by bridge with and without oxygen, and backbone spin against the gap](figures/fig11_covariates.png)
+
+Putting the four choices together shows which one sets what. In single molecules the arms decide the ring's spin and its direction relative to the metal: two fused arms (DPP) align it with the metal, four (TPP) mostly turn it against. In chains the bridge decides whether the bare backbone carries a spin (the weak bridge does, for both iron and vanadium). One oxygen on the metal removes the backbone spin in every chain, while the gap still changes with the bridge, from about 0.15 eV to 0.64 eV. So the spin is set by the metal-oxygen unit and the conduction by the bridge, independently.
+
 ## How I checked it
 
 We can start with the molecules, since those have been measured. Our ZnTPP and ZnDPP contrast matches Sun et al. (2020), closed-shell PorA₄ and open-shell PorA₂. For iron in PorA₂, Sun et al. (2022) measured about 3.7 μB with the ring and metal spins aligned, and our molecule gives 4 μB with the ring and metal spins aligned. Next, the oxo chains land on the textbook spin of each unit, S = 1 for Fe=O and S = ½ for V=O, and a setup error would be unlikely to give both. Finally, every run used here converged to 10⁻⁵ in the density and 10⁻⁵ eV in the energy. Many runs were repeated as the geometries were corrected, and the copies agree to within a few meV.
