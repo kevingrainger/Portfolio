@@ -39,6 +39,9 @@ A winter storm hit central Chile on 15-21 July 2026 (CRU). Codelco halted Andina
 - **The ports saw it at once.** Dry-bulk exports from the central ports (San Antonio, Quintero) fell to zero from the first day of the storm and stayed there until about 25 July, then recovered to their pre-storm level by 26 July. The northern copper ports kept shipping.
 - **The price moved within the week.** COMEX copper rose about 3% over the storm and 4.6% by 4 August.
 - **The satellites went blind.** Caletones, which smelts El Teniente's ore, had its last clear Sentinel-2 pass on 11 July and its next on 19 August, a 39-day gap, because cloud and snow covered it. After the storm its heat ran at about 57% of the June level, against a usual summer ratio of about 1.1. Optical imagery can't see a storm while it happens, which is why radar (Sentinel-1) or night-time thermal (VIIRS) is the next step for disruption monitoring.
+![Caletones in true colour and shortwave infrared before, during and after the storm](figures/fig8_caletones_scenes.png)
+
+- **In the images.** Before the storm Caletones glows in the shortwave infrared (130 and 109 hot pixels on 26 June and 11 July) under a white smoke plume; on 3 July the plume is gone and only 13 pixels show, a short stop before the storm. During the storm (21 July) the scene is 100% cloud. On 19 August the valley is under snow and the heat is down to 31, recovering to 59 by 30 August.
 - **So detection and price were close together here.** Ships showed the stop the same day and the price moved the same week; the gap between seeing and pricing a disruption was days, not weeks.
 
 ## A second disruption: Kazakhstan's 2012 cold snap
@@ -49,6 +52,8 @@ Kazakhmys reported that a severe winter hit transport and processing in early 20
 
 ![Balkhash in true colour and shortwave infrared, July 2011 to August 2012](figures/fig7_balkhash_scenes.png)
 
+The white stripes are a known Landsat 7 fault: its Scan Line Corrector failed on 31 May 2003, leaving wedges with no data in every scene since.
+
 - **The furnace showed through the snow.** On 30 January 2012, in the middle of the cold snap, the land around the smelter is white in true colour, but in the shortwave infrared the furnace glows with 88 hot pixels, as hot as in summer. The smelter was running; the output Kazakhmys lost most likely came from transport and the mines, not from the furnaces stopping.
 - **It slowed afterwards.** On 2 March a band of cloud or plume crosses the site, so that pass says little; on 3 April, with the snow gone, the heat was low (16 hot pixels in the 6 x 6 km box), and by August it was back (77). A per-pass measure that discards scenes with mostly snow-covered ground, as the time series above does, would have missed the January signal altogether.
 - **The lesson for the method.** Cloud blinds optical imagery, as in Chile; snow doesn't, because a furnace is far hotter than the ground around it, but the cloud and snow masks have to be applied around the hot spot, not across the whole scene. Radar (Sentinel-1) and night-time thermal imagery (VIIRS, from 2012) are the next step for cloudy disruptions.
@@ -57,7 +62,7 @@ The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to 
 
 **Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.
 
-`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
+`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `chile_scenes.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
 
 **Limits:** PortWatch does not say what a ship carries, so dry-bulk tonnes at a copper port is a proxy. Only Peru publishes a free monthly series to check it against. Which mine ships through which port is marked "check" where uncertain. The hot-spot check proves heat near a site, not that the heat is the smelter's.
 

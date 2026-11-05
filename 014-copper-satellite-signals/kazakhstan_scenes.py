@@ -4,8 +4,8 @@
 # Real Landsat 7 scenes of the Balkhash copper smelter around the 2012 cold snap.
 # Top row: true colour (red, green, blue), where the snow shows. Bottom row: shortwave
 # infrared false colour (2.2 um, 1.6 um, near infrared), where a furnace glows, with the
-# pixels passing the hot-spot test outlined. The black stripes are Landsat 7's missing
-# scan lines (since 2003). 6 x 6 km around the smelter, Microsoft Planetary Computer.
+# pixels passing the hot-spot test outlined. The stripes are Landsat 7's missing scan
+# lines: its Scan Line Corrector failed on 31 May 2003, leaving wedge-shaped gaps. 6 x 6 km around the smelter, Microsoft Planetary Computer.
 #
 #   python kazakhstan_scenes.py
 #
