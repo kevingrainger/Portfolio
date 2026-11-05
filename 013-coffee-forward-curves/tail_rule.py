@@ -64,13 +64,17 @@ def main():
         labels = ["every month"] + [f"forecast: {k}" for k in names[1:]]
         y = np.arange(len(names))
         means = [100 * o[k]["mean_change"] for k in names]
-        ax.barh(y, means, color=[GREY] + [RED if "Vietnam" in k or "both" in k else BLUE for k in names[1:]], height=0.6)
-        for i, k in enumerate(names[1:], 1):
-            lo, hi = (100 * v for v in o[k]["ci90"])
-            ax.plot([lo, hi], [i, i], color=NAVY, lw=1.5)
-            ax.text(max(hi, means[i]) + 0.5, i, f"{o[k]['n']} months", va="center", fontsize=8.5, color=GREY)
+        cols = [GREY] + [RED if "Vietnam" in k or "both" in k else BLUE for k in names[1:]]
+        ax.axvline(means[0], color=GREY, lw=0.9, ls="--")
+        for i, k in enumerate(names):
+            if "ci90" in o[k]:
+                lo, hi = (100 * v for v in o[k]["ci90"])
+                ax.plot([lo, hi], [i, i], color=cols[i], lw=2, solid_capstyle="round")
+            ax.plot(means[i], i, "o", color=cols[i], ms=8, mec="white", mew=1)
+            if i:
+                ax.text(max(hi, means[i]) + 0.5, i, f"{o[k]['n']} months", va="center", fontsize=8.5, color=GREY)
         ax.axvline(0, color="0.7", lw=0.8)
-        ax.set_yticks(y, labels); ax.invert_yaxis()
+        ax.set_yticks(y, labels); ax.invert_yaxis(); ax.set_ylim(len(names) - 0.5, -0.5)
         ax.set_xlabel("price change over the next three months (%)")
         ax.set_title(bean.capitalize(), loc="left")
     fig.savefig(os.path.join(FIG, "fig17_tail_rule.png"), dpi=170, bbox_inches="tight"); plt.close(fig)

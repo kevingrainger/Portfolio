@@ -142,8 +142,10 @@ def dependence_figure():
              "arabica|brazil_dry": "Arabica, Brazil dryness", "robusta|brazil_dry": "Robusta, Brazil dryness"}
     keys = list(names)
     y = np.arange(len(keys))
-    ax.barh(y, [d["tail"][k]["tail"] for k in keys], color=[RED, RED, BLUE, BLUE], height=0.55, alpha=0.85,
-            label="empirical, top 10%")
+    emp = [d["tail"][k]["tail"] for k in keys]
+    for i, c in enumerate([RED, RED, BLUE, BLUE]):
+        ax.plot([0, emp[i]], [i, i], color=c, lw=0.8, alpha=0.4)
+    ax.scatter(emp, y, s=70, facecolor="white", edgecolor=[RED, RED, BLUE, BLUE], lw=1.8, zorder=3, label="empirical, top 10%")
     lam = np.array([d["copula"][k]["tail_lambda"] for k in keys])
     lo = np.array([d["copula"][k]["tail_lambda_90"][0] for k in keys])
     hi = np.array([d["copula"][k]["tail_lambda_90"][1] for k in keys])
@@ -282,8 +284,14 @@ def seasonal_figure():
     hz = ["vietnam_heat", "vietnam_dry", "brazil_dry"]
     lab = ["Vietnam heat", "Vietnam dryness", "Brazil dryness"]
     y = np.arange(len(hz)); h = 0.38
-    ax.barh(y, [o["skill_score_vs_climatology"][k] for k in hz], 0.55, color=NAVY)
+    sk = [o["skill_score_vs_climatology"][k] for k in hz]
+    ax.axvspan(min(min(sk), 0) - 0.05, 0, color="0.94", lw=0)
+    ax.hlines(y, 0, sk, color=NAVY, lw=1, alpha=0.5)
+    ax.plot(sk, y, "o", color=NAVY, ms=9, mec="white", mew=1.2)
+    for i, v in enumerate(sk):
+        ax.annotate(f"{v:+.2f}", (v, i), xytext=(0, 9), textcoords="offset points", ha="center", fontsize=8.5, color=NAVY)
     ax.axvline(0, color=GREY, lw=0.8)
+    ax.set_ylim(len(hz) - 0.5, -0.6)
     ax.set_yticks(y, lab); ax.invert_yaxis()
     ax.set_xlabel("skill score against climatology (0 = no better than a normal month)")
     ax.set_title("ECMWF SEAS5 forecast skill", loc="left")
@@ -291,11 +299,16 @@ def seasonal_figure():
     keys = ["arabica|forecast", "arabica|climatology", "robusta|forecast", "robusta|climatology"]
     names = ["Arabica, forecast", "Arabica, climatology", "Robusta, forecast", "Robusta, climatology"]
     vals = [100 * o["results"][k]["hit_rate"] for k in keys]
-    ax.barh(range(4), vals, color=[NAVY, LIGHT, NAVY, LIGHT], height=0.6)
-    for i, k in enumerate(keys):
-        ax.text(vals[i] + 0.8, i, f"{o['results'][k]['decisions']} decisions", va="center", fontsize=8.5, color=GREY)
+    for j, bean in enumerate(["Arabica", "Robusta"]):
+        f, c = vals[2 * j], vals[2 * j + 1]
+        ax.plot([c, f], [j, j], color=GREY, lw=2.5, alpha=0.5, solid_capstyle="round")
+        ax.plot(c, j, "o", color=LIGHT, ms=10, mec=NAVY, mew=0.8, label="climatology" if j == 0 else None)
+        ax.plot(f, j, "o", color=NAVY, ms=10, mec="white", mew=1, label="SEAS5 forecast" if j == 0 else None)
+        ax.text(max(f, c) + 2.2, j, f"{o['results'][keys[2 * j]]['decisions']} decisions", va="center", fontsize=8.5, color=GREY)
     ax.axvline(50, color=RED, lw=1, ls="--")
-    ax.set_yticks(range(4), names); ax.invert_yaxis(); ax.set_xlim(0, 75)
+    ax.text(50.4, 1.45, "coin toss", color=RED, fontsize=8.5)
+    ax.set_yticks(range(2), ["Arabica", "Robusta"]); ax.set_ylim(1.6, -0.6); ax.set_xlim(35, 75)
+    ax.legend(frameon=False, fontsize=9, loc="lower right")
     ax.set_xlabel("buy-forward-or-wait calls that were right (%)")
     ax.set_title("Importer decisions, 2008 on", loc="left")
     fig.savefig(os.path.join(FIG, "fig16_seasonal.png"), dpi=170, bbox_inches="tight")

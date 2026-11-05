@@ -79,8 +79,8 @@ def main():
     print(json.dumps(out, indent=1))
 
     plt.rcParams.update({"font.family": "serif", "font.size": 10.5, "axes.spines.top": False, "axes.spines.right": False})
-    fig = plt.figure(figsize=(13, 5.2))
-    gs = fig.add_gridspec(2, 2, width_ratios=[1.1, 1], hspace=0.6, wspace=0.35)
+    fig = plt.figure(figsize=(13, 7))
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.05, 1], hspace=0.55, wspace=0.28)
     ax = fig.add_subplot(gs[:, 0])
     lines = []
     for nm in ["ne_50m_coastline", "ne_50m_admin_0_boundary_lines_land"]:
@@ -98,19 +98,27 @@ def main():
     ax.set_xlim(-10.5, 4.5); ax.set_ylim(35.5, 44.3); ax.set_aspect(1 / np.cos(np.radians(40)))
     ax.set_xticks([]); ax.set_yticks([]); ax.legend(frameon=False, fontsize=9, loc="lower right")
     ax.set_title("Sites", loc="left")
-    names = list(out)
     short = ["25 regions", "25 + six spread", "25, six moved"]
-    for k, (key, lab, col, fmt) in enumerate([("effective_sites", "Effective independent sites", NAVY, "{:.1f}"),
-                                               ("worst5_share_of_mean", "Worst 5% of days, % of an average day", BLUE, "{:.0%}")]):
-        ax = fig.add_subplot(gs[k, 1])
-        vals = [out[n][key] for n in names]
-        ax.barh(range(3), vals, color=col, height=0.6)
-        for i, v in enumerate(vals):
-            ax.text(v, i, " " + fmt.format(v), va="center", fontsize=9)
-        ax.set_yticks(range(3), short); ax.invert_yaxis()
-        ax.set_xlim(0, max(vals) * 1.25); ax.set_xticks([])
-        ax.spines["bottom"].set_visible(False)
-        ax.set_title(lab, loc="left", fontsize=10.5)
+    styles = [(NAVY, "-"), (BLUE, "--"), (RED, "-")]
+    ax = fig.add_subplot(gs[0, 1])
+    for (name, cols), lab, (c, ls) in zip(fleets.items(), short, styles):
+        a = day[cols] - day[cols].groupby(day.index.month).transform("mean")
+        lam = np.sort(np.linalg.eigvalsh(np.corrcoef(a.values.T)))[::-1]
+        ax.plot(np.arange(1, len(lam) + 1), 100 * np.cumsum(lam) / lam.sum(), ls, color=c, lw=1.6, marker="o", ms=3,
+                label=f"{lab}: {out[name]['effective_sites']:.1f} effective sites")
+    ax.set_xlim(0.5, 10.5); ax.set_ylim(40, 101)
+    ax.set_xlabel("number of weather patterns (principal components)"); ax.set_ylabel("% of daily variation")
+    ax.set_title("Daily variation explained by shared weather patterns", loc="left", fontsize=10.5)
+    ax.legend(frameon=False, fontsize=8.5, loc="lower right")
+    ax = fig.add_subplot(gs[1, 1])
+    for (name, cols), lab, (c, ls) in zip(fleets.items(), short, styles):
+        f = day[cols].sum(axis=1) / len(cols)
+        x = np.sort(f / f.mean())
+        ax.plot(100 * x, 100 * np.arange(1, len(x) + 1) / len(x), ls, color=c, lw=1.6, label=lab)
+    ax.axhline(5, color=GREY, lw=0.8, ls=":"); ax.text(2, 5.5, "worst 5% of days", color=GREY, fontsize=8.5)
+    ax.set_xlim(0, 100); ax.set_ylim(0, 30)
+    ax.set_xlabel("fleet output on the day, % of an average day"); ax.set_ylabel("% of days at or below")
+    ax.set_title("Low-output days, cumulative share", loc="left", fontsize=10.5)
     fig.savefig(os.path.join(HERE, "figures", "fig9_spread_sites.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
 

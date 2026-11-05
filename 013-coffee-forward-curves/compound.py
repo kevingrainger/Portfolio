@@ -63,14 +63,21 @@ def main():
     plt.rcParams.update({"font.family": "serif", "font.size": 10.5, "axes.spines.top": False, "axes.spines.right": False})
     fig, axes = plt.subplots(1, 2, figsize=(13, 4.6), gridspec_kw=dict(width_ratios=[1, 1.6], wspace=0.25))
     ax = axes[0]
-    x = np.arange(len(GROUPS)); w = 0.38
-    for i, (bean, c) in enumerate([("arabica", NAVY), ("robusta", LIGHT)]):
-        vals = [100 * out["groups"][bean][k]["mean"] for k in GROUPS]
-        ax.bar(x + (i - 0.5) * w, vals, w, color=c, label=bean)
+    x = np.arange(len(GROUPS)); w = 0.2
+    rs = np.random.default_rng(1)
+    for i, (bean, c) in enumerate([("arabica", NAVY), ("robusta", BLUE)]):
+        for j, k in enumerate(GROUPS):
+            v = 100 * df.loc[g == k, f"{bean}_res"].dropna().values
+            xx = j + (i - 0.5) * 2 * w + rs.uniform(-w / 2, w / 2, len(v))
+            ax.scatter(xx, v, s=6, color=c, alpha=0.25, lw=0)
+            bm = [rs.choice(v, len(v)).mean() for _ in range(2000)]
+            ax.plot([j + (i - 0.5) * 2 * w] * 2, np.quantile(bm, [0.05, 0.95]), color=c, lw=2.2)
+            ax.plot(j + (i - 0.5) * 2 * w, v.mean(), "o", color=c, ms=8, mec="white", mew=1.2, label=bean if j == 0 else None)
+    ax.set_ylim(-20, 25)
     ax.axhline(0, color=GREY, lw=0.8)
     ax.set_xticks(x, [f"{k}\n({out['groups']['arabica'][k]['months']} months)" for k in GROUPS], fontsize=9)
-    ax.set_ylabel("mean monthly return, real removed (%)")
-    ax.set_title("Bean returns by weather hits", loc="left"); ax.legend(frameon=False)
+    ax.set_ylabel("monthly return, real removed (%)")
+    ax.set_title("Bean returns by weather hits", loc="left"); ax.text(0.99, 0.02, "dots: single months; marker and bar: mean, 90% interval", transform=ax.transAxes, ha="right", fontsize=8, color=GREY); ax.legend(frameon=False)
     ax = axes[1]
     ax.fill_between(df.index, 0, br.astype(int), step="mid", color=BLUE, alpha=0.5, lw=0, label="Brazil hit")
     ax.fill_between(df.index, 0, -vn.astype(int), step="mid", color=RED, alpha=0.5, lw=0, label="Vietnam hit")

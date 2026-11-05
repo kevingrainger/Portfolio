@@ -66,11 +66,15 @@ def main():
     ax.set_xlabel("share of expected harvest sold forward (%)"); ax.set_ylabel("spread of revenue, € per expected tonne")
     ax.set_title("Revenue risk against hedge ratio", loc="left"); ax.legend(frameon=False, fontsize=9)
     ax = axes[1]
-    names = list(hind); x = np.arange(3); wbar = 0.38
-    for i, (name, c) in enumerate(zip(names, [NAVY, RED])):
-        vals = list(hind[name].values())
-        ax.bar(x + (i - 0.5) * wbar, vals, wbar, color=c, label=name)
-    ax.set_xticks(x, list(hind[names[0]].keys())); ax.set_ylabel("revenue, € per expected tonne")
+    for (name, q), c, ls in zip([("Italian producer, normal harvest", 1.0), ("producer in the drought, harvest down a third", 0.67)],
+                                [NAVY, RED], ["-", "--"]):
+        rev = q * FT10 + H * (F0 - FT10)
+        ax.plot(100 * H, rev, color=c, lw=1.8, ls=ls, label=name)
+        for h in (0.0, 0.5, 1.0):
+            v = q * FT10 + h * (F0 - FT10)
+            ax.plot(100 * h, v, "o", color=c, ms=5)
+            ax.annotate(f"€{v:.0f}", (100 * h, v), xytext=(0, 7), textcoords="offset points", ha="center", fontsize=8.5, color=c)
+    ax.set_xlabel("share of expected harvest sold forward (%)"); ax.set_ylabel("revenue, € per expected tonne")
     ax.set_title("2010 in hindsight", loc="left"); ax.legend(frameon=False, fontsize=9, loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=1)
     fig.savefig(os.path.join(FIG, "fig8_yield_risk.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 

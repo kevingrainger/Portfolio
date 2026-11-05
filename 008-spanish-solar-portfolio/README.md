@@ -36,6 +36,16 @@ The 25 regions sit mostly in the dry south and centre. Six sites in other weathe
 - **Spreading out buys diversification.** On daily output with the season removed, the 25 regions act like 2.1 independent sites; adding the six raises that to 2.8, and moving six of the most clustered southern sites to the new regimes, keeping 25 MW, raises it to 3.1, about half as much again.
 - **But not on the worst days.** The fleet's worst 5% of days stay at about 37% of an average day in every version. Those days are winter fronts that cover the whole peninsula, and the northern sites are cloudier anyway, so spreading lowers everyday correlation without lifting the tail. `spread_sites.py`
 
+## A first stochastic event set
+
+A P95 needs many more bad months than one year of weather holds, so the next step is to simulate them. From the 2023 ERA5 output of the 25 regions, each site's day is split into its monthly mean and a daily anomaly. The anomalies are joined by a Gaussian copula: each site keeps its own anomaly distribution, the sites are tied together by their rank correlation (0.63 on average between pairs), and each day carries over part of the day before (a day-to-day correlation of 0.60 in the shared weather). 2,000 years are drawn twice, once with the fitted correlation and once with the sites independent, and the fleet's monthly output is read off each.
+
+![Monthly fleet output across the simulated years, and the worst month of each year against how often it comes round](figures/fig10_event_set.png)
+
+- **The shared weather is most of the tail.** The fleet's 1-in-20 bad month falls 9.2% below normal on average across the year with correlated sites, against 2.3% if the sites were independent: about four times deeper.
+- **The worst month of the year.** In one year in twenty the fleet's worst month is 19% below its mean; with independent sites it would be 4%. By month, the bad month is deepest from October to January (12-15% below normal), when fronts cross the whole peninsula, and shallowest in July (2%).
+- **What the data is too thin for.** One year only gives the day-to-day weather inside that year. It cannot show a whole year that is cloudier than usual, so these tails are a floor. The plan is to add more ERA5 years, and then to perturb the simulated days with the IFS and AIFS forecast errors, which reach only about 200 km, so the two models' difference becomes a spread of possible days rather than a single number. `event_set.py`
+
 ## Two forecast models: ECMWF IFS and AIFS
 
 ECMWF now runs two global models side by side: IFS, the physics model, and AIFS, an AI model trained on ERA5 and built with the same Anemoi tools as the dataset above. Both forecast surface solar radiation. Their daily solar-energy forecasts 1–7 days ahead at the 25 sites, from March 2025, are scored against ERA5. The test period runs from February to October 2026, and skill is measured against each site's climatology:

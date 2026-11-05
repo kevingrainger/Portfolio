@@ -89,7 +89,10 @@ def main():
     for ax, (name, col) in zip(axes, [("Chilean copper-port exports", BLUE), ("COMEX copper return", RED)]):
         d = lagdf[lagdf.target == name]
         ax.axhspan(-d.band.mean(), d.band.mean(), color="0.92", lw=0)
-        ax.bar(d.lag, d.r, color=col, width=0.7)
+        ax.vlines(d.lag, 0, d.r, color=col, lw=1, alpha=0.5)
+        ax.plot(d.lag, d.r, "-o", color=col, lw=1.4, ms=6, mec="white", mew=1)
+        out_band = d[abs(d.r) > d.band]
+        ax.plot(out_band.lag, out_band.r, "o", color=col, ms=9, mfc="none", mew=1.4)
         ax.axhline(0, color="0.6", lw=0.8)
         ax.set_xlabel("months the heat signal leads (+) or lags (-)")
         ax.set_title(f"Chilean smelter heat vs {name.split(' ', 1)[1] if name.startswith('COMEX') else 'port exports'}", loc="left")

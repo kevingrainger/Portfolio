@@ -58,7 +58,8 @@ def main():
     ax.set_ylabel("°C"); ax.set_title("Italian temperature (eight-city ERA5 mean)", loc="left"); shade(ax)
     ax = axes[3]
     m = extreme_day.resample("ME").sum()
-    ax.bar(m.index, m.values, width=25, color=RED, alpha=0.8)
+    ax.fill_between(m.index, 0, m.values, step="mid", color=RED, alpha=0.35, lw=0)
+    ax.step(m.index, m.values, where="mid", color=RED, lw=1)
     ax.set_ylabel("days per month"); ax.set_title("Extreme-weather days (above 28 °C or below 3 °C)", loc="left"); shade(ax)
     fig.align_ylabels(axes)
     fig.savefig(os.path.join(FIG, "fig8_stacked.png"), dpi=170, bbox_inches="tight"); plt.close(fig)

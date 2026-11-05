@@ -103,7 +103,8 @@ def main():
     ax.set_title("Balkhash smelter heat, Landsat 7", loc="left")
     ax.text(pd.Timestamp(COLD[0]), 0.98, " 2012 cold snap", transform=ax.get_xaxis_transform(), color=BLUE, va="top", fontsize=9)
     ax = axes[1]
-    ax.bar(d.date, d.snow, width=6, color=LIGHT, label="snow")
+    ax.fill_between(d.date, 0, d.snow, step="mid", color=LIGHT, alpha=0.8, lw=0, label="snow")
+    ax.step(d.date, d.snow, where="mid", color=BLUE, lw=0.8)
     ax.plot(d.date, d.clear, ".", color=GREY, ms=4, label="clear and snow-free")
     ax.set_ylabel("share of the box"); ax.legend(frameon=False, fontsize=9, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.12))
     ax.set_title("What the satellite could see", loc="left")
