@@ -6,7 +6,29 @@
 
 ERA5-Land describes the Po Valley in boxes about 9 km across. Gridded station products such as E-OBS fill the map by interpolating stations, and stop returning the stations in the process. This project builds daily maximum temperature on a 1 km grid for June to August 2021-2023 under two constraints: between stations the surface obeys a reduced heat-budget equation in which each land-cover class couples the air to the ground at its own rate, and at stations it equals the observation exactly. XGBoost learns the heating the equation leaves out and returns it to the equation as a prior. A U-Net trained on the thermometers with the heat budget in its loss (a physics-informed network) is the best model on the hottest days.
 
-**Data.** Station locations, coastline, lakes and city outlines are real; elevation and land cover are estimated from them. The daily fields (ERA5-Land, MODIS, E-OBS, station readings) are simulated in the shape of the real products, with a known truth behind them. The numbers below therefore test the method and are not findings about the Po Valley. `download_data.py` fetches the real products; that run is next.
+**Data.** The method was built and tested first on simulated daily fields in the shape of the real products, with a known truth behind them (the sections below). It has since been run on the real data: ERA5-Land, MODIS land surface temperature, terrain and land cover from Earth Engine, and the readings of 38 stations, scored at stations held out in 50 km blocks in 2023.
+
+## On the real data
+
+| Model | RMSE (K) | Hottest 5% of days (K) |
+|---|:-:|:-:|
+| ERA5-Land, bilinear and lapse rate | 1.89 | 2.05 |
+| Regression with kriged residuals | 1.61 | 1.87 |
+| Physics only | 1.62 | 1.67 |
+| Physics, anchored to stations | 1.61 | 1.75 |
+| Physics, anchored, XGBoost prior | 1.75 | 1.72 |
+| U-Net emulator | 1.65 | 1.85 |
+| Network on stations only | 1.71 | 1.88 |
+| Physics-informed network | 1.60 | 1.78 |
+| Physics-informed network, heavier physics, anchored | 1.64 | 1.60 |
+
+- **Every regional model beats ERA5-Land by about 0.3 K,** a sixth of its error.
+- **The best models are level.** Kriging, the physics and the physics-informed network all sit within 0.05 K of each other over all days; with 38 stations they can't be separated.
+- **The physics helps the network.** Putting the heat budget in the loss takes the network from 1.71 K to 1.60 K, and on the hottest days the anchored version is the best model (1.60 K).
+- **The XGBoost prior doesn't survive the real data** (1.75 K): what it learned on the simulation doesn't transfer.
+
+![The physics-informed network on the real data](figures/real/fig8_physics_informed_real.png)
+
 
 - **The constraint holds.** On all 276 days the surface returns every station to within 10⁻¹² K. Before any data, the solver recovered planted parameters exactly when its physics was complete, and to within 25% (relaxation times) when it was not.
 - **Anchored physics matches regression-kriging; it does not clearly beat it.** At stations in held-out 50 km blocks in 2023, RMSE falls from 1.34 K (ERA5-Land) to 1.03 K (physics only), 0.83 K (anchored) and 0.79 K (with the XGBoost prior). Regression with kriged residuals scores 0.85 K, and the 0.06 K gap has a 95% interval of -0.14 to +0.00 K.
@@ -130,6 +152,6 @@ Steady state: one balance per day, no heat storage, no memory. Single layer: no 
 
 **Interactive maps:** [the heatwave day](https://kevingrainger.github.io/maps/003-heatwave.html) · [missing heating, land cover and station footprints](https://kevingrainger.github.io/maps/003-missing-physics.html)
 
-**Next:** the real data. Then the regional ARPA station networks, which multiply the anchors tenfold; a lapse rate fitted per day; and a second-order advection scheme so that κ means something.
+**Next:** the regional ARPA station networks, which multiply the anchors tenfold; a lapse rate fitted per day; and a second-order advection scheme so that κ means something.
 
 *A side project, built for fun. Credits: ERA5-Land (Muñoz-Sabater et al. 2021, [doi:10.5194/essd-13-4349-2021](https://doi.org/10.5194/essd-13-4349-2021)); E-OBS (Cornes et al. 2018, [doi:10.1029/2017JD028200](https://doi.org/10.1029/2017JD028200)); variational analysis (Sasaki 1970, Mon. Wea. Rev. 98, 875-883; Lorenc 1986, [doi:10.1002/qj.49711247414](https://doi.org/10.1002/qj.49711247414)); the closest published relative, First Street Foundation's geostatistical air temperature model (Wilson et al. 2022, Climate 10(3):47, [doi:10.3390/cli10030047](https://doi.org/10.3390/cli10030047)); physics-informed machine learning (Karniadakis et al. 2021; Harder et al. 2023); ESA WorldCover 2021 (Zanaga et al. 2022, [doi:10.5281/zenodo.7254221](https://doi.org/10.5281/zenodo.7254221)); XGBoost (Chen & Guestrin 2016, [doi:10.1145/2939672.2939785](https://doi.org/10.1145/2939672.2939785)); U-Net (Ronneberger, Fischer & Brox 2015, MICCAI); deep-learning downscaling (Baño-Medina, Manzanas & Gutiérrez 2020, [doi:10.5194/gmd-13-2109-2020](https://doi.org/10.5194/gmd-13-2109-2020)); conformalised quantile regression (Romano, Patterson & Candès 2019, NeurIPS); physics-informed neural networks (Raissi, Perdikaris & Karniadakis 2019, [doi:10.1016/j.jcp.2018.10.045](https://doi.org/10.1016/j.jcp.2018.10.045)). Station list from Meteostat; outlines from Natural Earth.*
