@@ -1,6 +1,6 @@
-# PDEs by successive over-relaxation
+# PDE systems by successive over-relaxation
 
-**Undergraduate work in C++, re-plotted with a Numba port, plus a new Black–Scholes solver built the same way.**
+**Undergraduate work in C++, re-plotted with a Numba port, with the same SOR machinery applied to Black–Scholes.**
 
 ![Laplace's equation solved by SOR](figures/cover.png)
 

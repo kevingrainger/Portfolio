@@ -1,6 +1,6 @@
-# What is the temperature between the weather stations?
+# Po Valley mesoclimate, physics-informed machine learning
 
-**A heat-budget equation, forced to equal every station reading, with machine learning supplying the physics it lacks. Daily maximum temperature at 1 km over the Po Valley.**
+**A region-specific model of daily maximum temperature for the Po Valley: a heat-budget equation anchored to every station reading, compared with regression-kriging, a U-Net and a physics-informed network.**
 
 ![Daily maximum temperature at 1 km draped over the terrain, hottest July 2022 day](figures/cover.png)
 
@@ -117,7 +117,7 @@ S is the fold's training stations and Ω every land cell in the tile. A θ = b i
 - **At training stations the physics costs accuracy; at unseen stations it pays.** On a validation month at the training stations, λ = 3 scores 0.83 K against 0.81 K for λ = 0: the constraint stops the network fitting those thermometers as closely. At held-out stations every λ > 0 beats λ = 0, and at every land cell the error falls from 0.89 K to 0.84 K. That is the behaviour expected of a regulariser that carries real information.
 - **The gain is largest on the hottest days.** There RMSE falls by a quarter, from 1.12 K to 0.85 K. Heatwave days are rare in the training data, so a data-only network has too few examples to learn them from. The heat budget holds every day, and it holds on those days too.
 - **Anchored, it is the best model on the hottest days.** Using the λ = 3 network as the prior of the station anchoring gives 0.75 K on the hottest 5%, ahead of the XGBoost prior (0.78 K) and the plain physics (0.80 K). Over all days, M3 remains best (0.79 K against 0.86 K).
-- **The data-only network is the worst of all the networks.** Trained on 39 thermometers, it overfits them. The emulator avoided this only by borrowing the physics model's dense surface. The physics-informed network gets that information more honestly, from the equation rather than from the solver's output.
+- **The data-only network is the worst of all the networks.** Trained on 39 thermometers, it overfits them. The emulator avoided this only by borrowing the physics model's dense surface. The physics-informed network gets that information from the equation itself rather than from the solver's output.
 
 | | |
 |:-:|:-:|

@@ -1,4 +1,4 @@
-# When a reef can't come back
+# Coral reef tipping points
 
 ![The reef through a heatwave and back](figures/cover.gif)
 

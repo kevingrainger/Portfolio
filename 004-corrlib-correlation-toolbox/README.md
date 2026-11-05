@@ -1,4 +1,4 @@
-# corrlib: how much of a correlation is real?
+# corrlib, a correlation library
 
 **A small Python library for measuring, cleaning and stripping down correlation matrices, used by the seismic and solar projects.**
 
@@ -15,7 +15,7 @@ c.plot()
 
 - **Taking out the market** raises the effective number of independent bets from about 7 to 15.
 - **The cleaners are tested against known answers** (59 tests). Ledoit–Wolf matches scikit-learn exactly. Nonlinear shrinkage, using Ledoit & Wolf's 2020 estimator, is the best cleaner on structured data. The first version I wrote was worse than no cleaning at all near q = 1, and the tests caught it.
-- **An honest portfolio test.** Cleaning closes only part of the gap between the risk a portfolio claims and the risk it delivers. An earlier "perfect" result turned out to be a units bug.
+- **A portfolio test.** Cleaning closes only part of the gap between the risk a portfolio claims and the risk it delivers. An earlier "perfect" result turned out to be a units bug.
 
 | | |
 |:-:|:-:|

@@ -1,4 +1,4 @@
-# Metal-porphyrin chains by density functional theory
+# DFT simulations of metal-porphyrin 2D nano-networks
 
 *Undergraduate capstone, B.A. (Mod.) Theoretical Physics, Trinity College Dublin, 2025. Supervised by Prof. Cormac McGuinness. Calculations run in FHI-aims on Trinity's high-performance computing cluster.*
 

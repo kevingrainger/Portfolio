@@ -1,6 +1,6 @@
-# The bug that kills olive trees, one spittlebug at a time
+# Olive grove Xylella, stochastic SIR
 
-**Simulating *Xylella fastidiosa* in an olive grove shows the outbreak sitting on a knife-edge, and felling trees failing to push it off.**
+**A stochastic agent-based model of *Xylella fastidiosa* spreading through an olive grove by spittlebugs: the infection threshold, felling and planting spacing.**
 
 ![Unmanaged grove against vector control plus felling](figures/hero.png)
 

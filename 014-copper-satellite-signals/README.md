@@ -1,6 +1,6 @@
-# Copper seen from space
+# EO proxies for copper production intensity: an alternative data method
 
-**Copper's supply chain is short and visible. Concentrate leaves a handful of ports in Chile and Peru, and it is smelted in a few dozen plants that glow in shortwave infrared. Can you watch supply from space, and is what you see worth anything to someone trading copper?**
+**Earth-observation proxies for copper supply: ship traffic at the export ports and furnace heat at the smelters, tested against official exports, the copper price and a real disruption.**
 
 ![Four copper smelters in shortwave infrared, hot pixels outlined](figures/fig3_smelters.png)
 
@@ -16,7 +16,7 @@ $$\frac{\rho_{12}}{\rho_{11}} \ge 1.4, \qquad \frac{\rho_{12}}{\rho_{8A}} \ge 1.
 - **The ships see copper.** Dry-bulk exports from Peru's copper ports follow Peru's official copper export volumes: correlation 0.67 in monthly levels and 0.55 year on year. The placebo ports manage 0.27 and 0.20.
 - **But they don't predict the price.** Each port's last four weeks of exports, as a log ratio to the same weeks a year earlier, is used as the signal. It has no out-of-sample skill for the next four weeks of COMEX copper (R² = −5%, no better than the placebo ports' −7%). Supply is visible, and it is already in the price.
 - **Grasberg, September 2025.** After the mudslide at the Grasberg Block Cave on 8 September, dry-bulk exports from Amamapare fell 89%, from 3,850 to 410 tonnes a day over the next three months. The port was effectively closed from October to mid-November.
-- **24 of 30 smelters show heat from space** within 4 km of their published location. The check is honest about its weakness: Tuticorin, closed since 2018 and included as a negative control, also lights up from neighbouring industry. A hot spot has to be matched to the smelter's buildings before it is trusted.
+- **24 of 30 smelters show heat from space** within 4 km of their published location. The check has a known weakness: Tuticorin, closed since 2018 and included as a negative control, also lights up from neighbouring industry. A hot spot has to be matched to the smelter's buildings before it is trusted.
 
 | | |
 |:-:|:-:|

@@ -1,4 +1,4 @@
-# Desertification in the Sahel: plants that help plants
+# Sahel desertification as a lattice model
 
 ![Vegetation cover as rainfall falls and rises again, for three strengths of facilitation](figures/fig1_hysteresis.png)
 

@@ -1,6 +1,6 @@
-# How far does a cloud reach?
+# Correlated risk structures in a Spanish solar portfolio
 
-**Spain is building solar farms across a thousand kilometres of country. A year of ERA5 weather shows they behave like three or four.**
+**How correlated the output of 25 Spanish solar regions is, and why taking each site's P95 on its own underprices a fleet's risk: in 2023 the 25 sites behaved like three or four independent ones.**
 
 ![Correlation with Seville by season, and against distance for every site pair](figures/cover.png)
 

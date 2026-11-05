@@ -1,6 +1,6 @@
-# Hearing small earthquakes under a noisy city
+# Seismic denoiser
 
-**Geophysics and finance attack the same problem, and one impressive-looking result turns out to be a trick.**
+**Denoising methods from seismology and random matrix theory, scored on 3,000 noisy recordings from the Southern California Seismic Network by the arrival time and the first motion they preserve.**
 
 ![A buried wave, before and after](figures/cover.png)
 
