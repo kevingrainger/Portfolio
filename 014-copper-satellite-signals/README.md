@@ -41,11 +41,21 @@ A winter storm hit central Chile on 15-21 July 2026 (CRU). Codelco halted Andina
 - **The satellites went blind.** Caletones, which smelts El Teniente's ore, had its last clear Sentinel-2 pass on 11 July and its next on 19 August, a 39-day gap, because cloud and snow covered it. After the storm its heat ran at about 57% of the June level, against a usual summer ratio of about 1.1. Optical imagery can't see a storm while it happens, which is why radar (Sentinel-1) or night-time thermal (VIIRS) is the next step for disruption monitoring.
 - **So detection and price were close together here.** Ships showed the stop the same day and the price moved the same week; the gap between seeing and pricing a disruption was days, not weeks.
 
+## A second disruption: Kazakhstan's 2012 cold snap
+
+![Balkhash smelter heat from Landsat 7, 2010-2013, and what the satellite could see](figures/fig6_kazakhstan_2012.png)
+
+Kazakhmys reported that a severe winter hit transport and processing in early 2012, and first-quarter output fell to 65,100 tonnes from 74,200 a year earlier. Sentinel-2 only starts in 2015, so the Balkhash smelter is read from Landsat 7 (Planetary Computer, no account) with the same hot-spot test on the matching bands.
+
+- **The satellite saw nothing during the cold snap.** From December 2011 to March 2012 every pass flags the box around the smelter as snow-covered, so there is no clear view at all.
+- **It came back cooler.** The first clear passes in spring 2012 show about 12 hot pixels per pass, against 62 in the autumn before. But Balkhash's heat was falling year on year anyway (21 in 2010, 15 in 2011, 12 in 2012, 10 in 2013), so the cold snap can't be separated from that trend.
+- **The lesson matches Chile.** Optical satellites go blind in exactly the weather that causes disruptions, cloud and storm in Chile, snow in Kazakhstan. Radar (Sentinel-1) and night-time thermal imagery (VIIRS, from 2012) are the next step.
+
 The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to live and with Landsat and FIRMS added. It needs a free non-commercial sign-in.
 
 **Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.
 
-`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
+`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
 
 **Limits:** PortWatch does not say what a ship carries, so dry-bulk tonnes at a copper port is a proxy. Only Peru publishes a free monthly series to check it against. Which mine ships through which port is marked "check" where uncertain. The hot-spot check proves heat near a site, not that the heat is the smelter's.
 
