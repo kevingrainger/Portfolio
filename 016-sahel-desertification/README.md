@@ -56,6 +56,10 @@ The better rain also corrects one of my earlier claims. With ERA5, Fakara's rain
 
 Played year by year, each site is a strip of landscape (60 x 240 cells, a transect rather than a square) driven by its own rain, beside the real site's Sentinel-2 vegetation pattern and MODIS greenness. The model loses about a quarter of its cover through the 1980s at both sites and recovers only slightly afterwards. MODIS greenness at Gourma rises over the same years (a correlation of 0.21 with the model), while at Fakara it doesn't follow the model at all (-0.18): the same rain gives the same lattice, and land use makes the difference.
 
+**Long-term tracking.** Indexed to 2000-2004, the model's cover and MODIS greenness can be compared trend for trend. At Gourma the model gets the direction right but too weakly, +2.8% a decade against +9.3% in MODIS (90% interval 0.6 to 21%). At Fakara the model drifts down, -3.2% a decade, while MODIS is flat to slightly up (+1.0%, an interval spanning zero). Rain alone gives the lattice the right sign where rain matters, and the wrong one where land use does. `long_term.py`
+
+![Model cover and MODIS greenness, 2000-2025, indexed to 2000-2004](figures/fig8_long_term.png)
+
 The limits are worth stating. In our case $b$ is not millimetres of rain, the other rates are Kéfi's defaults rather than fitted values, and grazing and cropping enter only through $d$. A lattice cell also has no fixed size, so patch sizes can be compared in shape but not in metres.
 
 ## What I'd do next
