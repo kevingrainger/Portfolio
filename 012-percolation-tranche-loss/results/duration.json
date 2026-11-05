@@ -1,0 +1,20 @@
+{
+ "independent": {
+  "mean_output_months": 0.062383624312838094,
+  "p99_output_months": 0.08402482121379258,
+  "share_out_2_months": 0.015622466705269253
+ },
+ "correlated": {
+  "mean_output_months": 0.05967853226788764,
+  "p99_output_months": 0.26455144210456316,
+  "share_out_2_months": 0.015018818760856976
+ },
+ "percolation": {
+  "mean_output_months": 0.06253908908497867,
+  "p99_output_months": 0.10223772303653664,
+  "share_out_2_months": 0.015502316155182399
+ },
+ "months": 4,
+ "stay": 0.5,
+ "kaub_cm": 55.0
+}

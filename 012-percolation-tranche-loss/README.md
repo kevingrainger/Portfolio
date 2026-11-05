@@ -40,6 +40,10 @@ Both are the inverse of a leading eigenvalue.
 
 `three_models.py`
 
+**How long it lasts.** Run as a four-month low-water episode at 55 cm, with a disrupted firm staying down the next month half the time while it rebuilds stocks (an assumption), each model loses about 6% of one month's German output in total, more than four months at 1% because failures linger. In the worst 1% of episodes the independent model loses 8.4%, the network 10.2% and the correlated model 26%; about 1.5% of firms are out for two months or more. `duration.py`
+
+![Output lost over a four-month low-water episode, three models](figures/fig9_duration.png)
+
 **Part II, case B: structured credit.** At the same 1.9% mean loss as a Vasicek model, the 15–30% tranche carries **46×** the expected loss and equity about 40% less. Risk moves up the capital structure.
 
 | | |
