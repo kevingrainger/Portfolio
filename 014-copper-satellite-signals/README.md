@@ -47,15 +47,17 @@ A winter storm hit central Chile on 15-21 July 2026 (CRU). Codelco halted Andina
 
 Kazakhmys reported that a severe winter hit transport and processing in early 2012, and first-quarter output fell to 65,100 tonnes from 74,200 a year earlier. Sentinel-2 only starts in 2015, so the Balkhash smelter is read from Landsat 7 (Planetary Computer, no account) with the same hot-spot test on the matching bands.
 
-- **The satellite saw nothing during the cold snap.** From December 2011 to March 2012 every pass flags the box around the smelter as snow-covered, so there is no clear view at all.
-- **It came back cooler.** The first clear passes in spring 2012 show about 12 hot pixels per pass, against 62 in the autumn before. But Balkhash's heat was falling year on year anyway (21 in 2010, 15 in 2011, 12 in 2012, 10 in 2013), so the cold snap can't be separated from that trend.
-- **The lesson matches Chile.** Optical satellites go blind in exactly the weather that causes disruptions, cloud and storm in Chile, snow in Kazakhstan. Radar (Sentinel-1) and night-time thermal imagery (VIIRS, from 2012) are the next step.
+![Balkhash in true colour and shortwave infrared, July 2011 to August 2012](figures/fig7_balkhash_scenes.png)
+
+- **The furnace showed through the snow.** On 30 January 2012, in the middle of the cold snap, the land around the smelter is white in true colour, but in the shortwave infrared the furnace glows with 88 hot pixels, as hot as in summer. The smelter was running; the output Kazakhmys lost most likely came from transport and the mines, not from the furnaces stopping.
+- **It slowed afterwards.** On 2 March a band of cloud or plume crosses the site, so that pass says little; on 3 April, with the snow gone, the heat was low (16 hot pixels in the 6 x 6 km box), and by August it was back (77). A per-pass measure that discards scenes with mostly snow-covered ground, as the time series above does, would have missed the January signal altogether.
+- **The lesson for the method.** Cloud blinds optical imagery, as in Chile; snow doesn't, because a furnace is far hotter than the ground around it, but the cloud and snow masks have to be applied around the hot spot, not across the whole scene. Radar (Sentinel-1) and night-time thermal imagery (VIIRS, from 2012) are the next step for cloudy disruptions.
 
 The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to live and with Landsat and FIRMS added. It needs a free non-commercial sign-in.
 
 **Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.
 
-`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
+`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
 
 **Limits:** PortWatch does not say what a ship carries, so dry-bulk tonnes at a copper port is a proxy. Only Peru publishes a free monthly series to check it against. Which mine ships through which port is marked "check" where uncertain. The hot-spot check proves heat near a site, not that the heat is the smelter's.
 
