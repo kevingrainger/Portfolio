@@ -39,6 +39,20 @@ def stretch(a, lo=2, hi=98):
     return np.clip((a - p1) / (p2 - p1 + 1e-9), 0, 1)
 
 
+def map_marks(fig, box_km, bar_km):
+    """A scale bar and a north arrow on every image panel of the figure."""
+    for ax in fig.axes:
+        ims = ax.get_images()
+        if not ims:
+            continue
+        h, w = ims[0].get_array().shape[:2]
+        n = bar_km / box_km * w
+        ax.plot([0.06 * w, 0.06 * w + n], [0.90 * h] * 2, color="w", lw=3, solid_capstyle="butt")
+        ax.text(0.06 * w + n / 2, 0.86 * h, f"{bar_km:g} km", color="w", ha="center", fontsize=8.5)
+        ax.annotate("N", xy=(0.92 * w, 0.06 * h), xytext=(0.92 * w, 0.17 * h), color="w", ha="center", fontsize=9,
+                    arrowprops=dict(arrowstyle="-|>", color="w", lw=1.3))
+
+
 def main():
     vs.HALF = 3000
     sas = json.loads(urllib.request.urlopen(TOKEN, timeout=60).read())["token"]
@@ -65,6 +79,7 @@ def main():
     axes[0, 0].set_ylabel("true colour", fontsize=10.5)
     axes[1, 0].set_ylabel("shortwave infrared", fontsize=10.5)
     fig.suptitle("Balkhash copper smelter, Landsat 7, 6 x 6 km", x=0.01, ha="left", fontsize=12)
+    map_marks(fig, 6, 2)
     fig.tight_layout()
     fig.savefig(os.path.join(HERE, "figures", "fig7_balkhash_scenes.png"), dpi=170, bbox_inches="tight")
     print(counts)
