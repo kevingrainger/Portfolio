@@ -1,0 +1,211 @@
+{
+ "lags": [
+  {
+   "target": "Chilean copper-port exports",
+   "lag": -6,
+   "r": 0.0579320712909463,
+   "band": 0.2294006485044159,
+   "n": 76
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": -5,
+   "r": 0.08481580900319087,
+   "band": 0.2278453719378858,
+   "n": 77
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": -4,
+   "r": 0.11644194762643961,
+   "band": 0.22632130552233326,
+   "n": 78
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": -3,
+   "r": 0.00865116815277926,
+   "band": 0.2248274191931505,
+   "n": 79
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": -2,
+   "r": 0.08645071624352642,
+   "band": 0.22336272986089037,
+   "n": 80
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": -1,
+   "r": -0.12159308795730644,
+   "band": 0.22192629869234073,
+   "n": 81
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 0,
+   "r": -0.12322093387004215,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 1,
+   "r": 0.21353341235028506,
+   "band": 0.22192629869234073,
+   "n": 81
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 2,
+   "r": 0.14995450725979625,
+   "band": 0.22336272986089037,
+   "n": 80
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 3,
+   "r": 0.37343593385898505,
+   "band": 0.2248274191931505,
+   "n": 79
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 4,
+   "r": 0.18329927966782322,
+   "band": 0.22632130552233326,
+   "n": 78
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 5,
+   "r": 0.21718172676609424,
+   "band": 0.2278453719378858,
+   "n": 77
+  },
+  {
+   "target": "Chilean copper-port exports",
+   "lag": 6,
+   "r": 0.0847959463897265,
+   "band": 0.2294006485044159,
+   "n": 76
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": -6,
+   "r": 0.13855383256098944,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": -5,
+   "r": -0.1449189511357957,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": -4,
+   "r": 0.20611930594189978,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": -3,
+   "r": 0.06789962792987102,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": -2,
+   "r": -0.1238885581239847,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": -1,
+   "r": 0.14464259634724227,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 0,
+   "r": -0.19053216150525862,
+   "band": 0.2205172285815007,
+   "n": 82
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 1,
+   "r": 0.08361230687260927,
+   "band": 0.22192629869234073,
+   "n": 81
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 2,
+   "r": 0.1443727435725435,
+   "band": 0.22336272986089037,
+   "n": 80
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 3,
+   "r": -0.1822669731189636,
+   "band": 0.2248274191931505,
+   "n": 79
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 4,
+   "r": 0.21544995598584435,
+   "band": 0.22632130552233326,
+   "n": 78
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 5,
+   "r": 0.04479141684575118,
+   "band": 0.2278453719378858,
+   "n": 77
+  },
+  {
+   "target": "COMEX copper return",
+   "lag": 6,
+   "r": 0.021532128778799745,
+   "band": 0.2294006485044159,
+   "n": 76
+  }
+ ],
+ "episodes": 189,
+ "duration_months": {
+  "median": 1.0,
+  "share_one_month": 0.5956284153005464
+ },
+ "price_after_low_heat": {
+  "1": {
+   "n": 184,
+   "mean_after": 0.013591466916710784,
+   "mean_all": 0.007167511431208593,
+   "p_value": 0.0685
+  },
+  "2": {
+   "n": 183,
+   "mean_after": 0.022399171379354463,
+   "mean_all": 0.014419310441928946,
+   "p_value": 0.09275
+  },
+  "3": {
+   "n": 183,
+   "mean_after": 0.032353714700546064,
+   "mean_all": 0.022143368481937795,
+   "p_value": 0.0865
+  }
+ }
+}

@@ -30,6 +30,14 @@ $$\frac{\rho_{12}}{\rho_{11}} \ge 1.4, \qquad \frac{\rho_{12}}{\rho_{8A}} \ge 1.
 
 ![Smelter heat by month at six sites](figures/fig4_smelter_heat.png)
 
+## Heat intensity, duration and lags
+
+![Chilean smelter heat against port exports and the copper price, at lags of up to six months](figures/fig10_heat_lags.png)
+
+- **Heat leads exports by about three months.** The year-on-year change in the Chilean smelter heat index (Altonorte, Caletones, Chagres, Chuquicamata, each relative to its own median) correlates 0.37 with exports from the Chilean copper ports three months later, above the 95% band of 0.22; no other lag clears it. Year-on-year series are autocorrelated and 13 lags were tried, so this is a lead worth following, not a firm result.
+- **No lag of heat predicts the copper price.** Every correlation sits inside the band, as expected if visible supply is already priced in.
+- **Low-heat episodes are mostly short.** A smelter ran below half its usual heat in 189 episodes; 60% lasted a single month, many of them likely cloudy passes or brief stops. In the month after one, copper rose 1.4% against 0.7% in all months, suggestive but not significant (p of about 0.07). `heat_lags.py`
+
 ## A disruption up close: the central Chile storm of July 2026
 
 ![COMEX copper, port exports and smelter heat around the July 2026 storm](figures/fig5_chile_2026.png)
