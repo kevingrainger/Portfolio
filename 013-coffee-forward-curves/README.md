@@ -63,9 +63,13 @@ Each quarter from 2008 to 2025, the ECMWF forecast issued that month is fed thro
 
 - **The forecast beats climatology on the weather.** Its skill score against climatology is 0.41 for Vietnam's heat and 0.13 for Vietnam's dryness (0 would mean no better than a normal season). For Brazil's dryness it is close to zero (0.02).
 - **It helps with the price, a little.** Driven by the forecast, the importer's calls were right 49% of the time for arabica and 50% for robusta, against 43% and 40% with climatology. On average the forecast-driven rule did about 0.6 percentage points of the purchase price better per quarter for arabica and 0.7 for robusta than the climatology rule.
-- **But not enough to rely on alone.** Half the calls were still wrong, and the average saving against simply waiting is close to zero. The weather-price link, a correlation of about 0.15, is too weak for a simple buy-or-wait rule; the forecast's value is in flagging the rare joint extremes, which is the next test.
+- **But not enough to rely on alone.** Half the calls were still wrong, and the average saving against simply waiting is close to zero. The weather-price link, a correlation of about 0.15, is too weak for a rule that calls every quarter.
 
-`seasonal_backtest.py`
+**Where the forecast earns its keep: the tail.** A tail rule buys forward only when the forecast puts an origin beyond one standard deviation of its normal season, and otherwise waits. In the 74 months from 2008 to 2025 when the forecast flagged Vietnam as unusually hot or dry, arabica rose 7.0% over the next three months and robusta 5.7% (90% intervals 5.1-9.1% and 3.8-7.6%), against 1.4% and 0.9% over all months. The result isn't the 2023-25 rally: without those years the flagged months still rose 5.1% and 3.3% while other months fell, and it holds when the forecast's warming drift is removed. A dry-Brazil flag alone isn't reliable (27 months, intervals spanning zero). For an importer, a hot or dry Vietnam forecast is a signal worth hedging on.
+
+![Price change after the forecast flags an extreme season](figures/fig17_tail_rule.png)
+
+`seasonal_backtest.py` · `tail_rule.py`
 
 ## Earlier findings kept
 
