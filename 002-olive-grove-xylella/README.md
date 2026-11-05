@@ -30,6 +30,10 @@ A sequence of images like these, one tree at a time, is exactly what data-assimi
 
 *Imagery: Esri World Imagery Wayback (source: Esri, Maxar, Earthstar Geographics), releases of 20 February 2014 and 24 September 2026; `real_grove.py` downloads and draws them.*
 
+**A first test of data assimilation.** Before fitting real images, the method needs a twin experiment: hide a known infection rate (0.5) in a simulated grove, observe its symptomatic trees every 120 days with each one seen only 80% of the time, and ask a particle filter of 32 groves, each with its own guess of the rate, to recover it. Two things come out. Nothing is learned for the first two years, because symptoms show about two years after infection. And even after six years the filter's 90% range for the rate stays at about 0.1 to 0.9: above the threshold every outbreak takes the whole grove, so the number of dead trees barely depends on the rate. To learn it, the images have to show which trees die and in what order, the spatial pattern of the spread, not just how many; that is what a per-tree image sequence like the Gallipoli pair would give. `assimilate.py`
+
+![A particle filter trying to recover a hidden infection rate from satellite-like counts](figures/fig8_assimilation.png)
+
 **Built:** a vectorised rewrite (`olive_model.py`), checked against my original model across 12 + 200 runs; four bug fixes; a transmission log; felling and detection policies; a planting-spacing sweep; and parallel ensembles.
 
 `olive_grove_01_model.ipynb` · `olive_grove_02_felling.ipynb` · `real_grove.py` · Python, NumPy, multiprocessing
