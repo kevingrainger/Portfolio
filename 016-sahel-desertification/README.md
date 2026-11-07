@@ -87,6 +87,14 @@ Rain alone predicted the two sites poorly, so the question moves from two sites 
 
 The limits are worth stating. The covariates are snapshots (cropland in 2021, livestock in 2015), not changes over the period, and the relations are correlations, not causes. The rain-trend control comes out negative: sites where rain rose most re-greened less than the linear fit expects, a known weakness of RESTREND when greenness saturates in wet years. And MODIS at 250 m mixes trees, grass and crops, so greening in cropland can be the crops themselves. `fetch_covariates.py` · `covariates.py`
 
+**Fitting the lattice to the satellites.** With Kéfi's default rates and a rain scale set by hand, the lattice tracked MODIS poorly, so it was fitted. Two changes: an observation model, since August-September greenness is mostly annual grass that follows that year's rain, on top of the slow shrub and tree cover the lattice represents (greenness = a + g × this year's rain + w × lattice cover, with w required to be positive); and the rates fitted per site by grid search, the scale that turns rain into the lattice's b, and the soil degradation rate d, constant to 1985 and then changing linearly to 2025 as land use changes. Fitted on 2001-2015, tested on 2016-2025, against rain alone. `calibrate_sites.py`
+
+![MODIS greenness against the fitted lattice and rain alone at both sites, and the fit over the rates](figures/fig11_calibration.png)
+
+- **At Gourma rain does almost all the work.** The best fit has degradation easing from 0.3 to 0.05, which lets the lattice re-green, but the lattice's weight in the fit is close to zero. On the test years it scores 0.28 against 0.23 for rain alone, too small a difference to mean much, and neither catches the very green 2024 and 2025.
+- **At Fakara nothing fits.** Greenness there doesn't follow rain (rain alone explains 1% of it), and any fit that leans on the lattice runs away on the test years.
+- **What this says about the approach.** At one 5 km site and 15 fitting years, peak greenness is the grass's response to rain, and the slow cover the lattice models can't be picked out of it. Two things should fix that: fitting to dry-season greenness, when the grass has died back and what's left is the woody cover the lattice is about, and fitting all 223 grid sites together with the degradation rate tied to the land-use index found above, so that one set of rates has to work everywhere.
+
 **Cropland over time.** The covariates above are snapshots, so cropland was also followed year by year, 2001-2023, from the MODIS land-cover product MCD12Q1 (500 m), at the same sites. Two tests were run: across sites, the rain-adjusted trend against the change in cropland share, with the other covariates as controls; and within each site, whether a year with more cropland has greenness above or below what its rain predicts, after removing each site's own level and each year's Sahel-wide anomaly.
 
 ![Cropland share by year at the Sahel sites, the rain-adjusted trend against cropland change, and the effect of each covariate](figures/fig10_landuse_change.png)
@@ -99,7 +107,7 @@ Land-use change over time rather than snapshots (ESA CCI land cover runs from 19
 
 ## Code
 
-`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `fetch_covariates.py` (Earth Engine and FAO GLW4) · `covariates.py` (RESTREND and the covariate fit) · `landuse_change.py` (MODIS cropland year by year) · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
+`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `fetch_covariates.py` (Earth Engine and FAO GLW4) · `covariates.py` (RESTREND and the covariate fit) · `landuse_change.py` (MODIS cropland year by year) · `calibrate_sites.py` (fitting the lattice to MODIS) · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
 
 ## Credits
 
