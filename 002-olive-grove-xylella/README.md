@@ -20,6 +20,22 @@
 | ![Ensemble](figures/fig2_ensemble.png) | ![Vector control](figures/fig7_vector_control.png) |
 | ![Planting spacing](figures/fig_spacing_threshold.png) | |
 
+## Multilevel Monte Carlo, and what it showed about the model
+
+The paper's grove has a million spittlebugs a hectare, 810,000 on our 90 × 90 m grove. That can't be run many times, so the model simulates a fraction of them: 0.1%, 810 spittlebugs, in every result above. Multilevel Monte Carlo (Giles 2008) is the standard way to get the answer at a finer level cheaply: most runs at a coarse level, plus corrections from pairs of runs, each pair one level finer and one coarser,
+
+$$E[Q_L] = E[Q_0] + \sum_{l=1}^{L} E[Q_l - Q_{l-1}].$$
+
+Here level $l$ simulates $405 \times 2^l$ spittlebugs, from 405 to 12,960, and $Q$ is the share of trees infected after a year. The corrections are cheap only if each fine run and its coarse partner move together (the coupling). So each fine run contains its coarse partner: its first half of spittlebugs draw exactly the same random numbers as the coarse run's (each run's randomness is split into a stream for the shared spittlebugs and one for the extra ones), the seed carrier is the same, and each tree's symptom delay is drawn once. 30 pairs per level. `mlmc.py`
+
+![Variance and mean of the share infected by level, and the computer time for a given accuracy](figures/fig9_mlmc.png)
+
+- **The coupling works.** Paired runs correlate at 0.62-0.78, against about zero when the two runs only share a seed, and the corrections vary half as much as the quantity itself.
+- **Multilevel doesn't pay yet.** To pin the share infected to within one point, multilevel needs about 2.2 hours of computer time against 1.7 for plain Monte Carlo at the finest level. It pays when the corrections shrink as the levels get finer and fine runs are far dearer than coarse ones. Neither holds here: each doubling of spittlebugs roughly doubles the share infected, and a run costs only about 1.6 times more per level.
+- **That is the real finding: the model hasn't converged in the number of spittlebugs.** The share infected after a year goes from 1% with 405 spittlebugs to 3% with 1,620, 22% with 6,480 and 49% with 12,960. After a year and a half every run with 6,480 or more has taken the whole grove. The 810 spittlebugs used throughout give a much slower outbreak than the paper's density would, so the timings above (half the grove in about 2.3 years) are slow, though the threshold and felling comparisons, made at one fixed density, still compare like with like.
+
+The next step is to let each simulated spittlebug stand for many: scale its chance of passing on the infection with the sampling fraction, check that the answer then settles as the number simulated grows, and only then use multilevel Monte Carlo to reach the paper's density.
+
 ## What I'd do next
 
 The model is only as good as its rates, and every rate here comes from the original paper. The next step is to fit it to a real grove. This one, near Gallipoli in the zone where *Xylella* spread from 2013, is a regular planting of roughly 15 × 20 trees, close to our simulated 16 × 16 grove. In February 2014 every tree has a full canopy. By September 2026 the crowns are small and grey: the trees have died and been cut back, or been replaced with young ones, which a single image cannot tell apart.
