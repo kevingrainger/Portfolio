@@ -1,0 +1,53 @@
+{
+ "best": {
+  "B0": 0.45,
+  "D0": 0.3,
+  "S": 0.03,
+  "collapsed_sites": 4.0,
+  "train_level": 0.6924939467312349,
+  "train_trend": 0.36210070538865574,
+  "train_recovery": 0.19914542088021653,
+  "train_year_to_year": 0.2094235810153327,
+  "train_sites": 119.0,
+  "test_level": 0.5590846047156728,
+  "test_trend": 0.5528539421743306,
+  "test_recovery": 0.3557238877627228,
+  "test_year_to_year": 0.257893700190398,
+  "test_sites": 104.0,
+  "train_score": 1.2537400730001071
+ },
+ "best_without_seed_rain": {
+  "B0": 0.6,
+  "D0": 0.2,
+  "S": 0.0,
+  "collapsed_sites": 22.0,
+  "train_level": 0.6889901723401226,
+  "train_trend": 0.3317476142999573,
+  "train_recovery": 0.16085315482125057,
+  "train_year_to_year": 0.2253891877203882,
+  "train_sites": 119.0,
+  "test_level": 0.5670329670329672,
+  "test_trend": 0.5009388669582845,
+  "test_recovery": 0.4560866318147872,
+  "test_year_to_year": 0.23830241984508183,
+  "test_sites": 104.0,
+  "train_score": 1.1815909414613306
+ },
+ "rain_alone": {
+  "train": {
+   "level": 0.6634382566585958,
+   "trend": 0.3392750320467171,
+   "recovery": 0.2453710297678394,
+   "year_to_year": 0.1648332264641408,
+   "sites": 119
+  },
+  "test": {
+   "level": 0.5588498879761016,
+   "trend": 0.5474981329350262,
+   "recovery": 0.3361997226074897,
+   "year_to_year": 0.1845108098969273,
+   "sites": 104
+  }
+ },
+ "avhrr_vs_modis_note": "AVHRR and MODIS dry-season NDVI correlate 0.88 over 2001-2021"
+}
