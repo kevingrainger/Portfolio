@@ -56,6 +56,18 @@ We can now add a metal with an open d shell. Vanadium and iron bring their d orb
 
 ![Vanadium chain orbitals](figures/fig6_vanadium_chain_orbitals.png)
 
+The thesis renders show the same thing molecule by molecule. Seen from above, the iron porphyrin's highest occupied orbital is a single round lobe on the metal. Turned side-on, it is iron's d<sub>z²</sub> orbital standing straight out of the plane of the ring, with almost nothing on the carbon around it. That is why iron and vanadium carry their spin on the metal, and why an oxygen sitting on top of the metal, right in that lobe, can switch the spin.
+
+![The Fe-TPP HOMO from above and side-on](figures/fig13_fe_dz2_top_and_side.png)
+
+Across the five molecules, zinc's frontier orbitals are spread over the whole ring and its arms, while iron's HOMO collapses onto the metal in both ligand types. Vanadium sits in between: its orbitals stay on the ring, with the metal joining in. The DPP molecules (two arms) stretch the orbitals along the long axis.
+
+![HOMO-1 to LUMO+1 for five metal porphyrins, from the thesis](figures/fig14_orbital_atlas.png)
+
+In the chains, the strongly coupled zinc chain's LUMO runs continuously along the backbone, the iron chain's HOMO is a row of separate metal lobes, and the vanadium chains move from ring-spread orbitals with a weak bridge to metal-centred ones with the extra strong bridge.
+
+![HOMO and LUMO of four periodic chains, from the thesis](figures/fig15_chain_orbitals.png)
+
 ## The runs I never wrote up: one oxygen on the metal
 
 For iron and vanadium every chain was run twice with spin switched on: once bare, and once with a single oxygen bound to the metal 1.6 Å below the ring, which gives iron–oxo (Fe=O) and vanadyl (V=O) chains. To see where the spin goes we can sum FHI-aims' Mulliken spin over each element, which splits our total moment into the part on the metal, the part on the oxygen and the part on the carbon backbone.
@@ -99,6 +111,8 @@ The limits are real, and there are three of them. PBE is known to be unreliable 
 I'd like to double the unit cell so neighbouring spins can point opposite ways, and compute the exchange coupling J between them for each bridge. For the V=O chains this is the coupling between two qubits through the bridge. I would also repeat the iron chains with DFT+U and several starting moments, to see which bare states survive. Then I'd compute how strongly O, NO and CO bind to each metal, to turn the sensing idea into a number. Last, the chain belongs on Au(111), since charge transfer to gold is what makes PorA₄ open-shell in the experiments.
 
 ## Reproducing the figures
+
+The orbital pictures in figures 13-15 are the original FHI-aims isosurface renders, taken from the thesis PDF by `make_thesis_orbitals.py` (kept in `figures/thesis/`).
 
 The raw FHI-aims runs (about 35 GB, in a folder I prepared for Cormac) are not in this repository. The extracted tables are in `data/`. With the runs available:
 
