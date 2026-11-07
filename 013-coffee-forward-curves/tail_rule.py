@@ -7,7 +7,7 @@
 # coffee mainly through rare extremes, so this asks whether the forecast's value is in
 # flagging them rather than in calling every quarter.
 #
-# For every month from 2008 to 2025: the next three months' price change of each bean (what
+# For every month from 2008 to July 2026: the next three months' price change of each bean (what
 # an importer who waited would pay extra), split by whether the forecast flagged the tail.
 # A block bootstrap of the flagged months gives the uncertainty.
 #
@@ -34,7 +34,7 @@ rng = np.random.default_rng(0)
 
 
 def main():
-    df = build()["2008":"2025-09"]
+    df = build()["2008":"2026-07"]
     flags = {"Vietnam hot or dry": (df.vietnam_heat_fc > THRESH) | (df.vietnam_dry_fc > THRESH),
              "Brazil dry": df.brazil_dry_fc > THRESH}
     flags["both origins"] = flags["Vietnam hot or dry"] & flags["Brazil dry"]
