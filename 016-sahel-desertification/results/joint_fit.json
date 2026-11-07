@@ -1,0 +1,59 @@
+{
+ "best": {
+  "B0": 0.45,
+  "D0": 0.2,
+  "D1": 0.0,
+  "train_level": 0.7412832929782083,
+  "train_trend": 0.2880786212790201,
+  "train_year_to_year": -0.0016126812435519958,
+  "train_sites": 119.0,
+  "test_level": 0.6375546783313774,
+  "test_trend": 0.4936733169742879,
+  "test_year_to_year": -0.026474744093977823,
+  "test_sites": 104.0,
+  "train_score": 1.0293619142572283
+ },
+ "rain_alone": {
+  "train": {
+   "level": 0.7328514456630111,
+   "trend": 0.3293690357498932,
+   "year_to_year": 0.24892796083489885,
+   "sites": 119
+  },
+  "test": {
+   "level": 0.6684946121839327,
+   "trend": 0.4310999679931719,
+   "year_to_year": 0.15938215115994064,
+   "sites": 104
+  }
+ },
+ "sites": 223,
+ "best_same_d": {
+  "B0": 0.45,
+  "D0": 0.2,
+  "D1": 0.0,
+  "train_level": 0.7412832929782083,
+  "train_trend": 0.2880786212790201,
+  "train_year_to_year": -0.0016126812435519,
+  "train_sites": 119.0,
+  "test_level": 0.6375546783313774,
+  "test_trend": 0.4936733169742879,
+  "test_year_to_year": -0.0264747440939778,
+  "test_sites": 104.0,
+  "train_score": 1.0293619142572283
+ },
+ "best_d_with_land_use": {
+  "B0": 0.45,
+  "D0": 0.2,
+  "D1": 0.05,
+  "train_level": 0.6609813416892182,
+  "train_trend": 0.3066514741489816,
+  "train_year_to_year": 0.0408847297444878,
+  "train_sites": 119.0,
+  "test_level": 0.5813613570895124,
+  "test_trend": 0.4108716526192255,
+  "test_year_to_year": 0.0251150852684423,
+  "test_sites": 104.0,
+  "train_score": 0.9676328158381997
+ }
+}
