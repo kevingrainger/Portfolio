@@ -47,6 +47,10 @@ A winter storm hit central Chile on 15-21 July 2026 (CRU). Codelco halted Andina
 - **The ports saw it at once.** Dry-bulk exports from the central ports (San Antonio, Quintero) fell to zero from the first day of the storm and stayed there until about 25 July, then recovered to their pre-storm level by 26 July. The northern copper ports kept shipping.
 - **The price moved within the week.** COMEX copper rose about 3% over the storm and 4.6% by 4 August.
 - **The satellites went blind.** Caletones, which smelts El Teniente's ore, had its last clear Sentinel-2 pass on 11 July and its next on 19 August, a 39-day gap, because cloud and snow covered it. After the storm its heat ran at about 57% of the June level, against a usual summer ratio of about 1.1. Optical imagery can't see a storm while it happens, which is why radar (Sentinel-1) or night-time thermal (VIIRS) is the next step for disruption monitoring.
+
+- **VIIRS through the gap.** Two daily VIIRS products from Earth Engine, May-October 2026, fill some of the 39 days. VNP14A1 thermal anomalies (1 km, day and night) flag Caletones on 30% of days before the storm and 29% after, but on only one of the 32 days without a clear Sentinel-2 pass: 19 July, in the middle of the storm, at 3.1 MW, its strongest reading of the season. Chagres was flagged the same day. So both smelters were running through the storm, and the missing detections on other days are cloud, not shutdowns. VNP46A2 night lights (500 m, cloud-free nights only) got 8 clear nights at Caletones in the gap. Its median brightness fell from about 13.8 before the storm to 10.9 in the gap and 10.8 after, while Chagres didn't change. That fits Sentinel-2's lower heat after the storm, but night lights at a mountain site 2,400 m up are noisy (snow and moonlight brighten the ground), so it is supporting evidence at best. `viirs_night.py`
+
+![VIIRS night lights and thermal anomalies at Caletones and Chagres, 2026](figures/fig12_viirs_night.png)
 ![Caletones in true colour and shortwave infrared before, during and after the storm](figures/fig8_caletones_scenes.png)
 
 - **In the images.** Before the storm Caletones glows in the shortwave infrared (130 and 109 hot pixels on 26 June and 11 July) under a white smoke plume; on 3 July the plume is gone and only 13 pixels show, a short stop before the storm. During the storm (21 July) the scene is 100% cloud. On 19 August the valley is under snow and the heat is down to 31, recovering to 59 by 30 August.
@@ -78,7 +82,7 @@ The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to 
 
 **Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.
 
-`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `chile_scenes.py` · `ships_radar.py` · `ships_cfar.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
+`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `chile_scenes.py` · `ships_radar.py` · `ships_cfar.py` · `viirs_night.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
 
 **Limits:** PortWatch does not say what a ship carries, so dry-bulk tonnes at a copper port is a proxy. Only Peru publishes a free monthly series to check it against. Which mine ships through which port is marked "check" where uncertain. The hot-spot check proves heat near a site, not that the heat is the smelter's.
 

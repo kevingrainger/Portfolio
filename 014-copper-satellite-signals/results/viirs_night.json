@@ -1,0 +1,32 @@
+{
+ "Caletones (Codelco)": {
+  "heat_in_storm": {
+   "2026-07-19": 3.08
+  },
+  "heat_days_detected": 43,
+  "heat_days": 174,
+  "heat_detected_in_s2_gap": 1,
+  "days_in_s2_gap": 32,
+  "clear_nights_in_s2_gap": 8,
+  "lights_median_before": 13.785321386843092,
+  "lights_median_after": 10.774630211188668,
+  "lights_median_in_gap": 10.899950273905818,
+  "clear_nights_before": 33,
+  "clear_nights_after": 24
+ },
+ "Chagres (Anglo American)": {
+  "heat_in_storm": {
+   "2026-07-19": 1.81
+  },
+  "heat_days_detected": 16,
+  "heat_days": 174,
+  "heat_detected_in_s2_gap": 5,
+  "days_in_s2_gap": 32,
+  "clear_nights_in_s2_gap": 10,
+  "lights_median_before": 8.850050545616892,
+  "lights_median_after": 9.740520030752663,
+  "lights_median_in_gap": 8.621600176815974,
+  "clear_nights_before": 36,
+  "clear_nights_after": 32
+ }
+}
