@@ -53,7 +53,14 @@ A P95 needs many more bad months than one year of weather holds, so the next ste
 - **The real years agree with the shared-weather story.** Over the 30 years the fleet's 1-in-20 bad month is 10.5% below normal on average across the calendar, against 2.5% if each site's year were drawn on its own: four times deeper, as the 2023 copula said.
 - **2023 was a sunny year, so the one-year copula was a little light.** 2023 ranks 22nd of 30 for output. Its copula put the 1-in-20 month at 9.2% below normal; refitted to 30 years it gives 12.3%, slightly deeper than observed and so a cautious estimate.
 - **The refitted copula reproduces the real years' extremes.** The worst month of each year, plotted against how often it comes round, falls on the simulated curve: about 23% below normal once in twenty years. The deepest months are in winter and March (15-18%), when fronts and cut-off lows sit over the peninsula for weeks; the worst month of all was March 2022, 24% below normal, a month of rain and Saharan dust. Whole years vary much less: the 1-in-20 year is about 3% below normal (2018, the worst, 4.9%).
-- **Next:** perturb the simulated days with the IFS and AIFS forecast errors, which reach only about 200 km, so that the two models' difference becomes a spread of possible days rather than a single number. `fetch_era5_daily.py` · `event_set_30y.py`
+`fetch_era5_daily.py` · `event_set_30y.py`
+
+**The two forecast models in the event set.** The first idea was to treat each model's 7-day forecast as a day that could have happened, the way extreme-weather studies stretch short records with forecast ensembles. At a week ahead the forecasts are still too good for that: AIFS's day-7 fleet forecast follows what happened with a correlation of 0.72, so its days aren't new weather. That needs forecasts weeks or months ahead. What the models can give now is their errors: a forecast error field is a realistic pattern of the weather turning out differently from what was expected, across all 25 sites at once. Each of the 30 years of ERA5 days was perturbed with an error field from a scored day within a month of the same date, from IFS or AIFS, 3 or 5 days ahead, 20 times over.
+
+![Fleet forecast against what happened, and the 1-in-20 bad day with and without forecast-error perturbations](figures/fig12_event_set_forecasts.png)
+
+- **The errors widen a single site's tail far more than the fleet's.** A single site's 1-in-20 bad day falls from 50% of a normal day to 46-48%; the fleet's moves from 64% to 61.5-64%. Forecast errors are local and largely cancel across the fleet, while the shared weather doesn't.
+- **The two models differ by about two points.** With day-5 errors the fleet's 1-in-20 bad day is 61.5% under AIFS and 63.4% under IFS. AIFS's errors are smaller at a single site but more widely shared (they reach about 230 km against 170 km for IFS), so they cancel less across the fleet. The gap between the two models is the event set's model uncertainty, small next to the effect of shared weather. `event_set_forecasts.py`
 
 ## Two forecast models: ECMWF IFS and AIFS
 
@@ -61,10 +68,11 @@ ECMWF now runs two global models side by side: IFS, the physics model, and AIFS,
 
 $$\text{skill} = 1 - \frac{\text{MSE}(\text{forecast})}{\text{MSE}(\text{climatology})}.$$
 
-- **For one site, the AI model wins from day 2.** By day 4 its skill is 0.73 against IFS's 0.57, and by day 7 it is 0.31 against 0.14.
-- **For the fleet, physics wins the first two days.** IFS scores 0.93 against 0.89 on day 1, then the order flips: AIFS leads on day 4 (0.87 against 0.80) and day 6 (0.67 against 0.56). At days 5 and 7 they are level.
+- **For one site, the AI model wins from day 2.** By day 4 its skill is 0.73 against IFS's 0.57.
+- **IFS days 6 and 7 are left out.** In the archive part of each of those days is missing: on clear June days the IFS day-6 forecast is about 40% of every other lead's, and its skill drops from 0.85 to 0.35 in a day, which no real forecast does. ECMWF's open IFS data switches from 3-hourly to 6-hourly steps after 144 hours, which is where the daily totals break. An earlier version of this page compared the two models at days 6-7 on those broken values.
+- **For the fleet, physics wins the first two days.** IFS scores 0.93 against 0.89 on day 1, then the order flips: AIFS leads on day 4 (0.87 against 0.80), and at day 5 they are close (0.72 against 0.76).
 - **Forecast errors are far more local than the weather.** The weather's daily anomaly stays correlated over L = 506 km, so the 25 sites act like **1.7** independent ones. The day-3 forecast errors decorrelate over 233 km (AIFS) and 167 km (IFS), so 3.0 and 4.3 independent sites. Pooling the fleet cancels forecast error much better than it diversifies the weather. That is why fleet skill is higher than single-site skill, and why IFS, whose errors are the most local, gains the most from pooling.
-- A straight-line correction per site and lead, trained on the first 60% of days, adds nothing to either model (it hurts IFS at days 6–7). It is kept in `aifs/results/skill.csv`.
+- A straight-line correction per site and lead, trained on the first 60% of days, adds nothing to either model. It is kept in `aifs/results/skill.csv`.
 
 | | |
 |:-:|:-:|

@@ -23,7 +23,7 @@ import figstyle                                         # noqa: E402
 
 RES = os.path.join(HERE, "results")
 FIG = os.path.join(os.path.dirname(HERE), "figures")
-AIFS, IFS, TRUTH = "#882255", "#117733", "0.15"
+AIFS, IFS, TRUTH = "#c0392b", "#1f6fb2", "0.15"
 
 
 def fig5_skill():
@@ -33,12 +33,16 @@ def fig5_skill():
     for ax, col, title in zip(axes, ["skill_site", "skill_fleet"], ["One site at a time", "The fleet of 25 sites"]):
         for m, c, lab in [("aifs", AIFS, "AIFS (AI)"), ("ifs", IFS, "IFS (physics)")]:
             g = s[s.model == m]
+            if m == "ifs":                     # IFS days 6-7 are broken in the archive (see README)
+                g = g[g.lead <= 5]
             ax.plot(g.lead, g[col], "o-", color=c, label=lab)
         ax.axhline(0, color="0.6", lw=0.7)
         ax.set_xlabel("days ahead")
         ax.set_title(title, loc="left", fontsize=10)
     axes[0].set_ylabel("skill against climatology\n(1 = perfect, 0 = no better)")
     axes[0].legend(loc="lower left")
+    axes[1].text(0.98, 0.04, "IFS days 6-7 left out:" + chr(10) + "part of each day missing in the archive", transform=axes[1].transAxes,
+                 ha="right", fontsize=8, color="0.4")
     start = pd.Timestamp(json.load(open(os.path.join(RES, "error_reach.json")))["test_from"])
     fig.suptitle(f"Daily solar energy at 25 Spanish sites, forecasts scored from {start:%d %B %Y}", x=0.01, ha="left")
     fig.tight_layout()
