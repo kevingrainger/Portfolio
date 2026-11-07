@@ -1,0 +1,28 @@
+{
+ "passes": 58,
+ "mean_ships": 4.948275862068965,
+ "storm_passes": [
+  3
+ ],
+ "by_eye_check": {
+  "2026-07-12": {
+   "by_eye": 4,
+   "cfar": 4
+  },
+  "2026-07-16": {
+   "by_eye": 2,
+   "cfar": 3
+  },
+  "2026-07-22": {
+   "by_eye": 1,
+   "cfar": 1
+  },
+  "2026-07-24": {
+   "by_eye": 7,
+   "cfar": 6
+  }
+ },
+ "corr_ships_sea_roughness": -0.019231426190598644,
+ "corr_ships_portcalls_7d": 0.378872840013801,
+ "n_matched": 58
+}

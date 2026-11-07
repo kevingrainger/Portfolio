@@ -50,9 +50,13 @@ A winter storm hit central Chile on 15-21 July 2026 (CRU). Codelco halted Andina
 ![Caletones in true colour and shortwave infrared before, during and after the storm](figures/fig8_caletones_scenes.png)
 
 - **In the images.** Before the storm Caletones glows in the shortwave infrared (130 and 109 hot pixels on 26 June and 11 July) under a white smoke plume; on 3 July the plume is gone and only 13 pixels show, a short stop before the storm. During the storm (21 July) the scene is 100% cloud. On 19 August the valley is under snow and the heat is down to 31, recovering to 59 by 30 August.
-- **Radar sees through the storm.** Sentinel-1 radar isn't stopped by cloud: the sea is dark and a ship's hull a bright point. Counted by eye at San Antonio's anchorage, four ships waited on 12 July, two on 16 July in the storm, one on 22 July, and about seven on 24 July as the queue rebuilt, matching the stop and restart in the port data. An automatic count with a fixed threshold was unreliable (rough storm seas hide ships, and strong port reflectors leave streaks), so a proper CFAR detector, the standard method for radar ship detection, is the next step.
+- **Radar sees through the storm.** Sentinel-1 radar isn't stopped by cloud: the sea is dark and a ship's hull a bright point. Counted by eye at San Antonio's anchorage, four ships waited on 12 July, two on 16 July in the storm, one on 22 July, and about seven on 24 July as the queue rebuilt, matching the stop and restart in the port data. A fixed brightness threshold couldn't count them automatically: rough storm seas hide ships, and strong port reflectors leave streaks.
 
 ![San Antonio port and anchorage through the storm, Sentinel-1 radar](figures/fig9_ships_radar.png)
+
+- **An automatic ship count.** A CFAR detector (constant false alarm rate), the standard method for radar ship detection, sets the threshold from the sea around each pixel instead of fixing it. The background is a ring 250-500 m around the pixel, and a pixel is flagged when it stands five standard deviations above it. Objects then have to be compact, at least 2,000 m², bright at their peak (above 0 dB, as a steel hull is and sea clutter here never is) and on water away from the harbour. Two fixes mattered. CFAR alone let rough sea through, which the peak test removed. And a land mask made from each pass hid the ships in the storm, because the rough sea was as bright as land, so the mask is now fixed, from all 58 passes. The detector agrees with the by-eye counts: 4 against 4 on 12 July, 3 against 2 in the storm, 1 against 1, and 6 against 7 on 24 July. Over January-August 2026 it finds about five ships per pass. The count no longer follows sea roughness (correlation −0.02), and it rises and falls with daily port calls from PortWatch (correlation 0.38 with their 7-day mean), though one radar pass every few days is a sparse sample of a queue that changes daily. `ships_cfar.py`
+
+![CFAR detections on four passes beside the by-eye counts, and the count across 2026 against port calls](figures/fig11_ships_cfar.png)
 
 - **So detection and price were close together here.** Ships showed the stop the same day and the price moved the same week; the gap between seeing and pricing a disruption was days, not weeks.
 
@@ -74,7 +78,7 @@ The same measurement runs on Google Earth Engine (`smelter_heat.py`), closer to 
 
 **Built:** a PortWatch downloader with copper, case and placebo ports; validation against Peru's central bank statistics; an expanding-window out-of-sample test; a Sentinel-2 hot-spot finder that locates furnaces from approximate coordinates; a smelter heat series from 9,900 Sentinel-2 passes; and the same pipeline on Earth Engine.
 
-`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `chile_scenes.py` · `ships_radar.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
+`fetch_ports.py` · `analyse_ports.py` · `verify_smelters.py` · `smelter_series.py` · `analyse_smelters.py` · `smelter_heat.py` · `event_chile_2026.py` · `event_kazakhstan_2012.py` · `kazakhstan_scenes.py` · `chile_scenes.py` · `ships_radar.py` · `ships_cfar.py` · `smelters.csv` · `make_figures.py` · Python, pandas, rasterio, Earth Engine API
 
 **Limits:** PortWatch does not say what a ship carries, so dry-bulk tonnes at a copper port is a proxy. Only Peru publishes a free monthly series to check it against. Which mine ships through which port is marked "check" where uncertain. The hot-spot check proves heat near a site, not that the heat is the smelter's.
 
