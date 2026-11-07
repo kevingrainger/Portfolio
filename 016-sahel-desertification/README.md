@@ -87,13 +87,19 @@ Rain alone predicted the two sites poorly, so the question moves from two sites 
 
 The limits are worth stating. The covariates are snapshots (cropland in 2021, livestock in 2015), not changes over the period, and the relations are correlations, not causes. The rain-trend control comes out negative: sites where rain rose most re-greened less than the linear fit expects, a known weakness of RESTREND when greenness saturates in wet years. And MODIS at 250 m mixes trees, grass and crops, so greening in cropland can be the crops themselves. `fetch_covariates.py` · `covariates.py`
 
+**Cropland over time.** The covariates above are snapshots, so cropland was also followed year by year, 2001-2023, from the MODIS land-cover product MCD12Q1 (500 m), at the same sites. Two tests were run: across sites, the rain-adjusted trend against the change in cropland share, with the other covariates as controls; and within each site, whether a year with more cropland has greenness above or below what its rain predicts, after removing each site's own level and each year's Sahel-wide anomaly.
+
+![Cropland share by year at the Sahel sites, the rain-adjusted trend against cropland change, and the effect of each covariate](figures/fig10_landuse_change.png)
+
+The data is too thin to answer this. At 500 m MODIS misses most Sahel fields: the median site shows no cropland at all in any year, its cropland agrees only loosely with ESA WorldCover (rank correlation 0.58), and only 11% of sites gained cropland. The change-on-change effect is small and its interval reaches zero (+0.6 a decade per standard deviation, −0.0 to 1.1). Within sites, a year with one point more cropland is 0.28% greener than its rain predicts (0.22 to 0.35), but that is likely circular: MODIS classifies cropland partly from greenness, and crops are green in August and September. Population density keeps the same clear effect as before (−2.1, −3.0 to −0.7). A real test needs a finer cropland record, such as ESA's CCI land cover (300 m, 1992-2022, from the Copernicus Climate Data Store). `landuse_change.py`
+
 ## What I'd do next
 
 Land-use change over time rather than snapshots (ESA CCI land cover runs from 1992), and a lattice whose degradation rate rises with the land-use index fitted above, run at every grid site. From there I would like to build a risk measure and a stochastic event set of droughts (many simulated rainfall histories, not just the one that happened), run the full lattice through them, and test how feasible different prevention methods are, such as rotating grazing or protecting the largest patches. I would also like to work on the pure mathematics of these models, as well as the applied side.
 
 ## Code
 
-`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `fetch_covariates.py` (Earth Engine and FAO GLW4) · `covariates.py` (RESTREND and the covariate fit) · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
+`animate_sites.py` (the strip lattice beside the satellite record) · `sahel_ca.py` (Numba lattice, asynchronous updates, periodic edges) · `approximations.py` (mean-field and pair-approximation ODEs, swept by continuation) · `run_hysteresis.py` · `run_theory.py` · `early_warning.py` (patch labelling across the periodic boundary, spanning-cluster test) · `sentinel_patches.py` (Sentinel-2 from Planetary Computer) · `fetch_sites.py` · `run_sites.py` · `fetch_covariates.py` (Earth Engine and FAO GLW4) · `covariates.py` (RESTREND and the covariate fit) · `landuse_change.py` (MODIS cropland year by year) · `make_figures.py` · Python, NumPy, Numba, SciPy, rasterio
 
 ## Credits
 
