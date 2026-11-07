@@ -44,7 +44,16 @@ A P95 needs many more bad months than one year of weather holds, so the next ste
 
 - **The shared weather is most of the tail.** The fleet's 1-in-20 bad month falls 9.2% below normal on average across the year with correlated sites, against 2.3% if the sites were independent: about four times deeper.
 - **The worst month of the year.** In one year in twenty the fleet's worst month is 19% below its mean; with independent sites it would be 4%. By month, the bad month is deepest from October to January (12-15% below normal), when fronts cross the whole peninsula, and shallowest in July (2%).
-- **What the data is too thin for.** One year only gives the day-to-day weather inside that year. It cannot show a whole year that is cloudier than usual, so these tails are a floor. The plan is to add more ERA5 years, and then to perturb the simulated days with the IFS and AIFS forecast errors, which reach only about 200 km, so the two models' difference becomes a spread of possible days rather than a single number. `event_set.py`
+- **What one year can't show.** One year only gives the day-to-day weather inside that year, not a whole month or year cloudier than usual. `event_set.py`
+
+**Thirty years.** The same fleet was followed through 1995-2024 with ERA5 daily radiation from the Open-Meteo archive. The 30 real years give the fleet's 1-in-20 bad month directly (the 5th percentile of 30 years, between the worst and second worst, so rough), and the copula was refitted to all 30 years of daily anomalies.
+
+![The fleet's 1-in-20 bad month by calendar month four ways, and the worst month of the year against return period](figures/fig11_event_set_30y.png)
+
+- **The real years agree with the shared-weather story.** Over the 30 years the fleet's 1-in-20 bad month is 10.5% below normal on average across the calendar, against 2.5% if each site's year were drawn on its own: four times deeper, as the 2023 copula said.
+- **2023 was a sunny year, so the one-year copula was a little light.** 2023 ranks 22nd of 30 for output. Its copula put the 1-in-20 month at 9.2% below normal; refitted to 30 years it gives 12.3%, slightly deeper than observed and so a cautious estimate.
+- **The refitted copula reproduces the real years' extremes.** The worst month of each year, plotted against how often it comes round, falls on the simulated curve: about 23% below normal once in twenty years. The deepest months are in winter and March (15-18%), when fronts and cut-off lows sit over the peninsula for weeks; the worst month of all was March 2022, 24% below normal, a month of rain and Saharan dust. Whole years vary much less: the 1-in-20 year is about 3% below normal (2018, the worst, 4.9%).
+- **Next:** perturb the simulated days with the IFS and AIFS forecast errors, which reach only about 200 km, so that the two models' difference becomes a spread of possible days rather than a single number. `fetch_era5_daily.py` · `event_set_30y.py`
 
 ## Two forecast models: ECMWF IFS and AIFS
 

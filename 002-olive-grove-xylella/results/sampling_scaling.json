@@ -1,0 +1,82 @@
+{
+ "reference_spittlebugs": 12960,
+ "days": 365,
+ "p_tree": 0.5,
+ "p_vector": 0.5,
+ "unscaled": {
+  "0": {
+   "spittlebugs": 405,
+   "mean": 0.01064453125,
+   "se": 0.00102768340088323,
+   "share_outbreaks_over_10pct": 0.0
+  },
+  "1": {
+   "spittlebugs": 810,
+   "mean": 0.02177734375,
+   "se": 0.0018914930287419636,
+   "share_outbreaks_over_10pct": 0.0
+  },
+  "2": {
+   "spittlebugs": 1620,
+   "mean": 0.03330078125,
+   "se": 0.0028595281781471546,
+   "share_outbreaks_over_10pct": 0.0
+  },
+  "3": {
+   "spittlebugs": 3240,
+   "mean": 0.08125,
+   "se": 0.005014158888884632,
+   "share_outbreaks_over_10pct": 0.325
+  },
+  "4": {
+   "spittlebugs": 6480,
+   "mean": 0.18583984375,
+   "se": 0.010468390743662286,
+   "share_outbreaks_over_10pct": 0.95
+  },
+  "5": {
+   "spittlebugs": 12960,
+   "mean": 0.43857421875,
+   "se": 0.027059674886578414,
+   "share_outbreaks_over_10pct": 0.95
+  }
+ },
+ "scaled": {
+  "0": {
+   "spittlebugs": 405,
+   "mean": 0.009375,
+   "se": 0.0010163181806062357,
+   "share_outbreaks_over_10pct": 0.0
+  },
+  "1": {
+   "spittlebugs": 810,
+   "mean": 0.01943359375,
+   "se": 0.0017157853173352699,
+   "share_outbreaks_over_10pct": 0.0
+  },
+  "2": {
+   "spittlebugs": 1620,
+   "mean": 0.03974609375,
+   "se": 0.003399892102769109,
+   "share_outbreaks_over_10pct": 0.025
+  },
+  "3": {
+   "spittlebugs": 3240,
+   "mean": 0.0884765625,
+   "se": 0.007005257668601892,
+   "share_outbreaks_over_10pct": 0.4
+  },
+  "4": {
+   "spittlebugs": 6480,
+   "mean": 0.21318359375,
+   "se": 0.011504695261294991,
+   "share_outbreaks_over_10pct": 0.975
+  },
+  "5": {
+   "spittlebugs": 12960,
+   "mean": 0.43857421875,
+   "se": 0.027059674886578414,
+   "share_outbreaks_over_10pct": 0.95
+  }
+ }
+}
