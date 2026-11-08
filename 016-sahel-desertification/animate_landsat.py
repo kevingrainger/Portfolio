@@ -15,7 +15,9 @@
 #   middle   the lattice driven by the site's own rain to that year: one cell per 30 m
 #            Landsat pixel (200 x 200), the rates from joint_fit_1982.py (b = 0.45 x 3-year
 #            mean CHIRPS June-September rain / 400 mm, degradation 0.3, 3% seed rain a year),
-#            settled 50 years in the early-1980s climate
+#            settled 50 years in the early-1980s climate. Uneven ground (site quality with a
+#            standard deviation of 1 over 240 m patches) and local seed spread (delta 0.03),
+#            fitted so the lattice is as clumped as the satellite vegetation (fit_clumping.py)
 #   right    the lattice's cover and Landsat's mean dry-season (February-May) NDVI over the box,
 #            to that year: the dry season shows the woody cover the lattice models
 #
@@ -34,13 +36,14 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from PIL import Image
 
-from sahel_ca import Landscape, VEG, EMPTY
+from sahel_ca import Landscape, VEG, EMPTY, quality_field
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NAVY, BLUE, LIGHT, RED, GREY = "#0b2545", "#1f6fb2", "#8cc0e8", "#c0392b", "#8a8a8a"
 CMAP = ListedColormap(["#b08850", "#f2e6cf", "#2e7d32"])        # degraded, empty, vegetated
 SITES = {"gourma": "Gourma, Mali", "fakara": "Fakara, Niger"}
 B0, D0, SEED_RAIN, N = 0.45, 0.3, 0.03, 200
+DELTA, GROUND, GROUND_LENGTH = 0.03, 1.0, 8      # seed spread and uneven ground, fitted to the satellite clumping (fit_clumping.py)
 VEG_MARGIN = 0.05                      # overlay: NDVI this far above the scene's median
 VEG_RGBA = (0.0, 0.9, 0.35, 0.8)       # bright green
 YEARS = list(range(1985, 2025))
@@ -55,7 +58,8 @@ def site_rain(site):
 
 def run_lattice(site):
     p3 = site_rain(site)
-    land = Landscape(n=N, b=float(min(1, B0 * p3.loc[1981:1983].mean() / 400)), cover=0.5, seed=7, d=D0, f=0.9)
+    land = Landscape(n=N, b=float(min(1, B0 * p3.loc[1981:1983].mean() / 400)), cover=0.5, seed=7, d=D0, f=0.9,
+                     delta=DELTA, quality=quality_field(N, GROUND, GROUND_LENGTH, seed=11 if site == "gourma" else 23))
     def seed():
         e = (land.grid == EMPTY) & (land.rng.random(land.grid.shape) < SEED_RAIN); land.grid[e] = VEG
     for _ in range(50):
@@ -118,7 +122,7 @@ def main():
             ax.set_xticks([]); ax.set_yticks([])
             ax = fig.add_subplot(gs[r, 1])
             ax.imshow(D["grids"][year], cmap=CMAP, vmin=-1, vmax=1, interpolation="nearest")
-            ax.set_title(f"Lattice driven by the site's rain, {year}", loc="left", fontsize=10)
+            ax.set_title(f"Lattice on the site's rain, {year}", loc="left", fontsize=10)
             ax.set_xticks([]); ax.set_yticks([])
             ax = fig.add_subplot(gs[r, 2])
             c = D["cover"].loc[:year]

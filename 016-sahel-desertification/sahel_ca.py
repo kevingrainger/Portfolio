@@ -18,6 +18,11 @@
 # f is the neighbour coupling: as in the Ising model, a cell's next state depends on
 # its neighbours, and being next to plants lowers the barrier for bare soil to recover.
 #
+# Uneven ground (optional). Real drylands are not uniform: water runs off slopes into
+# hollows, and some soils hold it better. A fixed site-quality field Q (mean 1) can scale b
+# cell by cell, b_i = b * Q_i, made by smoothing white noise over a length of a few cells
+# (quality_field). With Q = None every cell has the same b, as in Kefi et al.
+#
 # Time runs in continuous-time steps of dt: in each step every cell is visited once in
 # random order and changes with probability rate * dt (asynchronous updating, as in the
 # original). The lattice is periodic.
@@ -64,13 +69,58 @@ def _sweep(grid, b, c, m, d, r, f, delta, dt, order):
 
 
 @njit(cache=True)
+def _sweep_q(grid, b, Q, c, m, d, r, f, delta, dt, order):
+    """_sweep with a site-quality field: cell (i, j) sees b * Q[i, j]."""
+    n = grid.shape[0]
+    nveg = 0
+    for x in range(n * n):
+        if grid.flat[x] == 1:
+            nveg += 1
+    rho = nveg / (n * n)
+    for idx in order:
+        i, j = idx // n, idx % n
+        q = 0.25 * ((grid[(i + 1) % n, j] == 1) + (grid[(i - 1) % n, j] == 1)
+                    + (grid[i, (j + 1) % n] == 1) + (grid[i, (j - 1) % n] == 1))
+        s = grid[i, j]
+        u = np.random.random()
+        if s == 0:
+            grow = max((delta * rho + (1 - delta) * q) * (b * Q[i, j] - c * rho), 0.0) * dt
+            if u < grow:
+                grid[i, j] = 1
+                nveg += 1
+            elif u < grow + d * dt:
+                grid[i, j] = -1
+        elif s == 1:
+            if u < m * dt:
+                grid[i, j] = 0
+                nveg -= 1
+        else:
+            if u < (r + f * q) * dt:
+                grid[i, j] = 0
+        rho = nveg / (n * n)
+    return grid
+
+
+def quality_field(n, strength, length, seed=0):
+    """Fixed site quality, mean 1: smoothed white noise (Gaussian, `length` cells), scaled so
+    its standard deviation is `strength`, floored at 0. Periodic, like the lattice."""
+    from scipy.ndimage import gaussian_filter
+    if strength == 0:
+        return np.ones((n, n))
+    z = gaussian_filter(np.random.default_rng(seed).standard_normal((n, n)), length, mode="wrap")
+    z = (z - z.mean()) / z.std()
+    return np.maximum(1 + strength * z, 0.0)
+
+
+@njit(cache=True)
 def _seed(s):
     np.random.seed(s)
 
 
 class Landscape:
-    def __init__(self, n=100, b=0.6, cover=0.5, seed=0, dt=0.2, **params):
+    def __init__(self, n=100, b=0.6, cover=0.5, seed=0, dt=0.2, quality=None, **params):
         self.n, self.b, self.dt = n, b, dt
+        self.Q = quality
         self.p = {**DEFAULTS, **params}
         self.rng = np.random.default_rng(seed)
         _seed(seed)
@@ -82,7 +132,10 @@ class Landscape:
         p = self.p
         for _ in range(int(round(years / self.dt))):
             order = self.rng.permutation(self.n * self.n)
-            _sweep(self.grid, self.b, p["c"], p["m"], p["d"], p["r"], p["f"], p["delta"], self.dt, order)
+            if self.Q is None:
+                _sweep(self.grid, self.b, p["c"], p["m"], p["d"], p["r"], p["f"], p["delta"], self.dt, order)
+            else:
+                _sweep_q(self.grid, self.b, self.Q, p["c"], p["m"], p["d"], p["r"], p["f"], p["delta"], self.dt, order)
             self.t += self.dt
         return self
 
