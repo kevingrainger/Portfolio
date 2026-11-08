@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
 #-------- animate_landsat.py --------------------------------------------------------
 #-----------------------------------------------------------------------------
-# The lattice beside forty years of real Landsat images, at Gourma and Fakara.
+# The lattice beside forty years of real satellite pictures, at two Sahel sites with woody
+# vegetation and no fields: Agoufou in the Gourma (Mali), dune shrubland, and a tiger-bush
+# plateau north of Niamey (Niger), where the bush has been cut for firewood.
 #
-# Each frame is one year, 1985-2024. For each site:
+# Each frame is one year, 1987-2024. For each site:
 #   left     the satellite picture of the 6 x 6 km site in true colour: the clearest
 #            October-November scene (fetch_site_pictures.py), Landsat at 30 m to 2015 and
 #            Sentinel-2 at 10 m from 2016, one brightness stretch for all three bands. Bright
 #            green marks pixels clearly greener than the scene's own background (NDVI 0.05
-#            above its median): shrubs, trees and wet hollows. Landsat 5's archive over West Africa has
-#            long gaps, so the most recent available scene is shown, labelled with its
-#            sensor and date. Each scene is brightness-stretched on its own,
-#            because dry-season dust haze varies from year to year; the chart is the measure
-#   middle   the lattice driven by the site's own rain to that year: one cell per 30 m
-#            Landsat pixel (200 x 200), the rates from joint_fit_1982.py (b = 0.45 x 3-year
-#            mean CHIRPS June-September rain / 400 mm, degradation 0.3, 3% seed rain a year),
-#            settled 50 years in the early-1980s climate. Uneven ground (site quality with a
-#            standard deviation of 1 over 240 m patches) and local seed spread (delta 0.03),
-#            fitted so the lattice is as clumped as the satellite vegetation (fit_clumping.py)
-#   right    the lattice's cover and Landsat's mean dry-season (February-May) NDVI over the box,
-#            to that year: the dry season shows the woody cover the lattice models
+#            above its median). Landsat 5's archive over West Africa has gaps, so the latest
+#            available scene is shown, labelled with its sensor and date
+#   middle   the lattice, one cell per 30 m pixel, started from the 1987 picture's vegetation
+#            pattern (its greenest pixels, up to the cover the model supports in that
+#            climate; the degraded share scattered among the bare pixels) and driven by the site's CHIRPS rain (rates from joint_fit_1982.py:
+#            b = 0.45 x 3-year mean June-September rain / 400 mm, degradation 0.3, 3% seed
+#            rain a year, local seed spread delta 0.03). The ground is uneven, from the
+#            Copernicus 30 m elevation model: hollows collect run-off and get better site
+#            quality; its strength is the weakest that clumps about as well as the best
+#            (clumping.py), so patches aren't pinned to the same spots
+#   right    the lattice's cover and Landsat's mean dry-season (February-May) NDVI over the
+#            box, to that year: the dry season shows the woody cover the lattice models
 #
 #   python animate_landsat.py
 #
@@ -41,36 +43,89 @@ from sahel_ca import Landscape, VEG, EMPTY, quality_field
 HERE = os.path.dirname(os.path.abspath(__file__))
 NAVY, BLUE, LIGHT, RED, GREY = "#0b2545", "#1f6fb2", "#8cc0e8", "#c0392b", "#8a8a8a"
 CMAP = ListedColormap(["#b08850", "#f2e6cf", "#2e7d32"])        # degraded, empty, vegetated
-SITES = {"gourma": "Gourma, Mali", "fakara": "Fakara, Niger"}
+SITES = {"agoufou": "Agoufou (Mali)", "tigerbush": "Tiger bush (Niger)"}
 B0, D0, SEED_RAIN, N = 0.45, 0.3, 0.03, 200
-DELTA, GROUND, GROUND_LENGTH = 0.03, 1.0, 8      # seed spread and uneven ground, fitted to the satellite clumping (fit_clumping.py)
+DELTA, GROUND_LENGTH = 0.03, 8                   # local seed spread; hollows judged against the land within ~240 m
+STRENGTHS = [0.25, 0.5, 0.75, 1.0]               # uneven-ground strength: the weakest that clumps about as well as the best
+START = 1987                                     # both runs start from that year's satellite picture
 VEG_MARGIN = 0.05                      # overlay: NDVI this far above the scene's median
 VEG_RGBA = (0.0, 0.9, 0.35, 0.8)       # bright green
-YEARS = list(range(1985, 2025))
+YEARS = list(range(START, 2025))
 
 
 def site_rain(site):
-    r = pd.read_csv(os.path.join(HERE, "data", f"chirps_{site}.csv"), index_col=0, parse_dates=True).squeeze()
-    jjas = r[r.index.month.isin([6, 7, 8, 9])]
-    P = jjas.groupby(jjas.index.year).sum()
-    return P.rolling(3, min_periods=1).mean().loc[1981:2024]
+    P = pd.read_csv(os.path.join(HERE, "data", f"rain_jjas_{site}.csv"), index_col=0).squeeze()
+    return P.rolling(3, min_periods=1).mean()
 
 
-def run_lattice(site):
+def ground_quality(site, strength):
+    """Site quality from the elevation model: cells lower than the land around them (within
+    about GROUND_LENGTH cells) collect run-off and get better quality. Mean 1, standard
+    deviation `strength`, floored at 0."""
+    from scipy.ndimage import gaussian_filter
+    z = np.load(os.path.join(HERE, "data", f"dem_{site}.npy")).astype(float)
+    hollow = gaussian_filter(z, GROUND_LENGTH, mode="reflect") - z          # positive in hollows
+    hollow = (hollow - hollow.mean()) / hollow.std()
+    return np.maximum(1 + strength * hollow, 0.0)
+
+
+def picture_ndvi(site, year):
+    pics = np.load(os.path.join(HERE, "data", f"pictures_{site}.npz"))
+    a = pics[f"rgb_{year}"].astype(float)
+    if a.shape[0] == 600:
+        a = a.reshape(200, 3, 200, 3, 4).mean(axis=(1, 3))
+    return (a[..., 3] - a[..., 0]) / (a[..., 3] + a[..., 0] + 1e-6)
+
+
+def run_lattice(site, strength):
+    """Start from the real vegetation pattern: a short spin-up in the mid-1980s climate gives
+    the cover and the share of degraded ground the model supports; the START picture's
+    greenest pixels become vegetated up to that cover, and the degraded share is scattered at
+    random among the rest (a picture can't tell degraded from fertile bare ground). Then the site's rain, year by year."""
     p3 = site_rain(site)
-    land = Landscape(n=N, b=float(min(1, B0 * p3.loc[1981:1983].mean() / 400)), cover=0.5, seed=7, d=D0, f=0.9,
-                     delta=DELTA, quality=quality_field(N, GROUND, GROUND_LENGTH, seed=11 if site == "gourma" else 23))
-    def seed():
-        e = (land.grid == EMPTY) & (land.rng.random(land.grid.shape) < SEED_RAIN); land.grid[e] = VEG
+    Q = ground_quality(site, strength)
+    b0 = float(min(1, B0 * p3.loc[START - 2:START].mean() / 400))
+    spin = Landscape(n=N, b=b0, cover=0.5, seed=7, d=D0, f=0.9, delta=DELTA, quality=Q)
     for _ in range(50):
-        land.step(1); seed()
-    grids, cover = {}, {}
-    for y, p in p3.items():
-        land.b = float(min(1, B0 * p / 400))
-        land.step(1); seed()
-        if y in YEARS:
-            grids[y] = land.grid.copy(); cover[y] = land.cover()
+        spin.step(1)
+        e = (spin.grid == EMPTY) & (spin.rng.random(spin.grid.shape) < SEED_RAIN); spin.grid[e] = VEG
+    rho, deg = spin.cover(), spin.degraded()
+    nd = np.nan_to_num(picture_ndvi(site, START), nan=np.nanmedian(picture_ndvi(site, START)))
+    order = np.argsort(nd.ravel())[::-1]
+    grid = np.zeros(N * N, dtype=np.int8)
+    nveg = int(rho * N * N)
+    grid[order[:nveg]] = VEG
+    bare = order[nveg:]                                   # a picture can't tell degraded from fertile bare ground,
+    rng = np.random.default_rng(3)                        # so the degraded share is scattered among the bare pixels
+    grid[rng.choice(bare, min(int(deg * N * N), len(bare)), replace=False)] = -1
+    land = Landscape(n=N, b=b0, cover=0.5, seed=7, d=D0, f=0.9, delta=DELTA, quality=Q)
+    land.grid = grid.reshape(N, N)
+    grids, cover = {START: land.grid.copy()}, {START: land.cover()}
+    for y in YEARS[1:]:
+        land.b = float(min(1, B0 * p3.loc[y] / 400))
+        land.step(1)
+        e = (land.grid == EMPTY) & (land.rng.random(land.grid.shape) < SEED_RAIN); land.grid[e] = VEG
+        grids[y] = land.grid.copy(); cover[y] = land.cover()
     return grids, pd.Series(cover), p3
+
+
+def choose_strength(site):
+    """Uneven ground strong enough to clump like the satellite vegetation, but no stronger:
+    the weakest strength whose clumping gap (log ratio, lattice to satellite at the same
+    density, clumping.py) is within 0.05 of the best strength's. Stronger ground pins the
+    patches to the same spots."""
+    from clumping import clump, satellite_clumping
+    res = []
+    for st in STRENGTHS:
+        grids, cover, _ = run_lattice(site, st)
+        sat = satellite_clumping(site, {int(k): v for k, v in cover.items()})
+        yrs = [y for y in sat if y in grids and y > START]
+        lat_c = np.mean([clump(grids[y] == VEG) for y in yrs]); sat_c = np.nanmean([sat[y] for y in yrs])
+        res.append((st, abs(float(np.log(lat_c / sat_c))), lat_c, sat_c))
+        print(site, "strength", st, "lattice clumping", round(lat_c, 2), "satellite", round(sat_c, 2))
+    best = min(r[1] for r in res)
+    st, _, lat_c, sat_c = [r for r in res if r[1] <= best + 0.05][0]
+    return st, lat_c, sat_c
 
 
 def veg_overlay(img):
@@ -94,11 +149,12 @@ def main():
     for site in SITES:
         d = np.load(os.path.join(HERE, "data", f"landsat_{site}.npz"))
         pics = np.load(os.path.join(HERE, "data", f"pictures_{site}.npz"))
-        grids, cover, p3 = run_lattice(site)
+        st, lat_c, sat_c = choose_strength(site)
+        grids, cover, p3 = run_lattice(site, st)
         nd = pd.Series([float(np.nanmean(x)) for x in d["ndvi"]], index=d["years"])
-        data[site] = dict(years=list(pics["years"]), dates=list(pics["dates"]), sensors=list(pics["sensors"]),
+        data[site] = dict(strength=st, clump=(lat_c, sat_c), years=list(pics["years"]), dates=list(pics["dates"]), sensors=list(pics["sensors"]),
                           rgb=[pics[f"rgb_{y}"] for y in pics["years"]], grids=grids, cover=cover, ndvi=nd)
-        print(site, "cover 1985", round(cover.loc[1985], 2), "2024", round(cover.loc[2024], 2), "| Landsat NDVI first", round(nd.iloc[0], 3), "last", round(nd.iloc[-1], 3))
+        print(site, "strength", st, f"cover {START}", round(cover.loc[START], 2), "2024", round(cover.loc[2024], 2), "| Landsat NDVI first", round(nd.iloc[0], 3), "last", round(nd.iloc[-1], 3))
 
     plt.rcParams.update({"font.family": "serif", "font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
 
@@ -122,17 +178,17 @@ def main():
             ax.set_xticks([]); ax.set_yticks([])
             ax = fig.add_subplot(gs[r, 1])
             ax.imshow(D["grids"][year], cmap=CMAP, vmin=-1, vmax=1, interpolation="nearest")
-            ax.set_title(f"Lattice on the site's rain, {year}", loc="left", fontsize=10)
+            ax.set_title(f"Lattice from the {START} picture: {year}", loc="left", fontsize=10)
             ax.set_xticks([]); ax.set_yticks([])
             ax = fig.add_subplot(gs[r, 2])
             c = D["cover"].loc[:year]
             ax.plot(D["cover"].index, 100 * D["cover"].values, color=RED, lw=1, alpha=0.15)
             ax.plot(c.index, 100 * c.values, color=RED, lw=1.8, label="lattice cover (%)")
             ax.plot(year, 100 * c.iloc[-1], "o", color=RED, ms=6)
-            ax.set_xlim(1984, 2025); ax.set_ylim(0, 100 * D["cover"].max() * 1.25)
+            ax.set_xlim(START - 1, 2025); ax.set_ylim(0, 100 * D["cover"].max() * 1.25)
             ax.set_ylabel("lattice cover, %", color=RED)
             ax2 = ax.twinx(); ax2.spines["right"].set_visible(True)
-            nd = D["ndvi"]; nd_s = nd[nd.index <= year]
+            nd = D["ndvi"][D["ndvi"].index >= START]; nd_s = nd[nd.index <= year]
             ax2.plot(nd.index, nd.values, "o", color=NAVY, ms=4, alpha=0.15)
             ax2.plot(nd_s.index, nd_s.values, "o-", color=NAVY, ms=4.5, lw=0.8, label="Landsat dry-season NDVI")
             ax2.set_ylim(nd.min() * 0.85, nd.max() * 1.1); ax2.set_ylabel("Landsat NDVI", color=NAVY)

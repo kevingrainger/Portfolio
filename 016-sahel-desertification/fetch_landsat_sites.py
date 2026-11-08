@@ -24,7 +24,8 @@ import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITES = {"gourma": (15.33, -1.55, "EPSG:32630"), "fakara": (13.50, 2.70, "EPSG:32631")}
+SITES = {"gourma": (15.33, -1.55, "EPSG:32630"), "fakara": (13.50, 2.70, "EPSG:32631"),
+         "agoufou": (15.34, -1.48, "EPSG:32630"), "tigerbush": (13.60, 2.05, "EPSG:32631")}   # the last two: the animation sites
 YEARS = [y for y in range(1985, 2025) if y != 2012]
 PX, SIZE = 30, 200
 
@@ -47,6 +48,8 @@ def main():
     L89 = ("SR_B5", "SR_B4", "SR_B3", "SR_B2")
     for site, (lat, lon, crs) in SITES.items():
         path = os.path.join(HERE, "data", f"landsat_{site}.npz")
+        if os.path.exists(path):
+            continue
         pt = ee.Geometry.Point([lon, lat])
         x0, y0 = pt.transform(crs, 1).coordinates().getInfo()
         x0 -= SIZE * PX / 2; y0 += SIZE * PX / 2

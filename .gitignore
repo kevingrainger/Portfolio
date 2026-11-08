@@ -64,3 +64,4 @@ release-assets/
 014-copper-satellite-signals/data/s1_sanantonio/
 016-sahel-desertification/data/landsat_*.npz
 016-sahel-desertification/data/pictures_*.npz
+016-sahel-desertification/data/dem_*.npy

@@ -21,7 +21,8 @@ import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITES = {"gourma": (15.33, -1.55, "EPSG:32630"), "fakara": (13.50, 2.70, "EPSG:32631")}
+SITES = {"gourma": (15.33, -1.55, "EPSG:32630"), "fakara": (13.50, 2.70, "EPSG:32631"),
+         "agoufou": (15.34, -1.48, "EPSG:32630"), "tigerbush": (13.60, 2.05, "EPSG:32631")}   # the last two: the animation sites
 BOX = 6000
 
 
@@ -45,6 +46,8 @@ def main():
             .copyProperties(im, ["system:time_start"]).set("cc", im.get("CLOUDY_PIXEL_PERCENTAGE"))
 
     for site, (lat, lon, crs) in SITES.items():
+        if os.path.exists(os.path.join(HERE, "data", f"pictures_{site}.npz")) and "--refresh" not in __import__("sys").argv:
+            continue
         pt = ee.Geometry.Point([lon, lat])
         x0, y0 = pt.transform(crs, 1).coordinates().getInfo()
         x0 -= BOX / 2; y0 += BOX / 2
