@@ -14,6 +14,9 @@
 #
 #   python fetch_site_pictures.py      (Earth Engine account; EE_PROJECT)
 #
+# The animation sites are 12 x 12 km (Landsat 400 x 400 pixels, Sentinel-2 at 20 m, 600 x 600),
+# and only scenes covering at least 99% of the box are used.
+#
 # Output: data/pictures_<site>.npz (years, dates, sensors, and one r,g,b,nir array per year)
 
 import os
@@ -22,7 +25,9 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITES = {"gourma": (15.33, -1.55, "EPSG:32630"), "fakara": (13.50, 2.70, "EPSG:32631"),
-         "agoufou": (15.34, -1.48, "EPSG:32630"), "tigerbush": (13.60, 2.05, "EPSG:32631")}   # the last two: the animation sites
+         "agoufou": (15.34, -1.48, "EPSG:32630"), "tigerbush": (13.60, 2.05, "EPSG:32631"),
+         "gourma_wadi": (15.20, -1.40, "EPSG:32630"), "tigerbush_plateau": (13.70, 1.95, "EPSG:32631")}   # the last two: the animation sites
+BOX_OF = {"gourma_wadi": 12000, "tigerbush_plateau": 12000}                                          # the animation sites are 12 km boxes
 BOX = 6000
 
 
@@ -49,8 +54,9 @@ def main():
         if os.path.exists(os.path.join(HERE, "data", f"pictures_{site}.npz")) and "--refresh" not in __import__("sys").argv:
             continue
         pt = ee.Geometry.Point([lon, lat])
+        box_m = BOX_OF.get(site, BOX)
         x0, y0 = pt.transform(crs, 1).coordinates().getInfo()
-        x0 -= BOX / 2; y0 += BOX / 2
+        x0 -= box_m / 2; y0 += box_m / 2
         out = {}
         for y in range(1985, 2026):
             if y == 2012:
@@ -60,20 +66,27 @@ def main():
             elif y <= 2015:
                 col = ee.ImageCollection("LANDSAT/LC08/C02/T1_L2").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(landsat(("SR_B4", "SR_B3", "SR_B2", "SR_B5"))); px, sensor = 30, "Landsat 8"
             else:
-                col = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(s2); px, sensor = 10, "Sentinel-2"
-            if col.size().getInfo() == 0:
+                col = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(s2); px, sensor = (20 if site in BOX_OF else 10), "Sentinel-2"
+            n_scenes = col.size().getInfo()
+            if n_scenes == 0:
                 continue
-            best = ee.Image(col.sort("cc").first())
-            n = int(BOX / px)
-            arr = ee.data.computePixels({"expression": best.unmask(-9), "fileFormat": "NUMPY_NDARRAY",
-                                         "grid": {"dimensions": {"width": n, "height": n},
-                                                  "affineTransform": {"scaleX": px, "shearX": 0, "translateX": x0,
-                                                                      "shearY": 0, "scaleY": -px, "translateY": y0},
-                                                  "crsCode": crs}})
-            rgb = np.stack([np.array(arr[b], dtype=np.float32) for b in "rgbn"], axis=-1)
-            rgb[rgb == -9] = np.nan
-            if np.isnan(rgb).mean() > 0.1:
-                print(site, y, "too cloudy, skipped", flush=True)
+            n = int(box_m / px)
+            scenes = col.sort("cc").toList(min(n_scenes, 8))
+            rgb, best = None, None
+            for k in range(min(n_scenes, 8)):                  # the clearest scene that covers the whole box
+                cand = ee.Image(scenes.get(k))
+                arr = ee.data.computePixels({"expression": cand.unmask(-9), "fileFormat": "NUMPY_NDARRAY",
+                                             "grid": {"dimensions": {"width": n, "height": n},
+                                                      "affineTransform": {"scaleX": px, "shearX": 0, "translateX": x0,
+                                                                          "shearY": 0, "scaleY": -px, "translateY": y0},
+                                                      "crsCode": crs}})
+                a_ = np.stack([np.array(arr[b], dtype=np.float32) for b in "rgbn"], axis=-1)
+                a_[a_ == -9] = np.nan
+                if np.isnan(a_).mean() < (0.01 if site in BOX_OF else 0.1):
+                    rgb, best = a_, cand
+                    break
+            if rgb is None:
+                print(site, y, "no scene covers the box, skipped", flush=True)
                 continue
             date = ee.Date(best.get("system:time_start")).format("YYYY-MM-dd").getInfo()
             out[y] = (date, sensor, rgb)

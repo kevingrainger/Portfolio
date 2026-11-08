@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 #-------- animate_landsat.py --------------------------------------------------------
 #-----------------------------------------------------------------------------
-# The lattice beside forty years of real satellite pictures, at two Sahel sites with woody
-# vegetation and no fields: Agoufou in the Gourma (Mali), dune shrubland, and a tiger-bush
-# plateau north of Niamey (Niger), where the bush has been cut for firewood.
+# The lattice beside forty years of real satellite pictures, at two 12 x 12 km Sahel sites
+# with woody vegetation and no fields: a wooded valley and shrubland in the Gourma (Mali,
+# 15.20 N 1.40 W), and a tiger-bush plateau north of Niamey (Niger, 13.70 N 1.95 E), where
+# the bush has been cut for firewood.
 #
 # Each frame is one year, 1987-2024. For each site:
-#   left     the satellite picture of the 6 x 6 km site in true colour: the clearest
+#   left     the satellite picture of the 12 x 12 km site in true colour: the clearest
 #            October-November scene (fetch_site_pictures.py), Landsat at 30 m to 2015 and
-#            Sentinel-2 at 10 m from 2016, one brightness stretch for all three bands. Bright
+#            Sentinel-2 at 20 m from 2016, only scenes covering the whole box, one brightness stretch for all three bands. Bright
 #            green marks pixels clearly greener than the scene's own background (NDVI 0.05
 #            above its median). Landsat 5's archive over West Africa has gaps, so the latest
 #            available scene is shown, labelled with its sensor and date
@@ -43,8 +44,8 @@ from sahel_ca import Landscape, VEG, EMPTY, quality_field
 HERE = os.path.dirname(os.path.abspath(__file__))
 NAVY, BLUE, LIGHT, RED, GREY = "#0b2545", "#1f6fb2", "#8cc0e8", "#c0392b", "#8a8a8a"
 CMAP = ListedColormap(["#b08850", "#f2e6cf", "#2e7d32"])        # degraded, empty, vegetated
-SITES = {"agoufou": "Agoufou (Mali)", "tigerbush": "Tiger bush (Niger)"}
-B0, D0, SEED_RAIN, N = 0.45, 0.3, 0.03, 200
+SITES = {"gourma_wadi": "Gourma (Mali)", "tigerbush_plateau": "Tiger bush (Niger)"}
+B0, D0, SEED_RAIN, N = 0.45, 0.3, 0.03, 400           # 400 x 400 cells of 30 m: a 12 x 12 km site
 DELTA, GROUND_LENGTH = 0.03, 8                   # local seed spread; hollows judged against the land within ~240 m
 STRENGTHS = [0.25, 0.5, 0.75, 1.0]               # uneven-ground strength: the weakest that clumps about as well as the best
 START = 1987                                     # both runs start from that year's satellite picture
@@ -70,10 +71,9 @@ def ground_quality(site, strength):
 
 
 def picture_ndvi(site, year):
+    from clumping import to_grid
     pics = np.load(os.path.join(HERE, "data", f"pictures_{site}.npz"))
-    a = pics[f"rgb_{year}"].astype(float)
-    if a.shape[0] == 600:
-        a = a.reshape(200, 3, 200, 3, 4).mean(axis=(1, 3))
+    a = to_grid(pics[f"rgb_{year}"].astype(float), N)
     return (a[..., 3] - a[..., 0]) / (a[..., 3] + a[..., 0] + 1e-6)
 
 
@@ -118,7 +118,7 @@ def choose_strength(site):
     res = []
     for st in STRENGTHS:
         grids, cover, _ = run_lattice(site, st)
-        sat = satellite_clumping(site, {int(k): v for k, v in cover.items()})
+        sat = satellite_clumping(site, {int(k): v for k, v in cover.items()}, n=N)
         yrs = [y for y in sat if y in grids and y > START]
         lat_c = np.mean([clump(grids[y] == VEG) for y in yrs]); sat_c = np.nanmean([sat[y] for y in yrs])
         res.append((st, abs(float(np.log(lat_c / sat_c))), lat_c, sat_c))
@@ -168,13 +168,13 @@ def main():
             if avail:
                 k = avail[-1]
                 im = D["rgb"][k]
-                ax.imshow(stretch(im[..., :3]), extent=(0, 200, 200, 0))
-                ax.imshow(veg_overlay(im), extent=(0, 200, 200, 0), interpolation="nearest")
+                ax.imshow(stretch(im[..., :3]), extent=(0, N, N, 0))
+                ax.imshow(veg_overlay(im), extent=(0, N, N, 0), interpolation="nearest")
                 ax.set_title(f"{SITES[site]}: {D['sensors'][k]}, {D['dates'][k]}", loc="left", fontsize=10)
             else:
                 ax.text(0.5, 0.5, "no clear scene yet", ha="center", va="center", transform=ax.transAxes, color=GREY)
                 ax.set_title(f"{SITES[site]}: satellite", loc="left", fontsize=10)
-            ax.plot([10, 10 + 1000 / 30], [188, 188], color="w", lw=3); ax.text(10 + 500 / 30, 182, "1 km", color="w", ha="center", fontsize=8)
+            ax.plot([0.05 * N, 0.05 * N + 2000 / 30], [0.94 * N] * 2, color="w", lw=3); ax.text(0.05 * N + 1000 / 30, 0.91 * N, "2 km", color="w", ha="center", fontsize=8)
             ax.set_xticks([]); ax.set_yticks([])
             ax = fig.add_subplot(gs[r, 1])
             ax.imshow(D["grids"][year], cmap=CMAP, vmin=-1, vmax=1, interpolation="nearest")

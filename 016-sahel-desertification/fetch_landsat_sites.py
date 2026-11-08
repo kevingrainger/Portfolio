@@ -25,7 +25,9 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITES = {"gourma": (15.33, -1.55, "EPSG:32630"), "fakara": (13.50, 2.70, "EPSG:32631"),
-         "agoufou": (15.34, -1.48, "EPSG:32630"), "tigerbush": (13.60, 2.05, "EPSG:32631")}   # the last two: the animation sites
+         "agoufou": (15.34, -1.48, "EPSG:32630"), "tigerbush": (13.60, 2.05, "EPSG:32631"),
+         "gourma_wadi": (15.20, -1.40, "EPSG:32630"), "tigerbush_plateau": (13.70, 1.95, "EPSG:32631")}   # the last two: the animation sites
+SIZE_OF = {"gourma_wadi": 400, "tigerbush_plateau": 400}                                                     # 12 km boxes
 YEARS = [y for y in range(1985, 2025) if y != 2012]
 PX, SIZE = 30, 200
 
@@ -51,8 +53,9 @@ def main():
         if os.path.exists(path):
             continue
         pt = ee.Geometry.Point([lon, lat])
+        SZ = SIZE_OF.get(site, SIZE)
         x0, y0 = pt.transform(crs, 1).coordinates().getInfo()
-        x0 -= SIZE * PX / 2; y0 += SIZE * PX / 2
+        x0 -= SZ * PX / 2; y0 += SZ * PX / 2
         nd_stack, rgb_stack, got, dates = [], [], [], []
         for y in YEARS:
             if y <= 2011:
@@ -68,7 +71,7 @@ def main():
                 continue
             img = ee.Image(col.sort("CLOUD_COVER").first()).unmask(-9)
             arr = ee.data.computePixels({"expression": img, "fileFormat": "NUMPY_NDARRAY",
-                                         "grid": {"dimensions": {"width": SIZE, "height": SIZE},
+                                         "grid": {"dimensions": {"width": SZ, "height": SZ},
                                                   "affineTransform": {"scaleX": PX, "shearX": 0, "translateX": x0,
                                                                       "shearY": 0, "scaleY": -PX, "translateY": y0},
                                                   "crsCode": crs}})

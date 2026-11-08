@@ -1,11 +1,11 @@
-agoufou strength 0.25 lattice clumping 3.29 satellite 4.12
-agoufou strength 0.5 lattice clumping 3.05 satellite 3.74
-agoufou strength 0.75 lattice clumping 2.89 satellite 3.44
-agoufou strength 1.0 lattice clumping 2.73 satellite 3.15
-agoufou strength 0.75 cover 1987 0.19 2024 0.2 | Landsat NDVI first 0.125 last 0.164
-tigerbush strength 0.25 lattice clumping 2.1 satellite 2.44
-tigerbush strength 0.5 lattice clumping 2.22 satellite 2.49
-tigerbush strength 0.75 lattice clumping 2.27 satellite 2.49
-tigerbush strength 1.0 lattice clumping 2.28 satellite 2.47
-tigerbush strength 0.5 cover 1987 0.32 2024 0.32 | Landsat NDVI first 0.092 last 0.117
-gif MB 2.3
+gourma_wadi strength 0.25 lattice clumping 3.37 satellite 5.39
+gourma_wadi strength 0.5 lattice clumping 3.19 satellite 5.0
+gourma_wadi strength 0.75 lattice clumping 2.95 satellite 4.5
+gourma_wadi strength 1.0 lattice clumping 2.79 satellite 4.12
+gourma_wadi strength 0.75 cover 1987 0.2 2024 0.21 | Landsat NDVI first 0.112 last 0.151
+tigerbush_plateau strength 0.25 lattice clumping 1.9 satellite 2.58
+tigerbush_plateau strength 0.5 lattice clumping 1.91 satellite 2.51
+tigerbush_plateau strength 0.75 lattice clumping 1.92 satellite 2.45
+tigerbush_plateau strength 1.0 lattice clumping 1.93 satellite 2.4
+tigerbush_plateau strength 0.75 cover 1987 0.3 2024 0.36 | Landsat NDVI first 0.086 last 0.111
+gif MB 2.7

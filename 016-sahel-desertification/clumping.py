@@ -49,13 +49,23 @@ def clump(mask):
     return float(q / rho)
 
 
-def satellite_clumping(site, cover_by_year):
+def to_grid(a, n):
+    """Resample a picture (pixels x pixels x bands) to the n x n lattice grid by averaging."""
+    if a.shape[0] == n:
+        return a
+    k = a.shape[0] / n
+    if float(k).is_integer():
+        k = int(k)
+        return a.reshape(n, k, n, k, a.shape[2]).mean(axis=(1, 3))
+    from scipy.ndimage import zoom
+    return zoom(np.nan_to_num(a, nan=np.nanmedian(a)), (n / a.shape[0], n / a.shape[1], 1), order=1)
+
+
+def satellite_clumping(site, cover_by_year, n=200):
     d = np.load(os.path.join(HERE, "data", f"pictures_{site}.npz"))
     out = {}
     for y, sen in zip(d["years"], d["sensors"]):
-        a = d[f"rgb_{y}"].astype(float)
-        if a.shape[0] == 600:                                   # Sentinel-2 10 m -> 30 m
-            a = a.reshape(200, 3, 200, 3, 4).mean(axis=(1, 3))
+        a = to_grid(d[f"rgb_{y}"].astype(float), n)             # to the lattice's 30 m cells
         nd = (a[..., 3] - a[..., 0]) / (a[..., 3] + a[..., 0] + 1e-6)
         rho = cover_by_year.get(int(y), cover_by_year[max(k for k in cover_by_year if k <= max(int(y), min(cover_by_year)))])
         thr = np.nanquantile(nd, 1 - rho)

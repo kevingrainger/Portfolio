@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #-------- fetch_site_ground.py ------------------------------------------------------
 #-----------------------------------------------------------------------------
-# Rain and ground for the two animation sites (Agoufou in the Gourma, and a tiger-bush
-# plateau north of Niamey):
+# Rain and ground for the two animation sites (a wooded valley and shrubland in the Gourma,
+# and a tiger-bush plateau north of Niamey), 12 x 12 km:
 #   rain        CHIRPS June-September totals, 1981-2024, the mean over a 0.2 x 0.2 deg box
-#   elevation   Copernicus DEM GLO-30 (30 m), on the same 6 x 6 km, 30 m grid as the
+#   elevation   Copernicus DEM GLO-30 (30 m), on the same 12 x 12 km, 30 m grid as the
 #               Landsat pictures, for the lattice's uneven ground: water runs into the
 #               hollows, so lower-than-surroundings cells get better site quality
 #
@@ -20,7 +20,7 @@ import pandas as pd
 from fetch_site_pictures import SITES
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ANIM = ["agoufou", "tigerbush"]
+ANIM = ["gourma_wadi", "tigerbush_plateau"]
 
 
 def main():
@@ -36,9 +36,9 @@ def main():
         pd.Series({y: v[f"r{y}"] for y in range(1981, 2025)}, name="rain_jjas").rename_axis("year").to_csv(
             os.path.join(HERE, "data", f"rain_jjas_{site}.csv"))
         x0, y0 = ee.Geometry.Point([lon, lat]).transform(crs, 1).coordinates().getInfo()
-        x0 -= 3000; y0 += 3000
+        x0 -= 6000; y0 += 6000
         arr = ee.data.computePixels({"expression": dem.rename("dem"), "fileFormat": "NUMPY_NDARRAY",
-                                     "grid": {"dimensions": {"width": 200, "height": 200},
+                                     "grid": {"dimensions": {"width": 400, "height": 400},
                                               "affineTransform": {"scaleX": 30, "shearX": 0, "translateX": x0,
                                                                   "shearY": 0, "scaleY": -30, "translateY": y0},
                                               "crsCode": crs}})
