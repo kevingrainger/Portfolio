@@ -9,10 +9,12 @@
 # site's 6 x 6 km box (ranked by the scene's cloud cover, clouds masked):
 #   1985-2015   Landsat 5 (to 2011) and Landsat 8 (2013-15), 30 m, 200 x 200 pixels
 #   2016-2025   Sentinel-2 (harmonised surface reflectance), 10 m, 600 x 600 pixels
+# Red, green, blue and near-infrared are kept, so each picture has its own NDVI for the
+# vegetation overlay.
 #
 #   python fetch_site_pictures.py      (Earth Engine account; EE_PROJECT)
 #
-# Output: data/pictures_<site>.npz (years, dates, sensors, and one rgb array per year)
+# Output: data/pictures_<site>.npz (years, dates, sensors, and one r,g,b,nir array per year)
 
 import os
 
@@ -28,18 +30,18 @@ def main():
     ee.Initialize(project=os.environ.get("EE_PROJECT", "zinc-interface-468219-a4"))
 
     def landsat(bands):
-        r, g, b = bands
+        r, g, b, n = bands
         def f(im):
             qa = im.select("QA_PIXEL")
             ok = qa.bitwiseAnd(1 << 3).eq(0).And(qa.bitwiseAnd(1 << 4).eq(0))
-            return im.select([r, g, b], ["r", "g", "b"]).multiply(0.0000275).add(-0.2).updateMask(ok) \
+            return im.select([r, g, b, n], ["r", "g", "b", "n"]).multiply(0.0000275).add(-0.2).updateMask(ok) \
                 .copyProperties(im, ["system:time_start"]).set("cc", im.get("CLOUD_COVER"))
         return f
 
     def s2(im):
         scl = im.select("SCL")
         ok = scl.neq(3).And(scl.neq(8)).And(scl.neq(9)).And(scl.neq(10))
-        return im.select(["B4", "B3", "B2"], ["r", "g", "b"]).multiply(0.0001).updateMask(ok) \
+        return im.select(["B4", "B3", "B2", "B8"], ["r", "g", "b", "n"]).multiply(0.0001).updateMask(ok) \
             .copyProperties(im, ["system:time_start"]).set("cc", im.get("CLOUDY_PIXEL_PERCENTAGE"))
 
     for site, (lat, lon, crs) in SITES.items():
@@ -51,9 +53,9 @@ def main():
             if y == 2012:
                 continue
             if y <= 2011:
-                col = ee.ImageCollection("LANDSAT/LT05/C02/T1_L2").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(landsat(("SR_B3", "SR_B2", "SR_B1"))); px, sensor = 30, "Landsat 5"
+                col = ee.ImageCollection("LANDSAT/LT05/C02/T1_L2").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(landsat(("SR_B3", "SR_B2", "SR_B1", "SR_B4"))); px, sensor = 30, "Landsat 5"
             elif y <= 2015:
-                col = ee.ImageCollection("LANDSAT/LC08/C02/T1_L2").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(landsat(("SR_B4", "SR_B3", "SR_B2"))); px, sensor = 30, "Landsat 8"
+                col = ee.ImageCollection("LANDSAT/LC08/C02/T1_L2").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(landsat(("SR_B4", "SR_B3", "SR_B2", "SR_B5"))); px, sensor = 30, "Landsat 8"
             else:
                 col = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterDate(f"{y}-10-01", f"{y}-12-01").filterBounds(pt).map(s2); px, sensor = 10, "Sentinel-2"
             if col.size().getInfo() == 0:
@@ -65,7 +67,7 @@ def main():
                                                   "affineTransform": {"scaleX": px, "shearX": 0, "translateX": x0,
                                                                       "shearY": 0, "scaleY": -px, "translateY": y0},
                                                   "crsCode": crs}})
-            rgb = np.stack([np.array(arr[b], dtype=np.float32) for b in "rgb"], axis=-1)
+            rgb = np.stack([np.array(arr[b], dtype=np.float32) for b in "rgbn"], axis=-1)
             rgb[rgb == -9] = np.nan
             if np.isnan(rgb).mean() > 0.1:
                 print(site, y, "too cloudy, skipped", flush=True)

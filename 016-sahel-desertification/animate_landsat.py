@@ -6,7 +6,9 @@
 # Each frame is one year, 1985-2024. For each site:
 #   left     the satellite picture of the 6 x 6 km site in true colour: the clearest
 #            October-November scene (fetch_site_pictures.py), Landsat at 30 m to 2015 and
-#            Sentinel-2 at 10 m from 2016, one brightness stretch for all three bands. Landsat 5's archive over West Africa has
+#            Sentinel-2 at 10 m from 2016, one brightness stretch for all three bands. Bright
+#            green marks pixels clearly greener than the scene's own background (NDVI 0.05
+#            above its median): shrubs, trees and wet hollows. Landsat 5's archive over West Africa has
 #            long gaps, so the most recent available scene is shown, labelled with its
 #            sensor and date. Each scene is brightness-stretched on its own,
 #            because dry-season dust haze varies from year to year; the chart is the measure
@@ -39,6 +41,8 @@ NAVY, BLUE, LIGHT, RED, GREY = "#0b2545", "#1f6fb2", "#8cc0e8", "#c0392b", "#8a8
 CMAP = ListedColormap(["#b08850", "#f2e6cf", "#2e7d32"])        # degraded, empty, vegetated
 SITES = {"gourma": "Gourma, Mali", "fakara": "Fakara, Niger"}
 B0, D0, SEED_RAIN, N = 0.45, 0.3, 0.03, 200
+VEG_MARGIN = 0.05                      # overlay: NDVI this far above the scene's median
+VEG_RGBA = (0.0, 0.9, 0.35, 0.8)       # bright green
 YEARS = list(range(1985, 2025))
 
 
@@ -63,6 +67,16 @@ def run_lattice(site):
         if y in YEARS:
             grids[y] = land.grid.copy(); cover[y] = land.cover()
     return grids, pd.Series(cover), p3
+
+
+def veg_overlay(img):
+    """Pixels clearly greener than the scene's own background (shrubs, trees, wet hollows).
+    Relative to each scene, because October-November grass is green in some years and
+    dry in others; the overlay shows where vegetation is, not how much."""
+    nd = (img[..., 3] - img[..., 0]) / (img[..., 3] + img[..., 0] + 1e-6)
+    mask = nd > np.nanmedian(nd) + VEG_MARGIN
+    over = np.zeros(mask.shape + (4,)); over[mask] = VEG_RGBA
+    return over
 
 
 def stretch(rgb):
@@ -94,7 +108,8 @@ def main():
             if avail:
                 k = avail[-1]
                 im = D["rgb"][k]
-                ax.imshow(stretch(im), extent=(0, 200, 200, 0))
+                ax.imshow(stretch(im[..., :3]), extent=(0, 200, 200, 0))
+                ax.imshow(veg_overlay(im), extent=(0, 200, 200, 0), interpolation="nearest")
                 ax.set_title(f"{SITES[site]}: {D['sensors'][k]}, {D['dates'][k]}", loc="left", fontsize=10)
             else:
                 ax.text(0.5, 0.5, "no clear scene yet", ha="center", va="center", transform=ax.transAxes, color=GREY)
@@ -121,10 +136,12 @@ def main():
             if r == 0:
                 h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
                 ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=8.5, loc="upper left")
-        fig.text(0.13, 0.04, "lattice:", fontsize=9)
+        fig.patches.append(plt.Rectangle((0.125, 0.038), 0.012, 0.016, transform=fig.transFigure, color=VEG_RGBA[:3], ec="0.5"))
+        fig.text(0.14, 0.04, "satellite: vegetation (NDVI 0.05 above the scene's median)", fontsize=9)
+        fig.text(0.50, 0.04, "lattice:", fontsize=9)
         for k, (lab, col) in enumerate([("shrubs and trees", "#2e7d32"), ("bare, fertile", "#f2e6cf"), ("degraded", "#b08850")]):
-            fig.patches.append(plt.Rectangle((0.18 + 0.12 * k, 0.038), 0.012, 0.016, transform=fig.transFigure, color=col, ec="0.5"))
-            fig.text(0.195 + 0.12 * k, 0.04, lab, fontsize=9)
+            fig.patches.append(plt.Rectangle((0.54 + 0.11 * k, 0.038), 0.012, 0.016, transform=fig.transFigure, color=col, ec="0.5"))
+            fig.text(0.555 + 0.11 * k, 0.04, lab, fontsize=9)
         return fig
 
     images = []
