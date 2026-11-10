@@ -8,7 +8,7 @@ In commodities the hedger who matters most is often the producer: a farm that kn
 
 ## The shock
 
-Russia had its worst heatwave on record through July 2010. On 5 August it banned grain exports, and European wheat, which competes with Black Sea grain for the same buyers, jumped with it. Wheat went from 136 euros a tonne on 3 May to 189 on 31 August, up 39%. Seen from May, with the volatility the market had shown, a price that high had about a 3% chance.
+Russia had its worst heatwave on record through July 2010. On 5 August it banned grain exports, and European wheat, which competes with Black Sea grain for the same buyers, jumped with it. Wheat went from 136 euros a tonne on 3 May to 189 on 31 August, up 39%. Seen from May, with the volatility the market had shown, a price that high had about a 3% chance under Black-76's risk-neutral (zero-drift) model.
 
 ## The setup
 
@@ -46,7 +46,7 @@ The eight hedges are the ones producers use day to day:
 
 We see that in hindsight the producer did best unhedged. This is because a price spike is good news for a seller, and every hedge gave some of it away. Of the hedges, the ones that kept the upside did best: the put spread and the long put lost only their premium. Short futures gave up the whole rally, and the collar and the three-way were capped at their call strikes.
 
-Judged on 3 May, before the event, the ranking reverses. By the worst 5% of outcomes, short futures and the collar protected the producer best, and staying unhedged was the most dangerous. The put is in between, giving a decent floor at a known cost while keeping the upside. This means the right hedge depends on what the producer can't afford. A farm that must cover its costs whatever happens should lock in a price, and one that can stand a bad year but hates missing a rally should buy puts. In 2010 the second kind did well, but that was about a 1-in-30 outcome.
+Judged on 3 May, before the event, the ranking reverses. By the average of the worst 5% of outcomes under the same model (the expected shortfall, or CVaR at 5%), short futures and the collar protected the producer best, and staying unhedged was the most dangerous. The put is in between, giving a decent floor at a known cost while keeping the upside. This means the right hedge depends on what the producer can't afford. A farm that must cover its costs whatever happens should lock in a price, and one that can stand a bad year but hates missing a rally should buy puts. In 2010 the second kind did well, but that was about a 1-in-30 outcome.
 
 ## The other side: an Italian miller
 

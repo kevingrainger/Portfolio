@@ -6,7 +6,7 @@
 
 ## Why I did this
 
-Seismology is built on signal processing, which ties it to my other projects, and earth systems are where my passion in applied mathematics lies. Small earthquakes under Los Angeles are buried in traffic noise. I wanted to see which denoising methods keep what a seismologist needs from a recording: the arrival time, and which way the ground moved first. We score filters, wavelets and stacking from seismology against two methods from random matrix theory (random-matrix cleaning, and minimum-variance weighting of an array) on 3,000 noisy recordings from the Southern California Seismic Network.
+Seismology is built on signal processing, which ties it to my other projects, and earth systems are where my passion in applied mathematics lies. Small earthquakes under Los Angeles are buried in traffic noise. I wanted to see which denoising methods keep what a seismologist needs from a recording: the arrival time, and which way the ground moved first. We score filters, wavelets and stacking from seismology against two methods from random matrix theory, on 3,000 noisy recordings from the Southern California Seismic Network. The first is a PCA template with a Marchenko–Pastur cut-off (the random-matrix cleaning below). That cut-off assumes white, independent noise, and seismic noise is neither. The second is minimum-variance weighting of an array.
 
 At first the random-matrix method picked 98% of arrivals. This was because every recording in the dataset has its arrival at the same point in the window. When we move the arrival at random, it drops to 60%, barely above doing nothing (56%).
 

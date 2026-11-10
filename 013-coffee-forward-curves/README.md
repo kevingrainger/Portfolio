@@ -63,7 +63,7 @@ Each quarter from 2008 to 2025, we feed the ECMWF forecast issued that month thr
 
 We see the forecast beat climatology on the weather. Its skill score against climatology is 0.41 for Vietnam's heat and 0.13 for Vietnam's dryness (0 would mean no better than a normal season). For Brazil's dryness it is close to zero (0.02).
 
-On the price it helps a little. Driven by the forecast, the importer's calls were right 49% of the time for arabica and 50% for robusta, against 43% and 40% with climatology. On average the forecast-driven rule did about 0.6 percentage points of the purchase price better per quarter for arabica and 0.7 for robusta than the climatology rule. This is not enough to rely on alone, though. Half the calls were still wrong, and the average saving against waiting is close to zero. This is because the weather-price link, a correlation of about 0.15, is too weak for a rule that calls every quarter.
+On the price it does not clearly help. Driven by the forecast, the importer's calls were right 49% of the time for arabica and 50% for robusta, against 43% and 40% with climatology. With about 70 quarters the standard error on each rate is about ±6 points, so these cannot be told apart from a coin flip or from climatology. On average the forecast-driven rule did about 0.6 percentage points of the purchase price better per quarter for arabica and 0.7 for robusta than the climatology rule. This is not enough to rely on alone, though. Half the calls were still wrong, and the average saving against waiting is close to zero. This is because the weather-price link, a correlation of about 0.15, is too weak for a rule that calls every quarter.
 
 ### The forecast in the tail
 

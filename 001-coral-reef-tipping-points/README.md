@@ -20,7 +20,7 @@ Our reef is a 60 × 60 lattice. Each cell *x* is in one of four states: healthy 
 P(accept)  =  min(1, exp(−β ΔE))
 ```
 
-where ΔE is the change in the cell's energy and β sets how noisy the reef is. A lower energy is a more likely state. For a healthy patch the energy can be written as such:
+where ΔE is the change in the cell's energy and β sets how noisy the reef is. Strictly, this is a Potts-inspired stochastic cellular automaton with Metropolis-type acceptance rather than a Potts model in the Gibbs sense: all cells update at once, the proposals depend on each cell's stress, a little noise is added to ΔE, and death and colonisation are one-way steps, so detailed balance fails and there is no equilibrium distribution. The interaction-range runs below use the original energy in `coral_model.py` (degree heating days capped at 8, with recovery terms), and the Scott Reef fit uses the energy written out here (`coral_crw.py`). A lower energy is a more likely state. For a healthy patch the energy can be written as such:
 
 ```
 E_H(x)  =  −J f_H(x)  −  ε_H  +  s · max(DHW(x) − D₅₀(x), 0)

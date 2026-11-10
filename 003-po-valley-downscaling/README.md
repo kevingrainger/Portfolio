@@ -103,7 +103,7 @@ loss  =  (1/|S|) Σ_{s∈S} (θ̂_s − y_s)²   +   pinball(5%, 95%)   +   λ �
 r     =  A θ̂ − b
 ```
 
-S is the fold's training stations and Ω every land cell in the tile. In our case A θ = b is the same discretised heat budget as in the physics model: same upwind and five-point stencil, same fitted κ, τ_a and τ_s(x). So r is the heating that the network's map needs and the equation does not supply. This is the soft-constraint form of physics-informed learning (Raissi, Perdikaris & Karniadakis 2019; Karniadakis et al. 2021). The physics term needs no labels. It reaches every cell between the stations, which is where a data-only network has nothing to learn from.
+S is the fold's training stations and Ω every land cell in the tile. In our case A θ = b is the same discretised heat budget as in the physics model: same upwind and five-point stencil, same fitted κ, τ_a and τ_s(x). So r is the heating that the network's map needs and the equation does not supply. This is the soft-constraint form of physics-informed learning (Raissi, Perdikaris & Karniadakis 2019; Karniadakis et al. 2021). Strictly it is a physics-regularised U-Net: the heat budget enters as a discretised residual in the loss, not through automatic differentiation of a continuous network as in a Raissi-style PINN. The physics term needs no labels. It reaches every cell between the stations, which is where a data-only network has nothing to learn from.
 
 We report λ at four settings instead of tuning it, each trained per fold for 1,200 steps.
 

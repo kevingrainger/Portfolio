@@ -47,7 +47,7 @@ Run as a four-month low-water episode at 55 cm, with a disrupted firm staying do
 
 ## Part II, case B: structured credit
 
-At the same 1.9% mean loss as a Vasicek model, the 15–30% tranche carries 46× the expected loss and equity about 40% less. This means risk moves up the capital structure.
+At the same 1.9% mean loss as a Vasicek model with ρ = 0.2, the 15–30% tranche carries 46× the expected loss (the note shows the ratio runs from 9 to several thousand as ρ goes from 0.3 to 0.1) and equity about 40% less. This means risk moves up the capital structure.
 
 | | |
 |:-:|:-:|

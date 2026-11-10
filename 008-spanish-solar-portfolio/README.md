@@ -1,12 +1,12 @@
 # Correlated risk structures in a Spanish solar portfolio
 
-**How correlated the output of 25 Spanish solar regions is, and why taking each site's P95 on its own underprices a fleet's risk: in 2023 the 25 sites behaved like three or four independent ones.**
+**How correlated the output of 25 Spanish solar regions is, and why taking each site's P95 on its own underprices a fleet's risk: in 2023 the 25 sites behaved like three or four independent ones (on the hourly clear-sky index).**
 
 ![Correlation with Seville by season, and against distance for every site pair](figures/cover.png)
 
 A solar fleet spread across a country should smooth itself out: when it is cloudy in Seville, it may be sunny in Zaragoza. How much smoothing we get depends on one number, the distance over which the weather stays correlated. In our case we build the weather data the way ECMWF's AI forecasting models consume it (an Anemoi dataset), then uses it to measure that distance for 25 Spanish solar regions, season by season.
 
-Our first answer was an artefact. On real data every site seemed almost perfectly correlated with every other. This was because of a daily shape left over by the clear-sky model, which every site shares and which did not show on synthetic data. Once it is removed we see correlation fall to 1/e over about 350 km in winter, 440 km in spring and summer, and 670 km in autumn. This means twenty-five sites diversify like only 3-4 independent ones.
+Our first answer was an artefact. On real data every site seemed almost perfectly correlated with every other. This was because of a daily shape left over by the clear-sky model, which every site shares and which did not show on synthetic data. Once it is removed we see correlation fall to 1/e over about 350 km in winter, 440 km in spring and summer, and 670 km in autumn. This means twenty-five sites diversify like only 3-4 independent ones. Here and below, the effective number of sites is the participation ratio of the correlation matrix's eigenvalues, (Σλ)²/Σλ², and it depends on the data it is measured on: 3-4 on the hourly clear-sky index for 2023 (raw and cleaned, by season), 2.1 on daily output with the season removed, and 1.7 on daily anomalies over the 2026 forecast test period.
 
 We expected summer's local convective clouds to shorten the correlations, but that seasonal pattern does not appear. Summer's correlation drops faster over the first 100 km, then lingers at longer distances.
 
@@ -74,7 +74,7 @@ At a single site AIFS scores higher than IFS from day 2 (0.73 against 0.57 by da
 
 IFS days 6 and 7 are left out. In the archive part of each of those days is missing: on clear June days the IFS day-6 forecast is about 40% of every other lead's, and its skill drops from 0.85 to 0.35 in a day, which no real forecast does. ECMWF's open IFS data switches from 3-hourly to 6-hourly steps after 144 hours, which is where the daily totals break. An earlier version of this page compared the two models at days 6-7 on those broken values.
 
-The weather's daily anomaly stays correlated over L = 506 km, so the 25 sites act like 1.7 independent ones. The day-3 forecast errors decorrelate over 233 km (AIFS) and 167 km (IFS), so 3.0 and 4.3 independent sites. This means pooling the fleet cancels forecast error much better than it diversifies the weather. This is why fleet skill is higher than single-site skill. IFS, whose errors are the most local, gains the most from pooling.
+The weather's daily anomaly stays correlated over L = 506 km, so over the 2026 test period the 25 sites act like 1.7 independent ones. The day-3 forecast errors decorrelate over 233 km (AIFS) and 167 km (IFS), so 3.0 and 4.3 independent sites. This means pooling the fleet cancels forecast error much better than it diversifies the weather. This is why fleet skill is higher than single-site skill. IFS, whose errors are the most local, gains the most from pooling.
 
 A straight-line correction per site and lead, trained on the first 60% of days, adds nothing to either model. It is kept in `aifs/results/skill.csv`.
 
