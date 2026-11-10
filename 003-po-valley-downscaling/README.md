@@ -4,9 +4,13 @@
 
 ![Daily maximum temperature at 1 km draped over the terrain, hottest July 2022 day](figures/cover.png)
 
-ERA5-Land describes the Po Valley in boxes about 9 km across. Gridded station products such as E-OBS fill the map by interpolating stations, and stop returning the stations in the process. This project builds daily maximum temperature on a 1 km grid for June to August 2021-2023 under two constraints: between stations the surface obeys a reduced heat-budget equation in which each land-cover class couples the air to the ground at its own rate, and at stations it equals the observation exactly. XGBoost learns the heating the equation leaves out and returns it to the equation as a prior. A U-Net trained on the thermometers with the heat budget in its loss (a physics-informed network) is the best model on the hottest days.
+## Why I did this
 
-**Data.** The method was built and tested first on simulated daily fields in the shape of the real products, with a known truth behind them (the sections below). It has since been run on the real data: ERA5-Land, MODIS land surface temperature, terrain and land cover from Earth Engine, and the readings of 38 stations, scored at stations held out in 50 km blocks in 2023.
+In my work in quantitative climate risk at Wieldmore I became interested in regional climate models: smaller, region-specific models of a mesoclimate, especially for Europe's industrial belts. A region like the Po Valley is small enough to put a PDE mesh and machine learning on directly, and it has two rich sources of data: ERA5 and Copernicus gridded data, and a dense network of weather stations. The interesting question is what you give up when you leave a physically continuous system like ERA5. Once you cut out a region and enforce boundaries, you are at the mercy of the boundary conditions.
+
+ERA5-Land describes the Po Valley in boxes about 9 km across. Gridded station products such as E-OBS fill the map by interpolating stations, and stop returning the stations in the process. In our case we build daily maximum temperature on a 1 km grid for June to August 2021-2023 under two constraints. Between stations the surface obeys a reduced heat-budget equation, in which each land-cover class couples the air to the ground at its own rate. At stations it equals the observation exactly. XGBoost learns the heating the equation leaves out and returns it to the equation as a prior. A U-Net trained on the thermometers with the heat budget in its loss (a physics-informed network) is the best model on the hottest days.
+
+**Data.** The method was built and tested first on simulated daily fields in the shape of the real products, with a known truth behind them (from "The model" onwards below). It has since been run on the real data: ERA5-Land, MODIS land surface temperature, terrain and land cover from Earth Engine, and the readings of 38 stations, scored at stations held out in 50 km blocks in 2023 (`results_real/`).
 
 ## On the real data
 
@@ -22,17 +26,11 @@ ERA5-Land describes the Po Valley in boxes about 9 km across. Gridded station pr
 | Physics-informed network | 1.60 | 1.78 |
 | Physics-informed network, heavier physics, anchored | 1.64 | 1.60 |
 
-- **Every regional model beats ERA5-Land by about 0.3 K,** a sixth of its error.
-- **The best models are level.** Kriging, the physics and the physics-informed network all sit within 0.05 K of each other over all days; with 38 stations they can't be separated.
-- **The physics helps the network.** Putting the heat budget in the loss takes the network from 1.71 K to 1.60 K, and on the hottest days the anchored version is the best model (1.60 K).
-- **The XGBoost prior doesn't survive the real data** (1.75 K): what it learned on the simulation doesn't transfer.
+We see every regional model beat ERA5-Land by about 0.3 K, a sixth of its error. Kriging, our physics model and the physics-informed network sit within 0.05 K of each other over all days, and with 38 stations we cannot separate them. Putting the heat budget in the loss takes the network from 1.71 K to 1.60 K, and on the hottest days the anchored version is the best model (1.60 K). The XGBoost prior does not carry over from the simulation (1.75 K).
 
 ![The physics-informed network on the real data](figures/real/fig8_physics_informed_real.png)
 
-
-- **The constraint holds.** On all 276 days the surface returns every station to within 10⁻¹² K. Before any data, the solver recovered planted parameters exactly when its physics was complete, and to within 25% (relaxation times) when it was not.
-- **Anchored physics matches regression-kriging; it does not clearly beat it.** At stations in held-out 50 km blocks in 2023, RMSE falls from 1.34 K (ERA5-Land) to 1.03 K (physics only), 0.83 K (anchored) and 0.79 K (with the XGBoost prior). Regression with kriged residuals scores 0.85 K, and the 0.06 K gap has a 95% interval of -0.14 to +0.00 K.
-- **The physics is local; the statistics give it reach.** The fitted relaxation times are short, so a station's footprint is a plume a few kilometres long. The wind term is worth 0.045 K. The fitted mixing coefficient is forty times smaller than the scheme's own numerical diffusion and cannot be interpreted.
+The constraint holds: on all 276 days the surface returns every station to within 10⁻¹² K. The fitted relaxation times are short, so a station's footprint is a plume only a few kilometres long. This means the physics reaches only a few kilometres from each station, and the statistical prior has to carry it further. The wind term is worth 0.045 K. The fitted mixing coefficient is forty times smaller than the scheme's own numerical diffusion, so it cannot be interpreted.
 
 | | |
 |:-:|:-:|
@@ -58,7 +56,9 @@ q  = q̂ + W⁻¹Gᵀ (G W⁻¹ Gᵀ)⁻¹ d             θ = A⁻¹(b + q)     
 
 Parameters are fitted with adjoint gradients: one extra solve per day gives the derivative with respect to all eight.
 
-## Skill at held-out stations, 2023
+## Method check on simulated data: skill at held-out stations, 2023
+
+Everything from here to the end of the neural-network sections is on the simulated daily fields, where the true temperature at every cell is known (`results/`). Before any data, the solver recovered planted parameters exactly when its physics was complete, and to within 25% (relaxation times) when it was not. We see anchored physics match regression-kriging without clearly beating it. RMSE falls from 1.34 K (ERA5-Land) to 1.03 K (physics only), 0.83 K (anchored) and 0.79 K (with the XGBoost prior), and regression with kriged residuals scores 0.85 K. The 0.06 K gap has a 95% interval of -0.14 to +0.00 K.
 
 | | Model | RMSE (K) | Bias (K) | < 200 m | 200-800 m | > 800 m |
 |---|---|:-:|:-:|:-:|:-:|:-:|
@@ -72,15 +72,15 @@ Parameters are fitted with adjoint gradients: one extra solve per day gives the 
 
 3,341 station-days at 39 stations, five folds of 50 km blocks, parameters fitted on 2021-2022. The simulated E-OBS is interpolated from its own 30-station network, so B2's score reflects that choice. Against the simulation's hidden truth at every land cell the ranking is the same (1.22 K, 0.85 K, 0.63 K for B0, M1, M2) and the XGBoost prior adds nothing at map level.
 
-## Two neural networks: an emulator, then a physics-informed one
+## Two neural networks: an emulator, then a physics-informed one (simulated data)
 
 The usual way to put a neural network into downscaling is to train it on a dense target. Here there are two ways to do that, and they ask different questions.
 
 ### 1. An emulator of the physics
 
-A small **U-Net** (Ronneberger, Fischer & Brox 2015), the standard image-to-image network in statistical downscaling (Baño-Medina, Manzanas & Gutiérrez 2020). It takes 14 coarse and static maps (ERA5-Land, the surface-temperature excess, wind, terrain and six land-cover fractions) and returns a 1 km field, plus a 5% and a 95% quantile. It has 120,000 parameters and is written in JAX.
+We use a small U-Net (Ronneberger, Fischer & Brox 2015), the standard image-to-image network in statistical downscaling (Baño-Medina, Manzanas & Gutiérrez 2020). It takes 14 coarse and static maps (ERA5-Land, the surface-temperature excess, wind, terrain and six land-cover fractions) and returns a 1 km field, plus a 5% and a 95% quantile. It has 120,000 parameters and is written in JAX.
 
-Its target is the anchored physics surface (M2), built for each fold **without that fold's stations**. So it is an **emulator**: it learns to reproduce the physics model from coarse inputs alone, without running the solver or seeing stations. This is not a fair contest with the physics. It shows how much of the anchored surface can be predicted from the coarse fields. Stations remain the ground truth for scoring.
+Its target is the anchored physics surface (M2), built for each fold without that fold's stations. This means it is an emulator: it learns to reproduce the physics model from coarse inputs alone, without running the solver or seeing stations. This is not a fair contest with the physics. It shows how much of the anchored surface can be predicted from the coarse fields. Stations remain the ground truth for scoring.
 
 | | Model | RMSE (K) | Bias (K) | Hottest 5% of days | < 200 m | 200-800 m | > 800 m |
 |---|---|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -90,9 +90,9 @@ Its target is the anchored physics surface (M2), built for each fold **without t
 | M2 | Physics, anchored | 0.83 | +0.04 | 0.80 | 0.77 | 0.73 | 1.09 |
 | M4 | **Physics, anchored, emulator prior** | **0.87** | +0.08 | 0.83 | 0.84 | 0.73 | 1.11 |
 
-- **Its RMSE matches the physics-only model (1.03 K), but it does worse on the hottest days (1.04 K against 0.86 K).** An emulator smooths its target, and the extremes are what get smoothed away.
-- **As a prior it adds nothing.** A prior learned from the anchored surface carries no information that the anchoring does not already supply.
-- **Its 90% interval held only 66% of 2023 readings.** It was trained against a smooth surface, not against thermometers. **Conformalised quantile regression** (Romano, Patterson & Candès 2019) widens the interval by the 90th percentile of the 2022 misses, measured at each fold's own held-out stations. In 2023 the interval then holds 86%, with a mean width of 3.0 K.
+We see the emulator's RMSE match the physics-only model (1.03 K), but it does worse on the hottest days (1.04 K against 0.86 K). This is because an emulator smooths its target, and the extremes are what get smoothed away. As a prior it adds nothing, since a prior learned from the anchored surface carries no information that the anchoring does not already supply.
+
+Its 90% interval held only 66% of 2023 readings. This is because it was trained to match a smooth surface and never saw the thermometers. Conformalised quantile regression (Romano, Patterson & Candès 2019) widens the interval by the 90th percentile of the 2022 misses, measured at each fold's own held-out stations. In 2023 the interval then holds 86%, with a mean width of 3.0 K.
 
 ### 2. A physics-informed network, trained on thermometers
 
@@ -103,9 +103,9 @@ loss  =  (1/|S|) Σ_{s∈S} (θ̂_s − y_s)²   +   pinball(5%, 95%)   +   λ �
 r     =  A θ̂ − b
 ```
 
-S is the fold's training stations and Ω every land cell in the tile. A θ = b is exactly the discretised heat budget of the physics model: same upwind and five-point stencil, same fitted κ, τ_a and τ_s(x). So r is the heating that the network's map needs and the equation does not supply. This is the soft-constraint form of physics-informed learning (Raissi, Perdikaris & Karniadakis 2019; Karniadakis et al. 2021). The physics term needs no labels. It reaches every cell between the stations, which is exactly where a data-only network has nothing to learn from.
+S is the fold's training stations and Ω every land cell in the tile. In our case A θ = b is the same discretised heat budget as in the physics model: same upwind and five-point stencil, same fitted κ, τ_a and τ_s(x). So r is the heating that the network's map needs and the equation does not supply. This is the soft-constraint form of physics-informed learning (Raissi, Perdikaris & Karniadakis 2019; Karniadakis et al. 2021). The physics term needs no labels. It reaches every cell between the stations, which is where a data-only network has nothing to learn from.
 
-λ is a dial, not a tuned hyperparameter. All four settings are reported, each trained per fold for 1,200 steps.
+We report λ at four settings instead of tuning it, each trained per fold for 1,200 steps.
 
 | λ | RMSE (K) | Hottest 5% of days | > 800 m | 90% interval holds | Truth RMSE, every land cell | Anchored RMSE | Anchored, hottest 5% |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -114,10 +114,11 @@ S is the fold's training stations and Ω every land cell in the tile. A θ = b i
 | 0.3 | 1.05 | 0.94 | 1.23 | 81% | 0.84 | 0.87 | 0.77 |
 | 3 | 1.05 | **0.85** | **1.20** | **82%** | **0.84** | 0.86 | **0.75** |
 
-- **At training stations the physics costs accuracy; at unseen stations it pays.** On a validation month at the training stations, λ = 3 scores 0.83 K against 0.81 K for λ = 0: the constraint stops the network fitting those thermometers as closely. At held-out stations every λ > 0 beats λ = 0, and at every land cell the error falls from 0.89 K to 0.84 K. That is the behaviour expected of a regulariser that carries real information.
-- **The gain is largest on the hottest days.** There RMSE falls by a quarter, from 1.12 K to 0.85 K. Heatwave days are rare in the training data, so a data-only network has too few examples to learn them from. The heat budget holds every day, and it holds on those days too.
-- **Anchored, it is the best model on the hottest days.** Using the λ = 3 network as the prior of the station anchoring gives 0.75 K on the hottest 5%, ahead of the XGBoost prior (0.78 K) and the plain physics (0.80 K). Over all days, M3 remains best (0.79 K against 0.86 K).
-- **The data-only network is the worst of all the networks.** Trained on 39 thermometers, it overfits them. The emulator avoided this only by borrowing the physics model's dense surface. The physics-informed network gets that information from the equation itself rather than from the solver's output.
+The physics term costs a little accuracy at the training stations and gains it at unseen ones. On a validation month at the training stations, λ = 3 scores 0.83 K against 0.81 K for λ = 0, because the constraint stops the network fitting those thermometers as closely. At held-out stations every λ > 0 beats λ = 0, and at every land cell the error falls from 0.89 K to 0.84 K. This is the behaviour expected of a regulariser that carries real information.
+
+The gain is largest on the hottest days, where RMSE falls by a quarter, from 1.12 K to 0.85 K. This is because heatwave days are rare in the training data, so a data-only network has too few examples to learn them from. The heat budget holds on every day, including the rare hot ones, so the physics term still has something to teach there. Using the λ = 3 network as the prior of the station anchoring gives 0.75 K on the hottest 5%, ahead of the XGBoost prior (0.78 K) and the plain physics (0.80 K). Over all days, M3 remains best (0.79 K against 0.86 K).
+
+The data-only network is the worst of all the networks. Trained on 39 thermometers, it overfits them. The emulator avoided this only by borrowing the physics model's dense surface, while the physics-informed network gets that information from the equation itself rather than from the solver's output.
 
 | | |
 |:-:|:-:|
@@ -130,6 +131,8 @@ S is the fold's training stations and Ω every land cell in the tile. A θ = b i
 
 ## Provenance
 
+The real run uses ERA5-Land (Copernicus CDS), MODIS land surface temperature, terrain and land cover (Earth Engine) and Meteostat station readings, fetched by `python download_data.py --ee-project YOUR_PROJECT` (with a GHCN-Daily fallback for stations). The simulated method check uses these tiers:
+
 | Dataset | Tier | Source |
 |---|---|---|
 | Station locations and elevations | real | Meteostat station list (CC BY 4.0), 39 stations with an observed 2021-2023 record |
@@ -139,8 +142,6 @@ S is the fold's training stations and Ω every land cell in the tile. A θ = b i
 | ERA5-Land Tmax, skin temperature, wind | simulated | `tmax1km/simulation.py` |
 | MODIS land surface temperature | simulated | `tmax1km/simulation.py` |
 | E-OBS daily tx | simulated | `tmax1km/simulation.py` |
-
-`python download_data.py --ee-project YOUR_PROJECT` replaces every row with the real product (Copernicus CDS, Earth Engine, Meteostat with a GHCN-Daily fallback). It was written without access to those services and has not been run end to end.
 
 ## Limits
 

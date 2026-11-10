@@ -6,7 +6,7 @@
 
 Numerical simulation was one of my favourite modules at Trinity, and one of the models we built there was the Potts model: a grid of cells, each in one of a few states, each pulled towards the state of its neighbours. I have always been interested in ecology, and in how ecosystems collapse, and the parallel between a lattice of spins and a reef of coral patches seemed too obvious to leave alone. A patch of coral is healthy, bleached, dead or overgrown, and what happens to it depends on the water temperature and on what is growing next to it.
 
-The best-known reef models (Mumby, Hastings & Edwards 2007) are mean-field: every patch feels the average of the whole reef. Physics has a firm rule about systems like this. Mean-field models exaggerate how sudden and how permanent a change of state is, because they ignore the local survivors that can reseed their surroundings. The aims of this project were:
+The best-known reef models (Mumby, Hastings & Edwards 2007) are mean-field: every patch feels the average of the whole reef. From physics we know that mean-field models exaggerate how sudden and how permanent a change of state is, because they ignore the local survivors that can reseed their surroundings. The aims of this project were:
 
 1. rebuild my undergraduate Potts model of a reef, fast enough to run thousands of times,
 2. change how far the interactions reach, from four neighbours to the whole reef, and see whether the reef tips and stays tipped,
@@ -45,7 +45,7 @@ To look for a tipping point we warm the water slowly, hold it, then cool it back
 
 ![Hysteresis loops for four interaction ranges](figures/hero.png)
 
-We see the reef get stuck at every interaction range. Once heat kills enough coral, seaweed takes the space, and cooling the water does not bring the coral back. The loop is about 60% wider when every cell feels the whole reef than when it feels its four nearest neighbours. This means the mean-field model does exaggerate collapse, as the physics suggested, and for the reason it suggested: with short-range coupling, surviving patches reseed the cells next to them.
+We see the reef get stuck at every interaction range. Once heat kills enough coral, seaweed takes the space, and cooling the water does not bring the coral back. Our loop is about 60% wider when every cell feels the whole reef than when it feels its four nearest neighbours. This means the mean-field model does exaggerate collapse, as the physics suggested, and for the reason it suggested: with short-range coupling, surviving patches reseed the cells next to them.
 
 I expected cleaner dynamics than this. We also found two negative results. How *fast* the water warms barely matters, but how hot it gets does. And none of the classic early-warning signals (rising variance and autocorrelation before a transition, Scheffer et al. 2009) fire before the collapse, because in our case the slide is gradual rather than sudden.
 
@@ -57,7 +57,7 @@ The first version was checked against a bleaching curve in `Coral temps.xlsx`. W
 
 Our target is now 65 site surveys by the Australian Institute of Marine Science (AIMS) at Scott Reef on 13–20 April 2016, from the Global Coral Bleaching Database (van Woesik & Kratochwill 2022). Each site reports bleaching as a category: 6 sites at 30–60%, 24 at 60–90% and 35 above 90%. The heat forcing is NOAA's daily DHW for the Scott–Ashmore station.
 
-The other change came from the literature. Corals in one reef differ: the most and least heat-tolerant tenth of colonies differ by 4–5 DHW (Humanes et al. 2022). We therefore give each cell its own tolerance D₅₀(x) ~ N(μ_D, σ_D²), drawn once and smoothed so neighbouring colonies are alike. In physics terms the uniform field of the Potts model becomes a random field.
+The other change came from the literature. Corals in one reef differ: the most and least heat-tolerant tenth of colonies differ by 4–5 DHW (Humanes et al. 2022). This is why we give each cell its own tolerance D₅₀(x) ~ N(μ_D, σ_D²), drawn once and smoothed so neighbouring colonies are alike. In physics terms the uniform field of the Potts model becomes a random field.
 
 Fitting a lattice model is not easy, because there is no likelihood to write down, and we can only simulate it. I first tried tuning it with Optuna, and it was hard to get anything that behaved like an actual reef rather than collapsing completely. Instead I used simulation-based inference (Cranmer, Brehmer & Louppe 2020):
 
@@ -67,11 +67,11 @@ Fitting a lattice model is not easy, because there is no likelihood to write dow
 
 ## How I checked it
 
-Before using the real survey, we check the inference on 800 simulated reefs it has never seen. For every parameter, the 90% credible interval contains the true value 90% of the time (89.5–90.4%), This means the uncertainty it reports can be trusted. The fitted model then predicts 0.5, 6.7, 20 and 37 sites in the four categories, against 0, 6, 24 and 35 observed.
+Before using the real survey, we check the inference on 800 simulated reefs it has never seen. For every parameter, the 90% credible interval contains the true value 90% of the time (89.5–90.4%). This means the uncertainty it reports can be trusted. The fitted model then predicts 0.5, 6.7, 20 and 37 sites in the four categories, against 0, 6, 24 and 35 observed.
 
 ## What the survey says, and what it can't
 
-The answer is two reefs. We see a bimodal posterior, with a sensitive reef with mean tolerance 4.5 DHW (37% of the posterior), and a tolerant reef at 12.7 DHW with a sharper response to stress (63%). By mid-April both have bleached about 85% of their living coral. This is an identifiability problem. One snapshot, taken at 16.5 DHW, far beyond both thresholds, cannot separate how tolerant the corals are from how steeply they respond once past it.
+We see a bimodal posterior: two reefs fit the survey, a sensitive reef with mean tolerance 4.5 DHW (37% of the posterior), and a tolerant reef at 12.7 DHW with a sharper response to stress (63%). By mid-April both have bleached about 85% of their living coral. This is an identifiability problem. One snapshot, taken at 16.5 DHW, far beyond both thresholds, cannot separate how tolerant the corals are from how steeply they respond once past it.
 
 ![Heat stress and the two reefs that fit the April surveys](figures/fig8_scott_reef_2016.png)
 

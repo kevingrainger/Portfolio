@@ -4,11 +4,15 @@
 
 ![A buried wave, before and after](figures/cover.png)
 
-Small earthquakes under Los Angeles are buried in traffic. I scored denoising methods from seismology (filters, wavelets, stacking) and from quantitative finance (random-matrix cleaning, minimum-variance weighting) on 3,000 noisy recordings from the Southern California Seismic Network. They were judged on what a seismologist needs: the arrival time, and which way the ground moved first.
+## Why I did this
 
-- **A trick exposed.** The random-matrix method picked 98% of arrivals, but only because every recording had its arrival in the same place. Move the arrival and it drops to 60%, barely above doing nothing (56%).
-- **A cleaner waveform isn't a better one.** Wavelets add 3 dB of signal-to-noise but flip the first motion on about one trace in fourteen. A plain bandpass filter is the only method that helps without harm.
-- **The same equation, twice.** The best way to weight an array of sensors is the minimum-variance portfolio from finance. With a road's noise shared between sensors, it beats averaging, but only once its covariance is cleaned the way you'd clean a stock correlation matrix.
+Seismology is built on signal processing, which ties it to my other projects, and earth systems are where my passion in applied mathematics lies. Small earthquakes under Los Angeles are buried in traffic noise. I wanted to see which denoising methods keep what a seismologist needs from a recording: the arrival time, and which way the ground moved first. We score filters, wavelets and stacking from seismology against two methods from random matrix theory (random-matrix cleaning, and minimum-variance weighting of an array) on 3,000 noisy recordings from the Southern California Seismic Network.
+
+At first the random-matrix method picked 98% of arrivals. This was because every recording in the dataset has its arrival at the same point in the window. When we move the arrival at random, it drops to 60%, barely above doing nothing (56%).
+
+Wavelets add 3 dB of signal-to-noise but flip the first motion on about one trace in fourteen. This means a cleaner-looking waveform can be worse for picking. A plain bandpass filter is the only method that helps without doing harm.
+
+For an array of sensors, the best weights are the minimum-variance ones: the weights that give the least noise, given how the noise is correlated between sensors. With a road's noise shared between our sensors, this beats a plain average, but only once that noise covariance is cleaned with random matrix theory (`corrlib`).
 
 | | |
 |:-:|:-:|

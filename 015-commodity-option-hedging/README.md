@@ -12,7 +12,7 @@ Russia had its worst heatwave on record through July 2010. On 5 August it banned
 
 ## The setup
 
-An Italian soft-wheat producer hedges on 3 May 2010 the crop it will sell on 31 August. It would hedge on Euronext (MATIF) milling wheat, but that market's daily 2010 history isn't freely available, so CBOT wheat converted to euros per tonne at each day's EUR/USD rate stands in for it; the two moved together on the Russian ban. Basis to the Italian cash price is ignored and everything is in euros per tonne. Options are European, expire on the sale date and are priced by Black (1976) at the 60-day volatility before 3 May (31% a year), since free option quotes for 2010 don't exist.
+An Italian soft-wheat producer hedges on 3 May 2010 the crop it will sell on 31 August. It would hedge on Euronext (MATIF) milling wheat, but that market's daily 2010 history isn't freely available, so CBOT wheat converted to euros per tonne at each day's EUR/USD rate stands in for it. The two moved together on the Russian ban. Basis to the Italian cash price is ignored and everything is in euros per tonne. Options are European, expire on the sale date and are priced by Black (1976) at the 60-day volatility before 3 May (31% a year), since free option quotes for 2010 don't exist.
 
 The eight hedges are the ones producers use day to day:
 
@@ -44,10 +44,9 @@ The eight hedges are the ones producers use day to day:
 | Zero-cost collar | 145 | 130 |
 | Short futures | 136 | 136 |
 
-- **In hindsight the producer did best unhedged.** A price spike is good news for a seller, and every hedge gave some of it away.
-- **Of the hedges, the ones that kept the upside won.** The put spread and the long put lost only their premium. Short futures gave up the whole rally, and the collar and the three-way were capped at their call strikes.
-- **Before the event, the ranking reverses.** Judged on 3 May by the worst 5% of outcomes, short futures and the collar protected the producer best, and no hedge was the most dangerous. The put sits in between: a decent floor at a known cost, with the upside kept.
-- **So the right hedge depends on what the producer can't afford.** A farm that must cover its costs whatever happens should lock in a price; one that can stand a bad year but hates missing a rally should buy puts. In 2010 the second kind did well, but that was about a 1-in-30 outcome.
+We see that in hindsight the producer did best unhedged. This is because a price spike is good news for a seller, and every hedge gave some of it away. Of the hedges, the ones that kept the upside did best: the put spread and the long put lost only their premium. Short futures gave up the whole rally, and the collar and the three-way were capped at their call strikes.
+
+Judged on 3 May, before the event, the ranking reverses. By the worst 5% of outcomes, short futures and the collar protected the producer best, and staying unhedged was the most dangerous. The put is in between, giving a decent floor at a known cost while keeping the upside. This means the right hedge depends on what the producer can't afford. A farm that must cover its costs whatever happens should lock in a price, and one that can stand a bad year but hates missing a rally should buy puts. In 2010 the second kind did well, but that was about a 1-in-30 outcome.
 
 ## The other side: an Italian miller
 
@@ -64,13 +63,13 @@ The same shock looks opposite to a buyer. An Italian miller (flour and pasta) th
 | Call spread | 175 | 14 | 181 |
 | Three-way | 176 | 14 | 182 |
 
-- **For the miller, hedging paid.** Buying forward saved €53 a tonne, 28% of the cost, and the collar and the call saved €43-46.
-- **The cheap structures failed in the shock.** The call spread and the three-way cut the premium by capping the protection at +15%, and the price rose 39%, so they saved only €14.
-- **One shock, two lessons.** The producer regretted hedging and the miller was saved by it. Which side of the market a firm is on decides whether a weather shock in another country is a windfall or a loss, and so which hedge it should hold.
+For the miller, hedging paid. Buying forward saved €53 a tonne, 28% of the cost, and the collar and the call saved €43-46. The cheaper structures did much less well in the shock. The call spread and the three-way cut the premium by capping the protection at +15%, and the price rose 39%, so they saved only €14.
+
+The producer regretted hedging and the miller was saved by it. This means which side of the market a firm is on decides whether a weather shock in another country is a windfall or a loss, and so which hedge it should hold.
 
 ## Yield risk: when the harvest moves with the price
 
-A producer's revenue is price times harvest. If the drought that lifts the price also shrinks the harvest, as for a Russian farm in 2010, the crop partly hedges itself and selling the whole expected harvest forward over-hedges. With a yield volatility of 15% a year, the hedge ratio that minimises the spread of revenue is 100% of the expected harvest when yield and price are unrelated (the Italian producer), 74% at a correlation of -0.3 and 48% at -0.6, where a full hedge is riskier than none. In 2010 a producer inside the drought with a third of its harvest lost and everything sold forward ended with €74 per expected tonne against €127 unhedged: it had to buy back, at the spike, wheat it never grew. `yield_risk.py`
+A producer's revenue is price times harvest. If the drought that lifts the price also shrinks the harvest, as for a Russian farm in 2010, the crop partly hedges itself and selling the whole expected harvest forward over-hedges. With a yield volatility of 15% a year, the hedge ratio that minimises the spread of revenue is 100% of the expected harvest when yield and price are unrelated (the Italian producer), 74% at a correlation of -0.3 and 48% at -0.6, where a full hedge is riskier than none. In 2010 a producer inside the drought with a third of its harvest lost and everything sold forward ended with €74 per expected tonne against €127 unhedged. This is because it had to buy back, at the spike, wheat it never grew. `yield_risk.py`
 
 ![Revenue risk against hedge ratio for three yield-price correlations, and 2010 in hindsight](figures/fig8_yield_risk.png)
 
@@ -80,11 +79,11 @@ The first version of this project took the other side: sell a 3-month at-the-mon
 
 | | |
 |:-:|:-:|
-| ![Error against cost](figures/fig1_frontier.png) | ![The variance surprise](figures/fig3_variance_surprise.png) |
+| ![Error against cost](figures/fig1_frontier.png) | ![Hedge variance](figures/fig3_variance_surprise.png) |
 
 ## Limits
 
-One shock, one producer and one sale date. CBOT in euros stands in for Euronext, so the dollar's moves against the euro are in the price; a real Italian hedge on Euronext would not carry them. Basis to the Italian cash price is ignored, and so is yield risk: a Russian producer that lost its crop in 2010 faced a very different problem, because its quantity fell as the price rose. Options are priced at realised volatility, not market quotes. The continuous front-month series jumps slightly at each roll.
+One shock, one producer and one sale date. CBOT in euros stands in for Euronext, so the dollar's moves against the euro are in the price; a real Italian hedge on Euronext would not carry them. Basis to the Italian cash price is ignored. Yield risk is treated only in the simple model above, with an assumed yield volatility of 15%. Options are priced at realised volatility rather than market quotes. The continuous front-month series jumps slightly at each roll.
 
 ## What I'd do next
 

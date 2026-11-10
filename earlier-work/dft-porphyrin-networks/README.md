@@ -16,7 +16,7 @@ The second half of the question came from my own conclusion in the thesis, that 
 
 ## The idea, from one molecule
 
-Our building block is a porphyrin with fused aryl arms. In the thesis I called them "phenol" arms, but they are phenyl rings with no oxygen. With all four arms fused it is TPP, and with two fused it is DPP. The same two molecules were made on gold by Sun et al. (2020), who call them PorA₄ and PorA₂. They found something worth knowing in advance. PorA₄ is closed-shell, with every electron paired, while PorA₂ is open-shell, with two unpaired electrons and a triplet ground state.
+Our building block is a porphyrin with fused aryl arms. In the thesis I called them "phenol" arms, but they are phenyl rings with no oxygen. With all four arms fused it is TPP, and with two fused it is DPP. The same two molecules were made on gold by Sun et al. (2020), who call them PorA₄ and PorA₂. Sun et al. found that PorA₄ is closed-shell, with every electron paired, while PorA₂ is open-shell, with two unpaired electrons and a triplet ground state.
 
 To link our units into a chain we have three bridges to choose from: a *weak* bridge is one carbon–carbon bond between arms, a *strong* bridge is three bonds after adding two carbons, and in an *extra-strong* chain the arms are fully fused, so our backbone becomes a graphene-like ribbon. These were the bridges partly or fully made by on-surface synthesis at the time. The metal was zinc, iron, vanadium, cobalt or manganese, chosen to span the d-shell from three electrons (vanadium) to a full ten (zinc).
 
@@ -56,7 +56,7 @@ We can now add a metal with an open d shell. Vanadium and iron bring their d orb
 
 ![Vanadium chain orbitals](figures/fig6_vanadium_chain_orbitals.png)
 
-The thesis renders show the same thing molecule by molecule. Seen from above, the iron porphyrin's highest occupied orbital is a single round lobe on the metal. Turned side-on, it is iron's d<sub>z²</sub> orbital standing straight out of the plane of the ring, with almost nothing on the carbon around it. That is why iron and vanadium carry their spin on the metal, and why an oxygen sitting on top of the metal, right in that lobe, can switch the spin.
+The thesis renders show the same thing molecule by molecule. Seen from above, the iron porphyrin's highest occupied orbital is a single round lobe on the metal. Turned side-on, it is iron's d<sub>z²</sub> orbital standing straight out of the plane of the ring, with almost nothing on the carbon around it.
 
 ![The Fe-TPP HOMO from above and side-on](figures/fig13_fe_dz2_top_and_side.png)
 
@@ -104,7 +104,7 @@ The cobalt chains never settled properly, and even their carbon states did not l
 
 The biggest lesson was about reading my own numbers. The open-shell result was in my table from the start, and I described it as a gap widening because I did not yet know what an open-shell molecule looks like in a closed-shell calculation.
 
-The limits are real, and there are three of them. PBE is known to be unreliable for spin states in iron porphyrins, so a +U correction or a hybrid functional would be the next check. The bare iron chains may depend on where each calculation started, since the spin settled differently from chain to chain. With one metal per unit cell our calculation forces every metal to point the same way, which means it cannot give the coupling between neighbouring spins.
+There are three main limits. PBE is known to be unreliable for spin states in iron porphyrins, so a +U correction or a hybrid functional would be the next check. The bare iron chains may depend on where each calculation started, since the spin settled differently from chain to chain. With one metal per unit cell our calculation forces every metal to point the same way, which means it cannot give the coupling between neighbouring spins.
 
 ## What I'd do next
 

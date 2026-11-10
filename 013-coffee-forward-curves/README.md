@@ -9,7 +9,7 @@ There is a large literature on weather and coffee prices. I started from the Bra
 ## Data
 
 - **Prices.** World Bank Pink Sheet, monthly arabica and robusta, 2004-2026, as log returns.
-- **The standard driver, stripped out first.** Each bean's return is regressed on the month's change in Brazilian reais per dollar and only the residual is kept, as gas was taken out of the Italian power price (009). On these monthly prices the real explains about 4% of each bean's moves.
+- **The standard driver, stripped out first.** We regress each bean's return on the month's change in Brazilian reais per dollar and keep only the residual, as gas was taken out of the Italian power price (009). On these monthly prices the real explains about 4% of each bean's moves.
 - **Weather.** ERA5 for each origin: the worst frost night and three-month dryness over eight producing regions of Brazil, weighted by output; three-month heat and dryness in Vietnam's Central Highlands. El Niño from NOAA's Oceanic Niño Index.
 - **Seasonal forecasts.** ECMWF SEAS5, issued every month since 1993, rain and temperature over both origins for the next three months.
 
@@ -17,7 +17,7 @@ There is a large literature on weather and coffee prices. I started from the Bra
 
 ![Correlation of each hazard with each bean against lag](figures/fig10_lags.png)
 
-A single correlation coefficient undersells weather, which rarely matters and then matters a lot, so four measures are used:
+Weather matters rarely but strongly, which a single correlation coefficient undersells, so we use four measures:
 
 - **Partial correlation** (Gaussian-rank, the real held fixed): Vietnam heat is about 0.17 with each bean, Brazilian dryness 0.13 with robusta.
 - **Lags:** Vietnam heat moves robusta in the same month and leads arabica by about five months.
@@ -47,7 +47,7 @@ The two beans themselves spike together. A Gumbel copula of arabica against robu
 
 ![Arabica-robusta tail dependence, rolling eight years](figures/fig12_bean_tail.png)
 
-**So what for an importer:** buying from the other origin is a hedge that works in ordinary months and fails in the months that matter, and it has been failing more. A global hedge has to be sized for joint weather risk, not for the average correlation.
+For an importer this means buying from the other origin hedges the ordinary months but not the joint extremes, and it has hedged them less and less. A global hedge has to be sized for joint weather risk rather than the average correlation.
 
 ## A weather-informed forward curve
 
@@ -59,19 +59,23 @@ A Kalman filter tracks two hidden states from each day's arabica futures curve s
 
 ![ECMWF forecast skill against climatology, and how often the importer's calls were right](figures/fig16_seasonal.png)
 
-Each quarter from 2008 to 2025, the ECMWF forecast issued that month is fed through the weather-price relationship, learned only from earlier years. If it predicts a rise, the importer buys forward; otherwise it waits three months and buys at the market. The benchmark is the same rule fed climatology: a normal season for the time of year.
+Each quarter from 2008 to 2025, we feed the ECMWF forecast issued that month through the weather-price relationship, learned only from earlier years. If it predicts a rise, the importer buys forward; otherwise it waits three months and buys at the market. The benchmark is the same rule fed climatology: a normal season for the time of year.
 
-- **The forecast beats climatology on the weather.** Its skill score against climatology is 0.41 for Vietnam's heat and 0.13 for Vietnam's dryness (0 would mean no better than a normal season). For Brazil's dryness it is close to zero (0.02).
-- **It helps with the price, a little.** Driven by the forecast, the importer's calls were right 49% of the time for arabica and 50% for robusta, against 43% and 40% with climatology. On average the forecast-driven rule did about 0.6 percentage points of the purchase price better per quarter for arabica and 0.7 for robusta than the climatology rule.
-- **But not enough to rely on alone.** Half the calls were still wrong, and the average saving against simply waiting is close to zero. The weather-price link, a correlation of about 0.15, is too weak for a rule that calls every quarter.
+We see the forecast beat climatology on the weather. Its skill score against climatology is 0.41 for Vietnam's heat and 0.13 for Vietnam's dryness (0 would mean no better than a normal season). For Brazil's dryness it is close to zero (0.02).
 
-**Where the forecast earns its keep: the tail.** A tail rule buys forward only when the forecast puts an origin beyond one standard deviation of its normal season, and otherwise waits. In the 78 months from 2008 to July 2026 when the forecast flagged Vietnam as unusually hot or dry, arabica rose 6.9% over the next three months and robusta 5.5% (90% intervals 5.1-8.8% and 3.7-7.3%), against 1.1% and 0.6% over all months. The result isn't the 2023-25 rally: checked on 2008-2025, without those years the flagged months still rose 5.1% and 3.3% while other months fell, and it holds when the forecast's warming drift is removed. A dry-Brazil flag alone isn't reliable (27 months, intervals spanning zero). For an importer, a hot or dry Vietnam forecast is a signal worth hedging on.
+On the price it helps a little. Driven by the forecast, the importer's calls were right 49% of the time for arabica and 50% for robusta, against 43% and 40% with climatology. On average the forecast-driven rule did about 0.6 percentage points of the purchase price better per quarter for arabica and 0.7 for robusta than the climatology rule. This is not enough to rely on alone, though. Half the calls were still wrong, and the average saving against waiting is close to zero. This is because the weather-price link, a correlation of about 0.15, is too weak for a rule that calls every quarter.
+
+### The forecast in the tail
+
+The forecast is most useful in the tail. A tail rule buys forward only when the forecast puts an origin beyond one standard deviation of its normal season, and otherwise waits. In the 78 months from 2008 to July 2026 when the forecast flagged Vietnam as unusually hot or dry, arabica rose 6.9% over the next three months and robusta 5.5% (90% intervals 5.1-8.8% and 3.7-7.3%), against 1.1% and 0.6% over all months. To check this is not only the 2023-25 rally, we rerun the test on 2008-2025 without those years. The flagged months still rose 5.1% and 3.3% while other months fell, and the result holds when the forecast's warming drift is removed. A dry-Brazil flag alone isn't reliable (27 months, intervals spanning zero). For an importer this means a hot or dry Vietnam forecast is a reason to buy forward.
 
 ![Price change after the forecast flags an extreme season](figures/fig17_tail_rule.png)
 
 `seasonal_backtest.py` · `tail_rule.py`
 
-**2026 so far.** Followed month by month, the rule worked through 2025 and was mixed in 2026. The forecasts issued in July and August 2025 put Vietnam heat above two standard deviations, and robusta rose 26% by November 2025. In 2026 the forecast flagged Vietnam heat from April, and the heat came: the following three months ran 0.9 to 2.2 standard deviations above normal in ERA5. Robusta rose 11% and 8% in the three months after the April and May flags, was flat after June and fell 11% after July, as prices came back from an August peak. The forecasts issued from August to October put Vietnam heat 4 to 5 standard deviations above normal, beyond anything in the record. Part of that is the warming since the 1993-2016 period the forecast is measured against, so each forecast was also measured against the same month in the 15 years before it, using only what was known then. The rule holds: 70 months flagged instead of 78, and arabica rose 6.4% and robusta 4.9% in the following three months (90% intervals 4.5-8.3% and 2.9-7.0%). The latest forecasts are still 2.7 to 4.1 standard deviations above the recent normal, so the extreme reading isn't only the warming. `year_2026.py` · `recent_normal.py`
+### 2026 so far
+
+Followed month by month, the rule worked through 2025 and was mixed in 2026. The forecasts issued in July and August 2025 put Vietnam heat above two standard deviations, and robusta rose 26% by November 2025. In 2026 the forecast flagged Vietnam heat from April, and the heat came: the following three months ran 0.9 to 2.2 standard deviations above normal in ERA5. Robusta rose 11% and 8% in the three months after the April and May flags, was flat after June and fell 11% after July, as prices came back from an August peak. The forecasts issued from August to October put Vietnam heat 4 to 5 standard deviations above normal, beyond anything in the record. Part of that is the warming since the 1993-2016 period the forecast is measured against, so each forecast was also measured against the same month in the 15 years before it, using only what was known then. The rule holds: 70 months flagged instead of 78, and arabica rose 6.4% and robusta 4.9% in the following three months (90% intervals 4.5-8.3% and 2.9-7.0%). The latest forecasts are still 2.7 to 4.1 standard deviations above the recent normal, so the extreme reading isn't only the warming. `year_2026.py` · `recent_normal.py`
 
 ![Vietnam heat forecasts and outcomes, and coffee prices, July 2025 to November 2026](figures/fig18_2026.png)
 
