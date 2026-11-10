@@ -32,11 +32,11 @@ The paper's grove has a million spittlebugs a hectare, 810,000 on our 90 × 90 m
 
 $$E[Q_L] = E[Q_0] + \sum_{l=1}^{L} E[Q_l - Q_{l-1}].$$
 
-Here level $l$ simulates $405 \times 2^l$ spittlebugs, from 405 to 12,960, and $Q$ is the share of trees infected after a year. The corrections are cheap only if each fine run and its coarse partner move together (the coupling). So each fine run contains its coarse partner: its first half of spittlebugs draw the same random numbers as the coarse run's (each run's randomness is split into a stream for the shared spittlebugs and one for the extra ones), the seed carrier is the same, and each tree's symptom delay is drawn once. We run 30 pairs per level. `mlmc.py`
+Here level $l$ simulates $405 \times 2^l$ spittlebugs, from 405 to 12,960, and $Q$ is the share of trees infected after a year. Each correction comes from a pair of runs, one fine ($2N$ spittlebugs) and one coarse ($N$). If the two runs were independent, their difference would be as noisy as the runs themselves and nothing would be saved. So the fine run is built from the coarse one. Its first $N$ spittlebugs are the coarse run's spittlebugs, with the same starting positions and the same random choice at every step (each run's randomness is split into a stream for the shared spittlebugs and one for the extra ones), and the other $N$ have their own random numbers. Both runs also share the first infected spittlebug and each tree's symptom delay, so they follow nearly the same outbreak and their difference is small. This coupling is the standard way multilevel Monte Carlo is used. Without it, a pair that only shares a starting seed gives corrections as noisy as the runs. We run 30 pairs per level. `mlmc.py`
 
 ![Variance and mean of the share infected by level, and the computer time for a given accuracy](figures/fig9_mlmc.png)
 
-We see the coupling work. Paired runs correlate at 0.62-0.78, against about zero when the two runs only share a seed, and the corrections vary half as much as the quantity itself.
+We see the coupling hold. Paired runs correlate at 0.62-0.78, against about zero when the two runs only share a seed, and the corrections vary half as much as the quantity itself.
 
 Multilevel does not pay yet, though. To pin the share infected to within one point, multilevel needs about 2.2 hours of computer time against 1.7 for plain Monte Carlo at the finest level. It pays when the corrections shrink as the levels get finer and fine runs are far dearer than coarse ones. Neither holds here: each doubling of spittlebugs roughly doubles the share infected, and a run costs only about 1.6 times more per level.
 

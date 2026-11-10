@@ -19,7 +19,7 @@
 # Output: results/assimilation.json, figures/fig8_assimilation.png
 
 import copy
-import json
+import json, sys
 import os
 
 import numpy as np
@@ -77,7 +77,13 @@ def main():
     out = dict(true_rate=TRUE_RATE, days=days, observed=obs, true_symptomatic=true_s, rate_mean=mean_r,
                rate_90=[lo_r, hi_r], ess=ess)
     json.dump(out, open(os.path.join(HERE, "results", "assimilation.json"), "w"), indent=1)
+    plot(out)
 
+
+def plot(d):
+    """Draw figures/fig8_assimilation.png from the saved results (python assimilate.py --plot)."""
+    days, true_s, obs, mean_r = d["days"], d["true_symptomatic"], d["observed"], d["rate_mean"]
+    lo_r, hi_r = d["rate_90"]
     plt.rcParams.update({"font.family": "serif", "font.size": 10.5, "axes.spines.top": False, "axes.spines.right": False})
     yrs = np.array(days) / 365
     fig, axes = plt.subplots(1, 2, figsize=(13, 4.4), gridspec_kw=dict(wspace=0.3))
@@ -85,15 +91,18 @@ def main():
     ax.plot(yrs, true_s, color=NAVY, lw=1.6, label="true symptomatic trees")
     ax.plot(yrs, obs, "o", color=RED, ms=4, label="observed (80% detection)")
     ax.set_xlabel("years since the first infection"); ax.set_ylabel("trees")
-    ax.set_title("What the satellite sees", loc="left"); ax.legend(frameon=False, fontsize=9)
+    ax.set_title("Symptomatic trees, true and observed", loc="left"); ax.legend(frameon=False, fontsize=9)
     ax = axes[1]
     ax.fill_between(yrs, lo_r, hi_r, color=LIGHT, alpha=0.7, lw=0, label="90% of the filter's belief")
     ax.plot(yrs, mean_r, color=BLUE, lw=1.8, label="filter's estimate")
     ax.axhline(TRUE_RATE, color=RED, lw=1, ls="--", label="hidden true rate")
     ax.set_xlabel("years since the first infection"); ax.set_ylabel("infection rate (tree susceptibility)")
-    ax.set_title("What the filter learns", loc="left"); ax.legend(frameon=False, fontsize=9)
+    ax.set_title("Particle filter estimate of the infection rate", loc="left"); ax.legend(frameon=False, fontsize=9)
     fig.savefig(os.path.join(HERE, "figures", "fig8_assimilation.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
 
 if __name__ == "__main__":
-    main()
+    if "--plot" in sys.argv:
+        plot(json.load(open(os.path.join(HERE, "results", "assimilation.json"))))
+    else:
+        main()

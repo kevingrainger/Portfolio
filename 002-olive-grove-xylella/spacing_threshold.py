@@ -68,7 +68,7 @@ def plot(df):
     ax.set_ylabel("share of trees ever infected, 3 years")
     ax.set_ylim(-0.03, 1.03)
     ax.legend(loc="lower left")
-    ax.set_title("Planting further apart: where the outbreak stops spreading", loc="left")
+    ax.set_title("Share of trees infected against tree spacing", loc="left")
     figstyle.save(fig, os.path.join(HERE, "figures", "fig_spacing_threshold"))
 
 
