@@ -20,7 +20,7 @@ There is a large literature on weather and coffee prices. I started from the Bra
 Weather matters rarely but strongly, which a single correlation coefficient undersells, so we use four measures:
 
 - **Partial correlation** (Gaussian-rank, the real held fixed): Vietnam heat is about 0.17 with each bean, Brazilian dryness 0.13 with robusta.
-- **Lags:** Vietnam heat moves robusta in the same month and leads arabica by about five months.
+- **Lags:** Vietnam heat moves robusta in the same month and leads arabica by about five months. The Pink Sheet gives each month's average price, which smooths the returns (Working 1960) and can shift a lag. Their lag-1 autocorrelation is 0.18 for arabica and 0.24 for robusta, against −0.13 for month-end prices of the ICE arabica future (KC=F). On those month-end prices the five-month lead still passes its 95% band (0.14 against 0.13), while the same-month link for arabica drops below it. There's no free month-end robusta series to repeat this on. `month_end_check.py`
 - **Tail dependence:** of the hottest tenth of months in Vietnam, 32% were also top-10% price rises for each bean, against 10% by chance (p ≈ 0.003 from block-shuffled prices). Brazilian dryness doesn't pass this test.
 - **A Gumbel copula,** which models extremes arriving together, fits Vietnam heat against each bean better than a Gaussian copula and puts the tail dependence at about 0.15 (90% interval 0.05-0.24). A Gaussian copula has none by construction.
 
@@ -67,7 +67,7 @@ On the price it helps a little. Driven by the forecast, the importer's calls wer
 
 ### The forecast in the tail
 
-The forecast is most useful in the tail. A tail rule buys forward only when the forecast puts an origin beyond one standard deviation of its normal season, and otherwise waits. In the 78 months from 2008 to July 2026 when the forecast flagged Vietnam as unusually hot or dry, arabica rose 6.9% over the next three months and robusta 5.5% (90% intervals 5.1-8.8% and 3.7-7.3%), against 1.1% and 0.6% over all months. To check this is not only the 2023-25 rally, we rerun the test on 2008-2025 without those years. The flagged months still rose 5.1% and 3.3% while other months fell, and the result holds when the forecast's warming drift is removed. A dry-Brazil flag alone isn't reliable (27 months, intervals spanning zero). For an importer this means a hot or dry Vietnam forecast is a reason to buy forward.
+The forecast is most useful in the tail. A tail rule buys forward only when the forecast puts an origin beyond one standard deviation of its normal season, and otherwise waits. In the 78 months from 2008 to July 2026 when the forecast flagged Vietnam as unusually hot or dry, arabica rose 6.9% over the next three months and robusta 5.5% (90% intervals 4.1-10.0% and 2.3-8.6%), against 1.1% and 0.6% over all months. The intervals come from a block bootstrap over the months (blocks of six months on average), because the three-month changes of neighbouring months overlap. On month-end arabica futures prices the flagged months rose 8.5% (5.0-12.2%). To check this is not only the 2023-25 rally, we rerun the test on 2008-2025 without those years. The flagged months still rose 5.1% and 3.3% while other months fell, and the result holds when the forecast's warming drift is removed. A dry-Brazil flag alone isn't reliable (27 months, intervals spanning zero). For an importer this means a hot or dry Vietnam forecast is a reason to buy forward.
 
 ![Price change after the forecast flags an extreme season](figures/fig17_tail_rule.png)
 
@@ -75,7 +75,7 @@ The forecast is most useful in the tail. A tail rule buys forward only when the 
 
 ### 2026 so far
 
-Followed month by month, the rule worked through 2025 and was mixed in 2026. The forecasts issued in July and August 2025 put Vietnam heat above two standard deviations, and robusta rose 26% by November 2025. In 2026 the forecast flagged Vietnam heat from April, and the heat came: the following three months ran 0.9 to 2.2 standard deviations above normal in ERA5. Robusta rose 11% and 8% in the three months after the April and May flags, was flat after June and fell 11% after July, as prices came back from an August peak. The forecasts issued from August to October put Vietnam heat 4 to 5 standard deviations above normal, beyond anything in the record. Part of that is the warming since the 1993-2016 period the forecast is measured against, so each forecast was also measured against the same month in the 15 years before it, using only what was known then. The rule holds: 70 months flagged instead of 78, and arabica rose 6.4% and robusta 4.9% in the following three months (90% intervals 4.5-8.3% and 2.9-7.0%). The latest forecasts are still 2.7 to 4.1 standard deviations above the recent normal, so the extreme reading isn't only the warming. `year_2026.py` · `recent_normal.py`
+Followed month by month, the rule worked through 2025 and was mixed in 2026. The forecasts issued in July and August 2025 put Vietnam heat above two standard deviations, and robusta rose 26% by November 2025. In 2026 the forecast flagged Vietnam heat from April, and the heat came: the following three months ran 0.9 to 2.2 standard deviations above normal in ERA5. Robusta rose 11% and 8% in the three months after the April and May flags, was flat after June and fell 11% after July, as prices came back from an August peak. The forecasts issued from August to October put Vietnam heat 4 to 5 standard deviations above normal, beyond anything in the record. Part of that is the warming since the 1993-2016 period the forecast is measured against, so each forecast was also measured against the same month in the 15 years before it, using only what was known then. The rule holds: 70 months flagged instead of 78, and arabica rose 6.4% and robusta 4.9% in the following three months (90% intervals 3.5-9.2% and 1.3-8.4%). The latest forecasts are still 2.7 to 4.1 standard deviations above the recent normal, so the extreme reading isn't only the warming. `year_2026.py` · `recent_normal.py`
 
 ![Vietnam heat forecasts and outcomes, and coffee prices, July 2025 to November 2026](figures/fig18_2026.png)
 
@@ -85,10 +85,10 @@ The frost study that started this: across 2000-2026 the days around a frost nigh
 
 ## Limits
 
-Monthly prices smooth short spikes. ERA5 rain over coffee regions is coarse (about 30 km). Only two origins are modelled. The forward curve covers 2024-2026 only, because free data lists only live contracts.
+Monthly average prices smooth short spikes and blur lags by up to a month. Only the arabica results could be checked on month-end futures. ERA5 rain over coffee regions is coarse (about 30 km). Only two origins are modelled. The forward curve covers 2024-2026 only, because free data lists only live contracts.
 
 ## Code
 
-`weather_signal.py` (the real out, lags, events) · `dependence.py` (partial, tail, copulas, DCC) · `compound.py` · `kalman_weather.py` · `seasonal_backtest.py` · `fetch_prices_enso.py` · `fetch_seas5.py` · `make_weather_figures.py` · earlier: `fetch_data.py`, `run_analysis.py`, `schwartz.py`, `drivers.py` · Python, NumPy, SciPy, arch, xarray, cfgrib, corrlib
+`weather_signal.py` (the real out, lags, events) · `dependence.py` (partial, tail, copulas, DCC) · `compound.py` · `kalman_weather.py` · `seasonal_backtest.py` · `tail_rule.py` · `month_end_check.py` · `fetch_prices_enso.py` · `fetch_seas5.py` · `make_weather_figures.py` · earlier: `fetch_data.py`, `run_analysis.py`, `schwartz.py`, `drivers.py` · Python, NumPy, SciPy, arch, xarray, cfgrib, corrlib
 
 *A side project, built for fun. Credits: Roll (1984); Schwartz (1997); Engle (2002) for DCC; Joe (1997) for copulas; Newey & West (1987). Data: World Bank Pink Sheet; NOAA CPC Oceanic Niño Index; ERA5 (Hersbach et al. 2020) via Open-Meteo; ECMWF SEAS5 via the Copernicus Climate Data Store; Brazilian real and arabica futures via Yahoo Finance.*

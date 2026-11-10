@@ -17,6 +17,8 @@
 #                      (each site's own distribution, rank correlation, day-to-day
 #                      persistence), 2,000 simulated years
 #   copula, 2023       the original, for comparison (results/event_set.json)
+#   t copula, 30 years the copula run again with a t copula in place of the Gaussian
+#                      (copula_tails.py), which allows joint extremes at any threshold
 #
 # Shortfall = how far the 1-in-20 month falls below that month's mean, in %.
 #
@@ -32,7 +34,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from scipy.stats import norm, rankdata
+from scipy.stats import norm, rankdata, t as student_t
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NAVY, BLUE, LIGHT, RED, GREY = "#0b2545", "#1f6fb2", "#8cc0e8", "#c0392b", "#8a8a8a"
@@ -40,12 +42,12 @@ YEARS = 2000
 rng = np.random.default_rng(0)
 
 
-def copula_sim(day, years):
+def copula_sim(day, years, nu=None, R=None):
     month = day.index.month
     mean = day.groupby(month).transform("mean"); sd = day.groupby(month).transform("std")
     z = ((day - mean) / sd).fillna(0)
     g = norm.ppf(np.column_stack([rankdata(z[c]) / (len(z) + 1) for c in z]))
-    R = np.corrcoef(g.T); common = g.mean(axis=1)
+    R = np.corrcoef(g.T) if R is None else R; common = g.mean(axis=1)
     phi = float(np.corrcoef(common[:-1], common[1:])[0, 1])
     L = np.linalg.cholesky(R + 1e-9 * np.eye(len(R)))
     # one simulated calendar year: 365 days, each month's mean and sd, the anomaly
@@ -60,7 +62,11 @@ def copula_sim(day, years):
         ar = np.empty_like(e); ar[0] = e[0]
         for t in range(1, len(cal)):
             ar[t] = phi * ar[t - 1] + np.sqrt(1 - phi ** 2) * e[t]
-        u = norm.cdf(ar @ L.T)
+        x = ar @ L.T
+        if nu is None:
+            u = norm.cdf(x)
+        else:                                   # t copula: one chi-squared mixing draw per day
+            u = student_t.cdf(x / np.sqrt(rng.chisquare(nu, len(cal)) / nu)[:, None], nu)
         zz = np.empty_like(u)
         for m in range(1, 13):
             i = cal.month == m; sz = sorted_z[m]
@@ -88,6 +94,10 @@ def main():
         for m in range(1, 13):
             ind[k, m - 1] = sum(site_month.loc[(years[p], m), s] for p, s in zip(pick, sites))
     sim, phi, rho = copula_sim(day, YEARS)
+    # the same with a t copula (copula_tails.py): R from Kendall's tau, nu by pseudo-likelihood
+    from copula_tails import anomalies, pseudo_obs, fit_t
+    Rt, nu, _ = fit_t(pseudo_obs(anomalies(day)))
+    sim_t, _, _ = copula_sim(day, YEARS, nu=nu, R=Rt)
     old = json.load(open(os.path.join(HERE, "results", "event_set.json")))
     s23 = np.array([(old["monthly"][str(m)]["mean"] - old["monthly"][str(m)]["p5_correlated"]) / old["monthly"][str(m)]["mean"] for m in range(1, 13)])
     s_obs, s_ind, s_sim = shortfall(obs), shortfall(ind), shortfall(sim)
@@ -100,7 +110,12 @@ def main():
                worst_year=int(years[int(np.argmin(annual))]), worst_year_below_mean=float(1 - annual.min() / annual.mean()),
                annual_1in20_observed=float(1 - np.quantile(annual, 0.05) / annual.mean()),
                annual_1in20_copula_30y=float(1 - np.quantile(sim.sum(axis=1), 0.05) / sim.sum(axis=1).mean()),
-               year_2023_rank_of_30=int((annual < annual[years.index(2023)]).sum() + 1))
+               year_2023_rank_of_30=int((annual < annual[years.index(2023)]).sum() + 1),
+               t_copula=dict(nu=nu, mean_shortfall=float(shortfall(sim_t).mean()),
+                             shortfall_by_month=[round(float(v), 4) for v in shortfall(sim_t)],
+                             worst_month_1in20=float(np.quantile(((sim_t.mean(0) - sim_t) / sim_t.mean(0)).max(axis=1), 0.95)),
+                             annual_1in20=float(1 - np.quantile(sim_t.sum(axis=1), 0.05) / sim_t.sum(axis=1).mean())),
+               worst_month_1in20_copula_30y=float(np.quantile(((sim.mean(0) - sim) / sim.mean(0)).max(axis=1), 0.95)))
     json.dump(out, open(os.path.join(HERE, "results", "event_set_30y.json"), "w"), indent=1)
     print(json.dumps({k: v for k, v in out.items() if k != "shortfall_by_month"}, indent=1))
 

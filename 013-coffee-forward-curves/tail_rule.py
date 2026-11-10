@@ -9,7 +9,11 @@
 #
 # For every month from 2008 to July 2026: the next three months' price change of each bean (what
 # an importer who waited would pay extra), split by whether the forecast flagged the tail.
-# A block bootstrap of the flagged months gives the uncertainty.
+# The uncertainty comes from a stationary bootstrap (Politis and Romano 1994) over the
+# whole monthly series: blocks of consecutive months, of random length with mean BLOCK,
+# are drawn with replacement and each month keeps its flag and its return together. The
+# three-month returns overlap, so neighbouring months are far from independent, and
+# drawing single months (an iid bootstrap) would make the intervals too narrow.
 #
 #   python tail_rule.py
 #
@@ -30,7 +34,34 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 RES, FIG = os.path.join(HERE, "results"), os.path.join(HERE, "figures")
 NAVY, BLUE, LIGHT, RED, GREY = "#0b2545", "#1f6fb2", "#8cc0e8", "#c0392b", "#8a8a8a"
 THRESH = 1.0
+BLOCK = 6                       # mean block length in months
+N_BOOT = 4000
 rng = np.random.default_rng(0)
+
+
+def stationary_indices(n, block, rng):
+    """One stationary-bootstrap resample of 0..n-1: start a new block at a random month
+    with probability 1/block, otherwise carry on to the next month (wrapping round)."""
+    idx = np.empty(n, dtype=int)
+    idx[0] = rng.integers(n)
+    new = rng.random(n) < 1 / block
+    starts = rng.integers(n, size=n)
+    for t in range(1, n):
+        idx[t] = starts[t] if new[t] else (idx[t - 1] + 1) % n
+    return idx
+
+
+def block_ci(r, flag, block=BLOCK, n_boot=N_BOOT, rng=rng):
+    """90% interval for the mean of r over flagged months. r and flag are aligned
+    monthly arrays (months with no return already dropped); resampling is over time."""
+    r, flag = np.asarray(r, float), np.asarray(flag, bool)
+    means = []
+    for _ in range(n_boot):
+        i = stationary_indices(len(r), block, rng)
+        f = flag[i]
+        if f.sum():
+            means.append(r[i][f].mean())
+    return [float(np.quantile(means, 0.05)), float(np.quantile(means, 0.95))]
 
 
 def main():
@@ -49,9 +80,9 @@ def main():
             if m.sum() < 3:
                 continue
             x = r[m].values
-            boot = [rng.choice(x, len(x)).mean() for _ in range(4000)]
             out[bean][name] = dict(n=int(m.sum()), mean_change=float(x.mean()), share_up=float((x > 0).mean()),
-                                   ci90=[float(np.quantile(boot, 0.05)), float(np.quantile(boot, 0.95))],
+                                   ci90=block_ci(r[ok].values, f[ok].values),
+                                   ci90_block3=block_ci(r[ok].values, f[ok].values, block=3),
                                    other_months=float(r[ok & ~f].mean()))
     json.dump(out, open(os.path.join(RES, "tail_rule.json"), "w"), indent=1)
     print(json.dumps(out, indent=1))
