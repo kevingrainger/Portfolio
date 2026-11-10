@@ -50,9 +50,11 @@ The same fleet was followed through 1995-2024 with ERA5 daily radiation from the
 
 We see the real years agree with the copula. Over the 30 years the fleet's 1-in-20 bad month is 10.5% below normal on average across the calendar, against 2.5% if each site's year were drawn on its own: four times deeper, as the 2023 copula said. 2023 was a sunny year (22nd of 30 for output), so the one-year copula was a little light. It put the 1-in-20 month at 9.2% below normal, and refitted to 30 years it gives 12.3%, slightly deeper than observed and so a cautious estimate.
 
-The refitted copula reproduces the real years' extremes. The worst month of each year, plotted against how often it comes round, falls on the simulated curve: about 23% below normal once in twenty years. The deepest months are in winter and March (15-18%), when fronts and cut-off lows sit over the peninsula for weeks. The worst month of all was March 2022, 24% below normal, a month of rain and Saharan dust. Whole years vary much less: the 1-in-20 year is about 3% below normal (2018, the worst, 4.9%).
+The refitted copula reproduces the real years' extremes. The worst month of each year, plotted against how often it comes round, falls on the simulated curve: about 24% below normal once in twenty years. The deepest months are in winter and March (15-18%), when fronts and cut-off lows sit over the peninsula for weeks. The worst month of all was March 2022, 24% below normal, a month of rain and Saharan dust. Whole years vary much less: the 1-in-20 year is about 3% below normal (2018, the worst, 4.9%).
 
-`fetch_era5_daily.py` · `event_set_30y.py`
+A Gaussian copula has no tail dependence, so we checked whether the sites have their bad days together more often than it allows. For each pair of sites we take how often both are in their worst q of days, divided by q (χ in Coles, Heffernan and Tawn 1999), and average over the 300 pairs. Over the 30 years it falls from 0.41 at q = 10% to 0.23 at q = 1%, close to the Gaussian copula's 0.44 and 0.25, so the copula doesn't understate joint bad days. A t copula, which keeps joint extremes at any level, fits the daily data much better by likelihood (6 degrees of freedom), but the extra joint extremes in the data are at the sunny end (0.56 falling to 0.41, against the Gaussian's 0.44 to 0.25). At the bad end the t copula overstates them (0.49 to 0.37). Run through the event set it gives almost the same answers: the 1-in-20 bad month is 12.0% below normal on average (12.3% with the Gaussian), and the 1-in-20 worst month of the year 23.6% (24.4%).
+
+`fetch_era5_daily.py` · `event_set_30y.py` · `copula_tails.py`
 
 ### The two forecast models in the event set
 

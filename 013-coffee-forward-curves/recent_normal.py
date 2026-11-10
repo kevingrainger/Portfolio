@@ -7,6 +7,7 @@
 # 4-5 standard deviations above it). Here each forecast is measured instead against the
 # same calendar month in the 15 years before it, using only what was known then, and the
 # tail rule rerun: after a Vietnam hot-or-dry flag, the next three months' price change.
+# Intervals from the same stationary block bootstrap as tail_rule.py.
 #
 #   python recent_normal.py
 #
@@ -19,9 +20,9 @@ import numpy as np
 import pandas as pd
 
 from seasonal_backtest import build
+from tail_rule import block_ci
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-rng = np.random.default_rng(0)
 
 
 def trailing_z(s, years=15):
@@ -38,9 +39,8 @@ def rule(df, heat, dry, bean):
     ok = r.notna() & heat.notna() & dry.notna()
     f = ok & ((heat > 1) | (dry > 1))
     x = r[f].values
-    boot = [rng.choice(x, len(x)).mean() for _ in range(4000)]
     return dict(months=int(f.sum()), share_flagged=float(f.sum() / ok.sum()), mean_change=float(x.mean()),
-                ci90=[float(np.quantile(boot, 0.05)), float(np.quantile(boot, 0.95))], all_months=float(r[ok].mean()))
+                ci90=block_ci(r[ok].values, f[ok].values), all_months=float(r[ok].mean()))
 
 
 def main():

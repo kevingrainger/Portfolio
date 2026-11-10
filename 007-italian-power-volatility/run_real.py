@@ -9,7 +9,8 @@
 #             years only, with log(price / gas) as the target; SHAP for the shapes.
 #   Stage 2   what drives the volatility? GARCH-MIDAS with the monthly count of extreme
 #             days (Italy-wide mean temperature above 28 C or below 3 C) setting the slow
-#             level, against plain GARCH(1,1), by likelihood ratio.
+#             level, tested against theta = 0 by likelihood ratio with the lag shape
+#             fixed (see stage2).
 #   Stage 3   does weather knowledge improve the volatility forecast out of sample? The
 #             model is fitted on 2018-2022 and scored on 2023 onwards (QLIKE, Diebold-
 #             Mariano), with the extreme-day count supplied three ways:
@@ -92,17 +93,33 @@ def stage1(df):
 
 
 def stage2(df, month_idx, extreme, r):
+    """Likelihood ratio of GARCH-MIDAS against the same model with theta = 0.
+
+    Under theta = 0 the beta-lag shape w drops out of the likelihood, so it isn't
+    identified under the null and the LR with both theta and w free is not chi-squared
+    with 2 degrees of freedom (Davies 1977, 1987; Andrews and Ploberger 1994). The test
+    reported here fixes w = 1 (flat weights over the past K = 6 months) before fitting,
+    which leaves theta as the only extra parameter: chi-squared with 1 degree of freedom.
+    The free-w fit is kept for the parameters, and lr_bootstrap.py bootstraps its LR."""
+    from scipy.optimize import minimize
     X = extreme.values
     p_midas, res_midas = pw.fit_garch_midas(r, month_idx, X)
-    nll_null = pw.garch_midas_nll([p_midas["mu"], p_midas["alpha"], p_midas["beta"], np.log(np.var(r)), 0.0, 1.5],
-                                  r, month_idx, X, 6)
-    # the null (theta = 0) refitted properly: GARCH-MIDAS with no weather term
-    from scipy.optimize import minimize
-    f0 = lambda q: pw.garch_midas_nll([q[0], q[1], q[2], q[3], 0.0, 1.5], r, month_idx, X, 6)
+    opts = dict(maxiter=8000, xatol=1e-8, fatol=1e-8)
+    # the null (theta = 0), refitted: GARCH-MIDAS with no weather term (w plays no part)
+    f0 = lambda q: pw.garch_midas_nll([q[0], q[1], q[2], q[3], 0.0, 1.0], r, month_idx, X, 6)
     res0 = minimize(f0, [p_midas["mu"], p_midas["alpha"], p_midas["beta"], p_midas["m"]], method="Nelder-Mead",
-                    options=dict(maxiter=8000, xatol=1e-8, fatol=1e-8))
-    lr = 2 * (min(res0.fun, nll_null) - res_midas.fun)
-    out = dict(params={k: float(v) for k, v in p_midas.items()}, LR=float(lr), p_value=float(chi2.sf(max(lr, 0), 2)),
+                    options=opts)
+    # the alternative with w fixed at 1: theta is the one extra parameter
+    f1 = lambda q: pw.garch_midas_nll([q[0], q[1], q[2], q[3], q[4], 1.0], r, month_idx, X, 6)
+    res1 = min((minimize(f1, [p_midas["mu"], p_midas["alpha"], p_midas["beta"],
+                              p_midas["m"] - t0 * X.mean(), t0], method="Nelder-Mead", options=opts)
+                for t0 in (0.0, -0.15, 0.1)), key=lambda z: z.fun)
+    lr1 = 2 * (res0.fun - res1.fun)
+    lr2 = 2 * (res0.fun - min(res_midas.fun, res1.fun))
+    out = dict(params={k: float(v) for k, v in p_midas.items()},
+               test="w fixed at 1 (flat weights), theta the only extra parameter, chi-squared 1 dof",
+               theta_w_fixed=float(res1.x[4]), LR=float(lr1), p_value=float(chi2.sf(max(lr1, 0), 1)),
+               LR_w_free=float(lr2), p_value_w_free_naive_chi2_2=float(chi2.sf(max(lr2, 0), 2)),
                days=int(len(r)), start=str(df.index[0].date()), end=str(df.index[-1].date()))
     json.dump(out, open(os.path.join(RES, "real_stage2.json"), "w"), indent=1)
     print("stage 2:", json.dumps(out))

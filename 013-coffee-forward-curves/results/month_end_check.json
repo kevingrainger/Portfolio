@@ -1,0 +1,310 @@
+{
+ "returns": {
+  "arabica Pink Sheet (monthly average)": {
+   "months": 273,
+   "lag1_autocorr": 0.183,
+   "sd": 0.0613
+  },
+  "robusta Pink Sheet (monthly average)": {
+   "months": 273,
+   "lag1_autocorr": 0.235,
+   "sd": 0.0569
+  },
+  "arabica KC=F (month-end)": {
+   "months": 273,
+   "lag1_autocorr": -0.132,
+   "sd": 0.0926
+  }
+ },
+ "lags": {
+  "arabica Pink Sheet": {
+   "brazil_dry": [
+    {
+     "lag": 0,
+     "r": 0.058,
+     "band": 0.139,
+     "significant": false
+    },
+    {
+     "lag": 1,
+     "r": 0.025,
+     "band": 0.139,
+     "significant": false
+    },
+    {
+     "lag": 2,
+     "r": -0.0,
+     "band": 0.14,
+     "significant": false
+    },
+    {
+     "lag": 3,
+     "r": 0.047,
+     "band": 0.14,
+     "significant": false
+    },
+    {
+     "lag": 4,
+     "r": 0.134,
+     "band": 0.141,
+     "significant": false
+    },
+    {
+     "lag": 5,
+     "r": 0.128,
+     "band": 0.141,
+     "significant": false
+    },
+    {
+     "lag": 6,
+     "r": 0.054,
+     "band": 0.142,
+     "significant": false
+    }
+   ],
+   "vietnam_dry": [
+    {
+     "lag": 0,
+     "r": 0.128,
+     "band": 0.13,
+     "significant": false
+    },
+    {
+     "lag": 1,
+     "r": 0.073,
+     "band": 0.129,
+     "significant": false
+    },
+    {
+     "lag": 2,
+     "r": 0.004,
+     "band": 0.129,
+     "significant": false
+    },
+    {
+     "lag": 3,
+     "r": -0.026,
+     "band": 0.129,
+     "significant": false
+    },
+    {
+     "lag": 4,
+     "r": 0.011,
+     "band": 0.13,
+     "significant": false
+    },
+    {
+     "lag": 5,
+     "r": 0.116,
+     "band": 0.13,
+     "significant": false
+    },
+    {
+     "lag": 6,
+     "r": 0.123,
+     "band": 0.131,
+     "significant": false
+    }
+   ],
+   "vietnam_heat": [
+    {
+     "lag": 0,
+     "r": 0.144,
+     "band": 0.143,
+     "significant": true
+    },
+    {
+     "lag": 1,
+     "r": 0.107,
+     "band": 0.143,
+     "significant": false
+    },
+    {
+     "lag": 2,
+     "r": 0.074,
+     "band": 0.143,
+     "significant": false
+    },
+    {
+     "lag": 3,
+     "r": 0.076,
+     "band": 0.144,
+     "significant": false
+    },
+    {
+     "lag": 4,
+     "r": 0.118,
+     "band": 0.144,
+     "significant": false
+    },
+    {
+     "lag": 5,
+     "r": 0.168,
+     "band": 0.144,
+     "significant": true
+    },
+    {
+     "lag": 6,
+     "r": 0.151,
+     "band": 0.146,
+     "significant": true
+    }
+   ]
+  },
+  "arabica KC=F month-end": {
+   "brazil_dry": [
+    {
+     "lag": 0,
+     "r": 0.065,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 1,
+     "r": 0.054,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 2,
+     "r": 0.081,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 3,
+     "r": 0.082,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 4,
+     "r": 0.121,
+     "band": 0.125,
+     "significant": false
+    },
+    {
+     "lag": 5,
+     "r": 0.025,
+     "band": 0.125,
+     "significant": false
+    },
+    {
+     "lag": 6,
+     "r": 0.021,
+     "band": 0.125,
+     "significant": false
+    }
+   ],
+   "vietnam_dry": [
+    {
+     "lag": 0,
+     "r": 0.104,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 1,
+     "r": 0.025,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 2,
+     "r": -0.01,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 3,
+     "r": -0.017,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 4,
+     "r": 0.038,
+     "band": 0.125,
+     "significant": false
+    },
+    {
+     "lag": 5,
+     "r": 0.075,
+     "band": 0.125,
+     "significant": false
+    },
+    {
+     "lag": 6,
+     "r": 0.132,
+     "band": 0.125,
+     "significant": true
+    }
+   ],
+   "vietnam_heat": [
+    {
+     "lag": 0,
+     "r": 0.102,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 1,
+     "r": 0.071,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 2,
+     "r": 0.04,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 3,
+     "r": 0.049,
+     "band": 0.124,
+     "significant": false
+    },
+    {
+     "lag": 4,
+     "r": 0.092,
+     "band": 0.125,
+     "significant": false
+    },
+    {
+     "lag": 5,
+     "r": 0.142,
+     "band": 0.125,
+     "significant": true
+    },
+    {
+     "lag": 6,
+     "r": 0.12,
+     "band": 0.125,
+     "significant": false
+    }
+   ]
+  }
+ },
+ "lags_months": 254,
+ "tail_rule_vietnam_hot_or_dry": {
+  "Pink Sheet": {
+   "months": 78,
+   "mean_change": 0.0693,
+   "ci90": [
+    0.0407,
+    0.0999
+   ],
+   "all_months": 0.0112
+  },
+  "KC=F month-end": {
+   "months": 75,
+   "mean_change": 0.085,
+   "ci90": [
+    0.0497,
+    0.1224
+   ],
+   "all_months": 0.0102
+  }
+ }
+}

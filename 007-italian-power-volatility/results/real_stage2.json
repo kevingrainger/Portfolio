@@ -7,8 +7,12 @@
   "theta": -0.1494057629989735,
   "w": 1.0000000000015499
  },
- "LR": 27.591296912782127,
- "p_value": 1.020060665566574e-06,
+ "test": "w fixed at 1 (flat weights), theta the only extra parameter, chi-squared 1 dof",
+ "theta_w_fixed": -0.14766380033209892,
+ "LR": 27.600924645535997,
+ "p_value": 1.4910747078611754e-07,
+ "LR_w_free": 27.600924645535997,
+ "p_value_w_free_naive_chi2_2": 1.0151620299745502e-06,
  "days": 3204,
  "start": "2018-01-02",
  "end": "2026-10-10"
