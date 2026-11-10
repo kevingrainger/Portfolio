@@ -12,7 +12,7 @@
 
 ## What we found
 
-We see that outbreaks are all or nothing: 39 of 40 take the whole grove, with half the trees infected in about 2.3 years, and one never starts. A bug in the original code put the grove in the wrong season on day 0. This gave every outbreak a head start and moved the two-year result by 38%.
+We see that outbreaks are all or nothing: 39 of 40 take the whole grove, with half the trees infected in about 2.3 years, and one never starts. A bug in the original code put the grove in the wrong season on day 0. This gave every outbreak a head start: 38% more of the grove infected by day 600 (0.274 against 0.199).
 
 A spittlebug stays on a tree for about 18 days per visit. Below about 16–29% chance of infection per visit outbreaks die out, and above it they take the grove. This is a sharp threshold, and it decides most of what follows.
 
