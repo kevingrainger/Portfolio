@@ -258,10 +258,10 @@ def plot_same_number_different_reality(target=0.6, n=400, seed=0):
     fan_x = rng.normal(size=n)
     fan_y = target * fan_x + np.abs(fan_x) * rng.normal(size=n) * 0.8
 
-    panels = [("straight line", clean_x, clean_y),
-              ("twelve days doing the work", out_x, out_y),
-              ("two regimes", reg_x, reg_y),
-              ("widening fan", fan_x, fan_y)]
+    panels = [("Linear", clean_x, clean_y),
+              ("Twelve extreme days", out_x, out_y),
+              ("Two groups", reg_x, reg_y),
+              ("Widening spread", fan_x, fan_y)]
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4.2))
     for ax, (title, px, py) in zip(axes, panels):

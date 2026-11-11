@@ -161,9 +161,9 @@ def plot_epps_curve(prices, true_correlation=None):
         ax.axhline(true_correlation, color='r', ls='--', lw=1.2, label='true correlation')
 
     ax.set_xscale('log')
-    ax.set_xlabel('sampling interval (ticks per sample) - slower to the right')
+    ax.set_xlabel('sampling interval (ticks per sample)')
     ax.set_ylabel('measured correlation')
-    ax.set_title('The Epps effect: sample too fast and the correlation disappears')
+    ax.set_title('Measured correlation against sampling interval')
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()

@@ -259,7 +259,7 @@ def plot_gain_vs_sensors(X, noise_window, clean="linear_shrinkage"):
 
     ax.set_xlabel('number of sensors stacked')
     ax.set_ylabel('noise reduction (dB)')
-    ax.set_title('Stacking: what helps, and when it stops helping')
+    ax.set_title('Noise reduction against number of sensors')
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()

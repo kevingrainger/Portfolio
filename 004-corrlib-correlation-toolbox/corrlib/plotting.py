@@ -79,14 +79,14 @@ def dendrogram(C, labels=None, ax=None, method="average"):
     _dendrogram(_linkage(C, method), labels=labels, ax=ax, leaf_rotation=90,
                 leaf_font_size=7, color_threshold=None)
     ax.set_ylabel('distance  sqrt(2(1 - rho))')
-    ax.set_title('Which variables group together', fontsize=10)
+    ax.set_title('Cluster tree', fontsize=10)
     return ax
 
 
 #-------- Spectrum -------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # Eigenvalues against the noise band. Anything past the edge is structure.
-def spectrum(C, n_observations, n_removed=0, ax=None, title="Eigenvalues vs pure noise"):
+def spectrum(C, n_observations, n_removed=0, ax=None, title="Eigenvalues against the noise band"):
     if ax is None:
         fig, ax = plt.subplots(figsize=(8, 4.5))
     rmt.plot_spectrum(C, n_observations, title=title, n_removed=n_removed, ax=ax)
@@ -119,11 +119,11 @@ def summary(correlator):
     grid = fig.add_gridspec(2, 2, height_ratios=[1.1, 1])
 
     heatmap(c.measured_, c.labels_, order=order, ax=fig.add_subplot(grid[0, 0]),
-            title=f"measured ({c.measure}), nothing removed")
+            title=f"Measured ({c.measure}), nothing removed")
     heatmap(c.matrix_, c.labels_, order=order, ax=fig.add_subplot(grid[0, 1]),
-            title=f"final: removed {c.describe_removal()}, cleaned with {c.clean}")
+            title=f"Removed {c.describe_removal()}, cleaned ({c.clean})")
     spectrum(c.residual_, c.n_effective_, n_removed=c.n_removed_,
-             ax=fig.add_subplot(grid[1, 0]), title="after removal, before cleaning")
+             ax=fig.add_subplot(grid[1, 0]), title="Spectrum after removal")
     dendrogram(c.cleaned_, c.labels_, ax=fig.add_subplot(grid[1, 1]))
     fig.tight_layout()
     return fig

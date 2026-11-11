@@ -2,13 +2,13 @@
 
 **A small Python library for measuring, cleaning and stripping down correlation matrices, used by the seismic and solar projects.**
 
-![Forty stocks, market removed and cleaned: the sectors appear](figures/cover.png)
+![39 stocks, market regressed out and cleaned, ordered by clustering](figures/cover.png)
 
 ## Why I did this
 
 I built this small Python library to support these projects, since most of them involve some kind of correlation, signal processing, filtering or data assimilation. I wanted one set of tools I knew worked, so that when I code with AI agents, the tools they call are always consistent and correct. Building it also made me learn the exact mathematics behind each method.
 
-With 40 stocks there are 780 correlations to estimate, and most of what a year of data says about them is noise. Random-matrix theory gives the eigenvalue spectrum of pure noise (the Marchenko–Pastur law), so we can clean against it. Once we remove the market (the one thing every stock shares), we see the sectors appear.
+With 39 stocks there are 741 correlations to estimate, and most of what a year of data says about them is noise. Random-matrix theory gives the eigenvalue spectrum of pure noise (the Marchenko–Pastur law), so we can clean against it. Once we remove the market (the one thing every stock shares), we see the sectors appear.
 
 ```python
 from corrlib import Correlator
@@ -27,6 +27,6 @@ Taking out the market raises the effective number of independent bets from about
 
 **Built:** correlation measures (Pearson, rank, Gaussian rank, partial, distance, tail dependence, lead–lag); estimators for irregular data; factor and mode removal; random-matrix cleaning; array stacking (minimum-variance = Capon beamformer); clustered heatmaps; effective sample size.
 
-`corrlib/` · `corrlib_showcase.ipynb` · `tests/` · Python, NumPy, SciPy
+`corrlib/` · `corrlib_showcase.ipynb` · `make_figures.py` · `tests/` · Python, NumPy, SciPy
 
 *A side project, built for fun, and the shared engine of projects 011 and 006. Prices come from Yahoo Finance via yfinance; the notebook downloads them, and they aren't stored in the repository.*

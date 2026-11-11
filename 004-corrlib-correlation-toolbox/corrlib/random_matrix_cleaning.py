@@ -386,7 +386,7 @@ def effective_rank(C):
 # pure noise prediction drawn on top, and the band edge marked. Anything to the
 # right of the edge is signal - usually one big spike, which is the market
 # itself moving everything together.
-def plot_spectrum(C, n_observations, title="Eigenvalue spectrum vs pure noise",
+def plot_spectrum(C, n_observations, title="Eigenvalues against the noise band",
                   n_removed=0, ax=None):
     R, _ = _to_correlation(np.asarray(C, dtype=float))
     N = R.shape[0]
