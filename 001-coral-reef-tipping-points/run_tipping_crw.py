@@ -100,7 +100,7 @@ def plot(df):
     ax.set_ylabel("living coral, share of the start")
     ax.set_ylim(-0.03, 1.1)
     ax.legend(loc="lower left", bbox_to_anchor=(0.0, 0.15), fontsize=8.5)
-    ax.set_title(f"Scott Reef's tipping point, 40 posterior draws (warmest-month mean {MMM:.1f} C)", loc="left")
+    ax.set_title(f"Living coral against sea temperature, 40 posterior draws", loc="left")
     figstyle.save(fig, os.path.join(HERE, "figures", "fig10_tipping_crw"))
 
 

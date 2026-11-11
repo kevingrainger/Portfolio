@@ -236,7 +236,7 @@ def figures():
         a1.plot(xs, [info["truth_rmse"][name(l)] for l in lams], "D-", color="#CC79A7", mfc="white", mew=1.3, label="every land cell (hidden truth)")
     a1.set_xticks(xs); a1.set_xticklabels(["0\n(data only)"] + [f"{l:g}" for l in lams[1:]])
     a1.set_xlabel(r"weight of the heat budget in the loss, $\lambda$"); a1.set_ylabel("RMSE (K)")
-    a1.set_title("(a) Turning up the physics", loc="left")
+    a1.set_title("(a) RMSE against the weight of the physics", loc="left")
     a1.legend(loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2, fontsize=8.5)
     models = ["B0", "M1", "U", name(lams[0]), name(lams[-1]), "M2", name(lams[-1]) + "A"]
     labels = ["ERA5-Land", "physics only", "U-Net emulator", "U-Net, data only", f"U-Net, physics-informed (λ = {lams[-1]:g})",
@@ -244,17 +244,24 @@ def figures():
     cols = ["#9a9a9a", "#a8d5ba", "#56B4E9", "#E69F00", "#0072B2", "#3f9b7a", "#CC79A7"]
     groups = ["rmse", "rmse_far_60km", "> 800 m", "rmse_hottest_5pct"]
     glab = ["all", "> 60 km from\nan anchor", "> 800 m", "hottest 5%\nof days"]
-    w = 0.8 / len(models)
+    off = np.linspace(-0.3, 0.3, len(models))
     for j, (m_, lab, c) in enumerate(zip(models, labels, cols)):
-        a2.bar(np.arange(len(groups)) + (j - len(models) / 2 + 0.5) * w, tab.loc[m_, groups].values.astype(float), w,
-               color=c, label=lab, edgecolor="white", linewidth=0.8)
-    a2.set_xticks(np.arange(len(groups))); a2.set_xticklabels(glab)
+        a2.plot(np.arange(len(groups)) + off[j], tab.loc[m_, groups].values.astype(float), "osD^vPX"[j],
+                color=c, label=lab, ms=7, mec="white", mew=0.6)
+    for g in range(len(groups) - 1):
+        a2.axvline(g + 0.5, color="0.9", lw=0.8)
+    a2.set_xticks(np.arange(len(groups))); a2.set_xticklabels(glab); a2.set_xlim(-0.5, len(groups) - 0.5)
     a2.set_ylabel("RMSE at held-out stations, 2023 (K)"); a2.grid(axis="x", visible=False)
-    a2.set_title("(b) Where it matters", loc="left")
+    a2.set_title("(b) RMSE by group of held-out stations", loc="left")
     a2.legend(loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2, fontsize=8)
-    figstyle.watermark(fig, "Simulated test data")
-    figstyle.save(fig, os.path.join(HERE, "figures", "fig8_physics_informed"))
+    if RU.REAL:
+        figstyle.save(fig, os.path.join(HERE, "figures", "real", "fig8_physics_informed_real"), formats=("png",))
+    else:
+        figstyle.watermark(fig, "Simulated test data")
+        figstyle.save(fig, os.path.join(HERE, "figures", "fig8_physics_informed"))
     plt.close(fig)
+    if "--skill-only" in sys.argv:
+        return
 
     # the hottest 2023 day: data-only and physics-informed fields side by side (3D)
     D = RU.ds()
@@ -286,8 +293,11 @@ def figures():
         ax.view_init(elev=28, azim=-62)
     fig.text(0.5, 0.02, f"{D.days[d].date()}, hottest 2023 day at the stations. Pins: the {test.sum()} stations of held-out fold {k}; "
              "a pin's head is the reading.", ha="center", fontsize=9)
-    figstyle.watermark(fig, "Simulated test data")
-    figstyle.save(fig, os.path.join(HERE, "figures", "fig9_pinn_surfaces"))
+    if RU.REAL:
+        figstyle.save(fig, os.path.join(HERE, "figures", "real", "fig9_pinn_surfaces_real"), formats=("png",))
+    else:
+        figstyle.watermark(fig, "Simulated test data")
+        figstyle.save(fig, os.path.join(HERE, "figures", "fig9_pinn_surfaces"))
     plt.close(fig)
 
 

@@ -142,7 +142,7 @@ def figures():
     a1.text(c.date.iloc[2], 4.5, "NOAA: bleaching (4)", fontsize=8, color=THR)
     a1.text(c.date.iloc[2], 8.5, "NOAA: mortality (8)", fontsize=8, color=THR)
     a1.set_ylabel("degree heating weeks")
-    a1.set_title("Scott Reef, 2015-16: two reefs fit the April surveys, and they disagree about the summer", loc="left")
+    a1.set_title("Scott Reef, 2015-16", loc="left")
     t = c.date.values[:p.shape[1]]
     for m, colr in ((1, SEN), (0, TOL)):
         q = p[mode == m, :, 0]
@@ -166,7 +166,7 @@ def figures():
     for v in (4, 8):
         a1.axvline(v, color=THR, lw=1, ls="--")
     a1.set_xlabel(LABELS[0]); a1.set_ylabel(LABELS[2])
-    a1.set_title("(a) Posterior: tolerance trades off against sensitivity", loc="left")
+    a1.set_title("(a) Posterior of tolerance and sensitivity", loc="left")
     x = np.linspace(0, 22, 400)
     rng = np.random.default_rng(1)
     for m, colr in ((1, SEN), (0, TOL)):

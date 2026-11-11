@@ -77,7 +77,7 @@ def stations(ds, fold=None):
     hx.hist(ds.elev[land] * 1000, bins=bins, weights=np.full(land.sum(), 100 / land.sum()), color="#cdbf9c", label="land area")
     hx.hist(st.elevation, bins=bins, weights=np.full(len(st), 100 / len(st)), histtype="step", color="#1f4e5f", lw=1.8, label="stations")
     hx.set_xlabel("elevation (m)"); hx.set_ylabel("share (%)")
-    hx.set_title("Stations sit low", loc="left")
+    hx.set_title("Elevation of stations and land", loc="left")
     hx.legend(loc="upper right")
     return fig
 
@@ -132,16 +132,23 @@ def temperature_surface(ax, grid, theta, cells_xy, y, cmap, norm, title, stride=
 
 
 #-------- skill --------------------------------------------------------------------------------------
-def skill_by_band(tables, titles, models):
+def skill_by_band(tables, titles, models, names=None):
+    """RMSE at held-out stations per band, one marker per model (a dot plot, no bars)."""
     fig, axes = plt.subplots(1, len(tables), figsize=(5.6 * len(tables), 4.0), sharey=True)
+    marks = "osD^vPX*"
     for ax, t, title in zip(axes, tables, titles):
         groups = list(dict.fromkeys(t.group))
-        width = 0.8 / len(models)
+        off = np.linspace(-0.3, 0.3, len(models))
         for j, m in enumerate(models):
             v = t[t.model == m].set_index("group").rmse.reindex(groups)
-            ax.bar(np.arange(len(groups)) + (j - len(models) / 2 + 0.5) * width, v, width, color=MODEL_COLOURS[m], label=m)
+            ax.plot(np.arange(len(groups)) + off[j], v, marks[j % len(marks)], color=MODEL_COLOURS[m], ms=7,
+                    label=(names or {}).get(m, m), mec="white", mew=0.6)
+        for g in range(len(groups) - 1):
+            ax.axvline(g + 0.5, color="0.9", lw=0.8)
         counts = t[t.model == models[0]].set_index("group").n.reindex(groups)
-        ax.set_xticks(np.arange(len(groups))); ax.set_xticklabels([f"{g}\n(n = {int(c)})" for g, c in zip(groups, counts)])
+        ax.set_xticks(np.arange(len(groups)))
+        ax.set_xticklabels([str(g) + "\n(n = " + str(int(c)) + ")" for g, c in zip(groups, counts)])
+        ax.set_xlim(-0.5, len(groups) - 0.5)
         ax.set_title(title, loc="left"); ax.grid(axis="x", visible=False)
     axes[0].set_ylabel("RMSE at held-out stations (K)")
     axes[-1].legend(ncol=1, loc="center left", bbox_to_anchor=(1.01, 0.5))
@@ -149,11 +156,11 @@ def skill_by_band(tables, titles, models):
 
 
 #-------- figures built from results/maps.npz ----------------------------------------------------
-def cover(ds, maps, width=13.0, height=6.5):
+def cover(ds, maps, width=13.0, height=6.5, key="hot_M3"):
     """The hottest July 2022 day: downscaled Tmax draped over the terrain."""
     from scipy import ndimage
     d = int(maps["days"][0])
-    tmax = maps["hot_M3"] - GAMMA * ds.elev
+    tmax = maps[key] - GAMMA * ds.elev
     norm = Normalize(16, 40)
     fig = plt.figure(figsize=(width, height))
     ax = fig.add_axes([-0.19, -0.50, 1.38, 1.86], projection="3d")
@@ -169,14 +176,14 @@ def cover(ds, maps, width=13.0, height=6.5):
     return fig
 
 
-def pde_surfaces(ds, maps):
+def pde_surfaces(ds, maps, key="hot_M3"):
     """Sea-level temperature as a surface, before and after anchoring, with stations as pins."""
     d = int(maps["days"][0])
     y = ds.y[d]
     ok = np.isfinite(y)
     cells = (ds.stations.ix.values, ds.stations.iy.values, ok)
-    fields = [("Physics only: the surface misses the pins", maps["hot_M1"]),
-              ("Anchored: the surface passes through every pin", maps["hot_M3"])]
+    fields = [("Physics only", maps["hot_M1"]),
+              ("Physics, anchored to stations", maps[key])]
     land = ~ds.sea
     lo = min(np.nanmin(y), min(f[land].min() for _, f in fields)) - 0.3
     hi = max(np.nanmax(y), max(f[land].max() for _, f in fields)) + 0.3
@@ -189,10 +196,10 @@ def pde_surfaces(ds, maps):
     return fig
 
 
-def downscaling(ds, maps):
+def downscaling(ds, maps, key="hot_M3", label="Physics, anchored, XGBoost prior (1 km)"):
     """What ERA5-Land sees, what the anchored model produces, and (simulation only) the truth."""
     d = int(maps["days"][0])
-    panels = [("ERA5-Land, lapse-corrected", maps["hot_theta_E"]), ("Physics, anchored, XGBoost prior (1 km)", maps["hot_M3"])]
+    panels = [("ERA5-Land, lapse-corrected", maps["hot_theta_E"]), (label, maps[key])]
     if "truth" in ds._maps:
         panels.append(("Known truth of the simulation", ds.field("truth", d) + GAMMA * ds.elev))
     norm = Normalize(18, 40)
@@ -207,16 +214,16 @@ def downscaling(ds, maps):
     return fig
 
 
-def missing_physics(ds, maps):
+def missing_physics(ds, maps, key="mean_q_m3"):
     """Mean q beside the land-cover map."""
-    q = np.where(ds.sea, np.nan, maps["mean_q_m3"])
+    q = np.where(ds.sea, np.nan, maps[key])
     lim = float(np.nanquantile(np.abs(q), 0.99))
     norm = TwoSlopeNorm(0, -lim, lim)
     fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.2))
     cmap = DIVERGING.copy(); cmap.set_bad("#e9eef2")
     axes[0].imshow(np.ma.masked_invalid(q), origin="lower", extent=ds.grid.extent, cmap=cmap, norm=norm, interpolation="bilinear")
     axes[0].scatter(ds.stations.x, ds.stations.y, s=10, color="k", zorder=3)
-    map_axes(axes[0], ds.grid, "Mean missing heating q (dots are stations)")
+    map_axes(axes[0], ds.grid, "Mean missing heating q")
     cb = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=DIVERGING), ax=axes[0], orientation="horizontal", fraction=0.05, pad=0.03, aspect=40)
     cb.set_label("K per hour"); cb.outline.set_visible(False)
     axes[1].imshow(land_cover_image(ds.frac), origin="lower", extent=ds.grid.extent, interpolation="bilinear")
@@ -244,9 +251,9 @@ def footprints(ds, maps):
         ax.quiver(ds.grid.x[s // 2::s], ds.grid.y[s // 2::s], u[s // 2::s, s // 2::s], v[s // 2::s, s // 2::s], color="0.35", scale=420, width=0.0022)
         ax.scatter(st.x, st.y, s=16, color="k", zorder=3)
         ax.set_xlim(st.x.min() - half, st.x.max() + half); ax.set_ylim(st.y.min() - half, st.y.max() + half)
-        map_axes(ax, ds.grid, f"{label}: mean wind {maps['speed'][d]:.0f} km/h")
+        map_axes(ax, ds.grid, f"{label}, mean wind {maps['speed'][d]:.0f} km/h")
     return fig
 
 
-def skill_bars(by_elevation, by_distance, models):
-    return skill_by_band([by_elevation, by_distance], ["By station elevation", "By distance to the nearest anchor"], models)
+def skill_bars(by_elevation, by_distance, models, names=None):
+    return skill_by_band([by_elevation, by_distance], ["By station elevation", "By distance to the nearest anchor"], models, names)
