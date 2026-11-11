@@ -30,7 +30,7 @@ The same Black (1976) pricing and delta hedging carry into the wheat hedging pro
 
 ## Code
 
-`vecer.py` (the one-dimensional Asian PDE) · `options_03_asian_softs.ipynb` (Monte Carlo, control variate, seasonal volatility, hedge simulator) · Python, NumPy, SciPy
+`vecer.py` (the one-dimensional Asian PDE) · `make_figures.py` (redraws the figures from the notebooks) · `options_03_asian_softs.ipynb` (Monte Carlo, control variate, seasonal volatility, hedge simulator) · Python, NumPy, SciPy
 
 The earlier notebooks that built and tested the finite-difference solver on an S&P 500 option chain, and compared the SET50 with the S&P 500, are kept in `archive/`.
 
