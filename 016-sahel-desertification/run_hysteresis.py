@@ -72,7 +72,7 @@ def plot(df):
     ax.legend(loc="center left", bbox_to_anchor=(0.0, 0.33))
     ax.set_xlabel("environmental quality b (rainfall)")
     ax.set_ylabel("vegetation cover")
-    ax.set_title("Plants that help plants tip, and do not come back on the same path", loc="left")
+    ax.set_title("Vegetation cover as b falls and rises, three strengths of facilitation", loc="left")
     ax.set_xlim(0, 1.0)
     ax.set_ylim(-0.02, 0.85)
     figstyle.save(fig, os.path.join(HERE, "figures", "fig1_hysteresis"))

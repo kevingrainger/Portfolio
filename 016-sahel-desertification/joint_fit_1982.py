@@ -142,7 +142,7 @@ def main():
         gg = g[(g.S == S) & (g.D0 == best.D0)].sort_values("B0")
         ax.plot(gg.B0, gg.collapsed_sites, "o" + ls, color=c, lw=1.6, ms=5, label=f"seed rain {S:.0%} a year")
     ax.set_xlabel("rain scale B0"); ax.set_ylabel("sites with no lattice cover left")
-    ax.set_title("Seed rain stops the dry edge collapsing", loc="left", fontsize=10.5); ax.legend(frameon=False, fontsize=8.5)
+    ax.set_title("Sites with no lattice cover left, with and without seed rain", loc="left", fontsize=10.5); ax.legend(frameon=False, fontsize=8.5)
     ax = axes[2]
     labs = ["level", "trend", "drought recovery", "year to year"]
     keys = ["level", "trend", "recovery", "year_to_year"]

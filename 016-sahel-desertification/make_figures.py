@@ -47,7 +47,7 @@ def fig2_theory():
     ax.legend(loc="center left", bbox_to_anchor=(0.0, 0.42))
     ax.set_xlabel("environmental quality b (rainfall)")
     ax.set_ylabel("vegetation cover")
-    ax.set_title("Without space, a desert never comes back; with it, it does (f = 0.9)", loc="left")
+    ax.set_title("Cover against b: lattice, mean field and pair approximation (f = 0.9)", loc="left")
     ax.set_xlim(0, 1)
     figstyle.save(fig, os.path.join(FIG, "fig2_theory"))
 
@@ -68,7 +68,7 @@ def fig3_early_warning():
     ax.invert_xaxis()
     ax.set_ylim(0, 1.02)
     ax.legend(loc="lower left", bbox_to_anchor=(0.0, 0.3))
-    ax.set_title("The network breaks before the cover goes", loc="left", fontsize=10)
+    ax.set_title("Cover and largest-patch share as b falls", loc="left", fontsize=10)
     ax = axes[1]
     keys = sorted([k for k in pz.files if k.startswith("sizes_")], reverse=True)
     shades = plt.cm.viridis(np.linspace(0.15, 0.85, len(keys)))
@@ -83,7 +83,7 @@ def fig3_early_warning():
     ax.set_xlabel("patch size (cells or 10 m pixels)")
     ax.set_ylabel("share of patches at least this large")
     ax.legend(loc="lower left", fontsize=8)
-    ax.set_title("Patch sizes: the large ones vanish first", loc="left", fontsize=10)
+    ax.set_title("Patch-size distribution at three values of b", loc="left", fontsize=10)
     fig.tight_layout()
     figstyle.save(fig, os.path.join(FIG, "fig3_early_warning"))
 
