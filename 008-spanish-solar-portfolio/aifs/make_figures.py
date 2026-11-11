@@ -63,7 +63,7 @@ def fig6_reach():
     ax.set_ylabel("correlation")
     ax.set_ylim(-0.3, 1.05)
     ax.legend(loc="lower left", fontsize=8.5)
-    ax.set_title("Forecast errors are far more local than the weather", loc="left")
+    ax.set_title("Correlation against distance: weather and day-3 forecast errors", loc="left")
     figstyle.save(fig, os.path.join(FIG, "fig6_error_reach"))
 
 
