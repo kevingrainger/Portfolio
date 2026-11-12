@@ -57,7 +57,7 @@ def may(seed=3):
         out[str(N)] = p
     axes[2].axvline(1, color=INK, lw=0.9, ls=(0, (2, 2)))
     axes[2].set_xlabel(r"$\sigma\sqrt{NC}$"); axes[2].set_ylabel("probability of stability")
-    axes[2].set_title("(c) The transition sharpens with size", loc="left")
+    axes[2].set_title(r"(c) Probability of stability against $\sigma\sqrt{NC}$", loc="left")
     axes[2].legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
     axes[2].set_ylim(-0.02, 1.02)
     json.dump(dict(x=xs.tolist(), C=C, p_stable=out), open(os.path.join(RES, "may_stability.json"), "w"), indent=2)

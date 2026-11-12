@@ -85,7 +85,7 @@ def futures(runs=150):
     a1.set_xlabel(r"transmissibility  $T/T_c$  (share of inputs that cannot be replaced)")
     a1.set_ylabel("German industrial output lost (%)")
     a1.set_xlim(0, 1.6); a1.set_ylim(0, None)
-    a1.set_title("(a) At the record low of 25 cm; circles mark 2018", loc="left")
+    a1.set_title("(a) Output lost at the record low of 25 cm, circles at 2018", loc="left")
     a1.legend(loc="upper left", fontsize=8.5)
 
     rows = [r for r in cal["rows"] if np.isfinite(r["T_star"])]
@@ -94,7 +94,7 @@ def futures(runs=150):
     a2.axhline(1, color=INK, lw=0.9, ls=(0, (2, 2)))
     a2.set_ylim(0, 1.1); a2.set_xlim(0, 100)
     a2.set_xlabel("share of the 1% loss that is direct (%)"); a2.set_ylabel(r"distance to threshold  $T^*/T_c$")
-    a2.set_title("(b) One number fixes a line, not a point", loc="left")
+    a2.set_title("(b) Distance to threshold against the direct share of the 1% loss", loc="left")
     figstyle.save(fig, os.path.join(FIG, "fig5_rhine_futures"))
     plt.close(fig)
 

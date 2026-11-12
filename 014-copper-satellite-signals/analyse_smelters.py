@@ -85,7 +85,7 @@ def main():
     fig, axes = plt.subplots(2, 3, figsize=(10.4, 5.4), sharex=True, sharey=True)
     for ax, s in zip(axes.ravel(), SHOW):
         r = rel[s]
-        ax.bar(r.index, r.values, width=25, color="#DDCC77")
+        ax.fill_between(r.index, 0, r.values, step="mid", color="#DDCC77", alpha=0.8, lw=0)
         ax.plot(r.index, r.rolling(6, min_periods=3).mean(), color="#882255", lw=1.6)
         ax.axhline(1, color="0.6", lw=0.6)
         ax.set_title(s, fontsize=9, loc="left")
@@ -96,7 +96,7 @@ def main():
     for ax in axes[1]:
         ax.xaxis.set_major_locator(mdates.YearLocator(2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-    fig.suptitle("Smelter heat seen by Sentinel-2, clear passes by month (bars) and 6-month mean (line)", x=0.01, ha="left")
+    fig.suptitle("Smelter heat by month at six sites, Sentinel-2 clear passes (shaded) and 6-month mean (line)", x=0.01, ha="left")
     fig.tight_layout()
     figstyle.save(fig, os.path.join(HERE, "figures", "fig4_smelter_heat"))
 

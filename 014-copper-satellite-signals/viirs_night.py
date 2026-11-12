@@ -97,7 +97,7 @@ def main():
         ax2.vlines(hd.index, 0, hd.frp, color=RED, lw=1.2, alpha=0.8)
         ax2.plot(hd.index, hd.frp, "^", color=RED, ms=4, label="thermal anomaly, fire radiative power (VNP14A1)")
         ax2.set_ylabel("MW"); ax2.set_ylim(0, max(1, hd.frp.max() * 1.3) if len(hd) else 1)
-        ax.set_title(f"{name.split(' (')[0]}: VIIRS night lights and thermal anomalies, 2026", loc="left")
+        ax.set_title(f"{name.split(' (')[0]}, VIIRS night lights and thermal anomalies, 2026", loc="left")
         if name.startswith("Cal"):
             h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
             ax.legend(h1 + h2, l1 + l2, frameon=False, fontsize=8.5, loc="upper left", ncol=2)

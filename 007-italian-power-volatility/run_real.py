@@ -71,7 +71,15 @@ def stage1(df):
     out.to_csv(os.path.join(RES, "real_stage1.csv"), index=False)
     print(out.pivot(index="model", columns="target", values="rmse").round(3))
 
+    fig_shap(df, xgb)
+    return out
+
+
+def fig_shap(df, xgb=None):
+    """SHAP for XGBoost fitted to log(price / gas) on all days: the temperature effect, and mean |SHAP| per input."""
     import shap
+    from xgboost import XGBRegressor
+    xgb = xgb or (lambda: XGBRegressor(n_estimators=400, max_depth=4, learning_rate=0.05))
     X = df[pw.FEATURES]
     y = np.log(df.price) - df.log_gas
     model = xgb().fit(X, y)
@@ -79,17 +87,18 @@ def stage1(df):
     sv = shap.TreeExplainer(model).shap_values(Xs)
     fig, axes = plt.subplots(1, 2, figsize=(10.4, 4.0))
     axes[0].scatter(Xs.temp, sv[:, pw.FEATURES.index("temp")], s=5, alpha=0.4, color=WINE, lw=0)
-    axes[0].set_xlabel("Italy-wide daily mean temperature, C")
+    axes[0].set_xlabel("Italy-wide daily mean temperature (°C)")
     axes[0].set_ylabel("effect on log(price / gas)")
-    axes[0].set_title("Temperature, as XGBoost learned it", loc="left", fontsize=10)
+    axes[0].set_title("Temperature effect (SHAP)", loc="left", fontsize=10)
     imp = np.abs(sv).mean(0)
     o = np.argsort(imp)
-    axes[1].barh(np.array(pw.FEATURES)[o], imp[o], color=GREEN)
+    axes[1].hlines(np.arange(len(o)), 0, imp[o], color="0.8", lw=1.5)
+    axes[1].plot(imp[o], np.arange(len(o)), "o", color=GREEN, ms=7)
+    axes[1].set_yticks(np.arange(len(o))); axes[1].set_yticklabels(np.array(pw.FEATURES)[o])
     axes[1].set_xlabel("mean |SHAP|, log(price / gas)")
-    axes[1].set_title("What matters once gas is taken out", loc="left", fontsize=10)
+    axes[1].set_title("Mean |SHAP| by input", loc="left", fontsize=10)
     fig.tight_layout()
     figstyle.save(fig, os.path.join(FIG, "fig6_real_shap"))
-    return out
 
 
 def stage2(df, month_idx, extreme, r):
@@ -157,9 +166,10 @@ def fig_price(df, extreme):
     axes[0].plot(df.index, df.gas, color=GREEN, lw=1.0, label="TTF gas, EUR/MWh")
     axes[0].set_yscale("log")
     axes[0].legend(loc="upper left")
-    axes[1].bar(extreme.index.to_timestamp(), extreme.values, width=25, color=SAND)
+    axes[1].step(extreme.index.to_timestamp(), extreme.values, where="mid", color=SAND, lw=1.2)
+    axes[1].fill_between(extreme.index.to_timestamp(), 0, extreme.values, step="mid", color=SAND, alpha=0.5, lw=0)
     axes[1].set_ylabel("extreme-weather days\nper month")
-    axes[0].set_title("Real data, 2018-2026: power follows gas; extreme days come in summers", loc="left")
+    axes[0].set_title("Italy North power and TTF gas, 2018-2026", loc="left")
     fig.tight_layout()
     figstyle.save(fig, os.path.join(FIG, "fig5_real_price"))
 

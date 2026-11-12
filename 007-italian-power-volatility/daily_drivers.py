@@ -69,7 +69,7 @@ def main():
             corr["temp_summer"] = float(dd[c].corr(dd.y))
         ax.plot(m[c], m.y, color="k", lw=1.6)
         r_show = corr.get("temp_summer") if c == "temp" else corr[c]
-        ax.set_xlabel(lab); ax.set_title(f"{'Summer heat' if c == 'temp' else c.capitalize()}: r = {r_show:+.2f}", loc="left")
+        ax.set_xlabel(lab); ax.set_title(f"{'Summer heat' if c == 'temp' else c.capitalize()}, r = {r_show:+.2f}", loc="left")
         if k == 0:
             ax.set_ylabel("power relative to gas, daily anomaly")
         ax.set_ylim(np.percentile(df.y, 0.5), np.percentile(df.y, 99.5))

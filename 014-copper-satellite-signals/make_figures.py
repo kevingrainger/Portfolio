@@ -37,7 +37,7 @@ def fig1_validation():
     ax.plot(idx.index, idx.ships_copper_ports_kt, color=GREEN, label=f"ships, copper ports (r = {s['corr_level_copper']:.2f})")
     ax.plot(idx.index, idx.ships_placebo_ports_kt, color=GREY, lw=1, label=f"ships, placebo ports (r = {s['corr_level_placebo']:.2f})")
     ax.set_ylabel("monthly volume, 2019 average = 100")
-    ax.set_title("Peru: dry-bulk ships at the copper ports track official copper exports", loc="left")
+    ax.set_title("Peru, dry-bulk exports at the copper ports and official copper exports", loc="left")
     ax.legend(loc="upper left", ncol=1)
     ax.set_ylim(0, None)
     figstyle.save(fig, os.path.join(FIG, "fig1_validation"))
@@ -57,7 +57,7 @@ def fig2_grasberg():
         ax.axvline(pd.Timestamp("2025-09-08"), color="0.6", lw=0.8, ls=":")
     axes[0].annotate("mudslide at the Grasberg Block Cave,\n8 September 2025", (pd.Timestamp("2025-09-08"), roll.max() * 0.85),
                      xytext=(8, 0), textcoords="offset points", fontsize=8.5)
-    axes[0].set_title("Amamapare, Grasberg's port in Papua: the ships stopped", loc="left")
+    axes[0].set_title("Dry-bulk exports from Amamapare, Grasberg's port in Papua", loc="left")
     axes[1].xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
     fig.tight_layout()
     figstyle.save(fig, os.path.join(FIG, "fig2_grasberg"))
@@ -84,7 +84,7 @@ def fig3_smelters():
         ax.set_xticks([]); ax.set_yticks([])
         ax.grid(False)
     vs.HALF = old
-    fig.suptitle("Smelters in shortwave infrared (Sentinel-2 bands 12, 11, 8A; 3 x 3 km): furnaces glow, hot pixels outlined",
+    fig.suptitle("Smelters in shortwave infrared, Sentinel-2 bands 12, 11 and 8A, 3 x 3 km, hot pixels outlined",
                  x=0.01, y=1.0, ha="left", fontsize=10)
     fig.tight_layout(rect=(0, 0, 1, 0.92))
     figstyle.save(fig, os.path.join(FIG, "fig3_smelters"))

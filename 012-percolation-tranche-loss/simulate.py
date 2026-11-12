@@ -169,11 +169,12 @@ def fig3():
     ratio = np.array([r["ratio"] for r in rows])
     names = [r["tranche"].replace(" ", "\n", 1) for r in rows]
     ypos = np.arange(len(rows))[::-1]
-    a2.barh(ypos, ratio, color=TR_COL, height=0.62, edgecolor="white", linewidth=2)
+    a2.hlines(ypos, 1, ratio, color=TR_COL, lw=1.6)
+    a2.scatter(ratio, ypos, color=TR_COL, s=55, zorder=3, edgecolor="white", linewidth=1)
     a2.set_xscale("log"); a2.axvline(1, color=INK, lw=0.9)
     a2.set_yticks(ypos); a2.set_yticklabels(names)
     a2.set_xlabel("expected loss, network ÷ Vasicek")
-    a2.set_title("(b) Where the risk moves", loc="left")
+    a2.set_title("(b) Expected loss by tranche, network against Vasicek", loc="left")
     a2.grid(axis="y", visible=False)
     for yy, r in zip(ypos, ratio):
         a2.text(max(r, 1) * 1.25, yy, f"{r:,.1f}×" if r < 10 else f"{r:,.0f}×", va="center", fontsize=8.5, color=INK)

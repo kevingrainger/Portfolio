@@ -47,7 +47,7 @@ def fig1_frost_2021():
         ax.annotate(txt, (P.index[j], P.iloc[j]), xytext=xy, textcoords="offset points", fontsize=8.5,
                     arrowprops=dict(arrowstyle="-", color="0.5", lw=0.7))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
-    axes[0].set_title("July 2021: the forecasts warned, the price moved most once the damage was known", loc="left")
+    axes[0].set_title("The July 2021 frost: forecast cold and the arabica price", loc="left")
     fig.tight_layout()
     figstyle.save(fig, os.path.join(FIG, "fig1_frost_2021"))
 
@@ -123,7 +123,7 @@ def fig4_timeline():
         ax.annotate(txt, (P.index[j], P.iloc[j]), xytext=xy, textcoords="data" if isinstance(xy[0], pd.Timestamp)
                     else "offset points", fontsize=8.5, arrowprops=dict(arrowstyle="-", color="0.5", lw=0.7))
     ax.set_ylim(P.min() * 0.85, top * 1.25)
-    ax.set_title("Arabica since 2000: frost nights are rare, and the big moves mostly come without them", loc="left")
+    ax.set_title("Arabica price and frost nights, 2000-2026", loc="left")
     figstyle.save(fig, os.path.join(FIG, "fig4_timeline"))
 
 
@@ -153,7 +153,7 @@ def fig5_curve_heatmap():
     cb.set_label("contract price against the\nfront month, % (log)")
     ax.set_ylabel("years to delivery")
     ax.grid(False)
-    ax.set_title("The forward curve, 2024-2026: purple is backwardation, deferred coffee cheaper than coffee now",
+    ax.set_title("Arabica forward curve, 2024-2026",
                  loc="left", fontsize=10)
     ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 7]))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
@@ -175,7 +175,7 @@ def fig6_frost_calendar():
     ax.set_xticks(starts, ["May", "Jun", "Jul", "Aug", "Sep"])
     ax.invert_yaxis(); ax.grid(False)
     ax.set_ylabel("year")
-    ax.set_title("Frost in Brazil's coffee belt, 1990-2026: a handful of nights a decade", loc="left")
+    ax.set_title("Frost nights in Brazil's coffee belt, 1990-2026", loc="left")
     figstyle.save(fig, os.path.join(FIG, "fig6_frost_calendar"))
 
 
@@ -190,8 +190,7 @@ def fig7_drivers():
         ax.text(v + 0.15, i, f"{v:.1f}%", va="center", fontsize=9)
     ax.set_xlabel("share of the variance of monthly returns explained, %")
     ax.set_xlim(0, max(vals) * 1.25)
-    ax.set_title(f"What moves arabica month to month, {s['start'][:4]}-{s['end'][:4]}: "
-                 f"all four explain {100 * s['r2_total']:.0f}%", loc="left", fontsize=10)
+    ax.set_title(f"Share of arabica's monthly variance explained by each driver, {s['start'][:4]}-{s['end'][:4]}", loc="left", fontsize=10)
     figstyle.save(fig, os.path.join(FIG, "fig7_drivers"))
 
 

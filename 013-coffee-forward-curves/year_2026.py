@@ -41,7 +41,7 @@ def main():
     ax.plot(d.index, d.vietnam_heat_next3, "-s", color=NAVY, lw=1.4, ms=4, label="what happened over those three months (ERA5)")
     ax.axhline(0, color="0.6", lw=0.8)
     ax.set_ylabel("Vietnam heat, standard deviations"); ax.legend(frameon=False, fontsize=9, loc="upper left")
-    ax.set_title("Vietnam heat in the Central Highlands: forecast and outcome", loc="left")
+    ax.set_title("Vietnam heat in the Central Highlands, forecast and outcome", loc="left")
     ax = axes[1]
     for bean, c, ls in [("robusta", BLUE, "-"), ("arabica", NAVY, "--")]:
         ax.plot(px.index, 100 * px[bean] / px[bean].iloc[0], ls, color=c, lw=1.8, label=bean)
@@ -49,7 +49,7 @@ def main():
     for t in flag:
         ax.axvspan(t - pd.Timedelta(days=14), t + pd.Timedelta(days=14), color=RED, alpha=0.12, lw=0)
     ax.set_ylabel(f"price, {px.index[0]:%B %Y} = 100"); ax.legend(frameon=False, fontsize=9, loc="lower left")
-    ax.set_title("Coffee prices (World Bank Pink Sheet); red: months the rule flagged", loc="left")
+    ax.set_title("Arabica and robusta prices, with the months the rule flagged in red", loc="left")
     fig.savefig(os.path.join(FIG, "fig18_2026.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
 
