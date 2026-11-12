@@ -61,8 +61,8 @@ if __name__ == "__main__":
     figstyle.save(fig, os.path.join(OUT, "fig5_missing_physics_real"), formats=("png",))
     plt.close(fig)
 
-    skill("results_real", ["B0", "B1", "B3", "M1", "M2", "M3"], os.path.join(OUT, "fig3_skill_real"), False)
-    skill("results", ["B0", "B1", "B2", "B3", "M1", "M2", "M3"], os.path.join(HERE, "figures", "fig3_skill"), True)
+    skill("results_real", ["B0", "B1", "M1", "M2"], os.path.join(OUT, "fig3_skill_real"), False)
+    skill("results", ["B0", "B1", "B2", "M1", "M2"], os.path.join(HERE, "figures", "fig3_skill"), True)
     print("wrote figures/real/*_real.png and figures/fig3_skill")
 
 
