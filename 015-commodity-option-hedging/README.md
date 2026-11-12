@@ -27,11 +27,11 @@ The eight hedges are the ones producers use day to day:
 | Three-way (fence) | A 95% / 85% put spread paid for by selling a call at €152. |
 | Layered | Sell a quarter of the crop forward at the start of May, June, July and August. |
 
-![Producer revenue and miller cost against the wheat price, for each hedge](figures/fig7_wheat_payoffs.png)
+![Miller cost against the wheat price, for each hedge](figures/fig7_wheat_payoffs.png)
 
 ## What happened
 
-![Producer revenue and miller cost by hedge: 2010 against the range expected on 3 May](figures/fig6_wheat_revenue.png)
+![Miller cost by hedge: 2010 against the range expected on 3 May](figures/fig6_wheat_revenue.png)
 
 | Hedge | Revenue in 2010 (€/t) | Average of the worst 5% expected on 3 May (€/t) |
 |---|:-:|:-:|

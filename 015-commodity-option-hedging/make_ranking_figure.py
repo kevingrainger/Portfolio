@@ -2,7 +2,7 @@
 #-------- make_ranking_figure.py ------------------------------------------------------
 #-----------------------------------------------------------------------------
 # Each hedge's 2010 outcome against its expected shortfall seen on 3 May, for the
-# producer (revenue) and the miller (cost). Drawn from results/wheat_2010.json
+# miller (cost). Drawn from results/wheat_2010.json
 # (run wheat_2010.py first).
 #
 # Output: figures/fig9_hindsight_vs_may.png
@@ -22,10 +22,8 @@ b = o["buyer"]
 NAVY, RED = "#0b2545", "#c0392b"
 
 figstyle.apply()
-fig, axes = plt.subplots(1, 2, figsize=(12, 4.8), gridspec_kw=dict(wspace=0.3))
-panels = [(axes[0], o, "cvar5", "Producer revenue", "worst-5% average expected on 3 May, € per tonne",
-           "revenue in 2010, € per tonne", NAVY),
-          (axes[1], b, "cvar95", "Miller cost", "worst-5% average expected on 3 May, € per tonne",
+fig, ax = plt.subplots(figsize=(7, 4.8))
+panels = [(ax, b, "cvar95", "Miller cost", "worst-5% average expected on 3 May, € per tonne",
            "cost in 2010, € per tonne", RED)]
 for ax, d, key, title, xl, yl, c in panels:
     for name, real in d["realised"].items():

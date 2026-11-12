@@ -3,9 +3,9 @@
 # Figures for both sides of the 2010 wheat hedge (wheat_2010.py):
 #   fig5_wheat_2010     wheat in euros per tonne through 2010, the hedge window, the heatwave
 #                       and the export ban, and the dates the layered hedge trades
-#   fig6_wheat_revenue  producer revenue and miller cost per tonne for each hedge: what 2010
+#   fig6_wheat_revenue  miller cost per tonne for each hedge: what 2010
 #                       gave, against the range expected on 3 May (5th to 95th percentile)
-#   fig7_wheat_payoffs  producer revenue and miller cost against the wheat price at the end
+#   fig7_wheat_payoffs  miller cost against the wheat price at the end
 #
 #   python make_wheat_figures.py
 
@@ -36,7 +36,7 @@ def ranges(ax, real, ex, names, title, xlabel, legend):
     ax.set_yticks(y, names); ax.invert_yaxis()
     ax.set_xlabel(xlabel); ax.set_title(title, loc="left")
     if legend:
-        ax.legend(frameon=False, fontsize=9, loc="upper center", bbox_to_anchor=(-0.25, -0.16), ncol=2)
+        ax.legend(frameon=False, fontsize=9, loc="upper center", bbox_to_anchor=(0.4, -0.16), ncol=2)
 
 
 def main():
@@ -54,26 +54,23 @@ def main():
         ax.plot(pd.Timestamp(d), F[:d].iloc[-1], "o", color=BLUE, ms=5)
     ax.annotate("hedge set, 3 May", (pd.Timestamp(START), F0), xytext=(-95, -28), textcoords="offset points",
                 arrowprops=dict(arrowstyle="-", color=GREY), fontsize=9)
-    ax.annotate("crop sold / wheat bought, 31 Aug", (pd.Timestamp(SALE), o["FT"]), xytext=(15, 22), textcoords="offset points",
+    ax.annotate("wheat bought, 31 Aug", (pd.Timestamp(SALE), o["FT"]), xytext=(15, 22), textcoords="offset points",
                 arrowprops=dict(arrowstyle="-", color=GREY), fontsize=9)
     ax.set_ylabel("€ per tonne"); ax.set_ylim(110, 230)
     ax.set_title("Wheat, euros per tonne, 2010", loc="left")
     fig.savefig(os.path.join(FIG, "fig5_wheat_2010.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
-    fig, axes = plt.subplots(1, 2, figsize=(13, 4.8), gridspec_kw=dict(wspace=0.45))
-    ranges(axes[0], o["realised"], o["ex_ante"], list(o["realised"]), "Producer revenue by hedge",
-           "revenue, € per tonne (higher is better)", False)
-    ranges(axes[1], b["realised"], b["ex_ante"], list(b["realised"]), "Miller cost by hedge",
+    fig, ax = plt.subplots(figsize=(7.5, 4.8))
+    ranges(ax, b["realised"], b["ex_ante"], list(b["realised"]), "Miller cost by hedge",
            "cost, € per tonne (lower is better)", True)
     fig.savefig(os.path.join(FIG, "fig6_wheat_revenue.png"), dpi=170, bbox_inches="tight"); plt.close(fig)
 
     FT = np.linspace(90, 200, 200)
     lay = np.full_like(FT, np.mean(o["layer_prices"]))
-    rev, cst = revenue(F0, FT, lay, o["setup"]), cost(F0, FT, lay, b["setup"])
-    fig, axes = plt.subplots(1, 2, figsize=(13, 4.8))
-    for ax, d, keys, title, ylab in [
-            (axes[0], rev, ["no hedge", "short futures", "long put", "zero-cost collar", "put spread"], "Producer", "revenue, € per tonne"),
-            (axes[1], cst, ["no hedge", "long futures", "long call", "zero-cost collar", "call spread"], "Miller", "cost, € per tonne")]:
+    cst = cost(F0, FT, lay, b["setup"])
+    fig, ax = plt.subplots(figsize=(7.5, 4.8))
+    for d, keys, title, ylab in [
+            (cst, ["no hedge", "long futures", "long call", "zero-cost collar", "call spread"], "Miller cost", "cost, € per tonne")]:
         for s, c, ls in zip(keys, [GREY, NAVY, RED, BLUE, LIGHT], ["-", "-", "-", "-", "--"]):
             ax.plot(FT, d[s], color=c, lw=1.8, ls=ls, label=s)
         ax.axvline(o["FT"], color=RED, lw=0.8, ls=":"); ax.text(o["FT"], 92, " Aug 2010", color=RED, fontsize=8.5)
