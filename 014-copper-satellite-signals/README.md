@@ -1,20 +1,17 @@
 # EO proxies for copper production intensity: an alternative data method
-
-**Earth-observation proxies for copper supply: ship traffic at the export ports and furnace heat at the smelters, tested against official exports, the copper price and a real disruption.**
-
 ![Four copper smelters in shortwave infrared, hot pixels outlined](figures/fig3_smelters.png)
 
-## Why I did this
+## Overview
 
-The devastating storms in Chile got me interested in how Earth observation can both help anticipate events like these and show their impact on industrial zones. Heavy industry is a good subject because it can be measured in so many ways: a large plant footprint, shipping data, and heat from energy-intensive furnaces. Each gives a way to estimate production, and so a downstream view of where prices are likely to go, or why they went the way they did. Copper suits this well, because its supply chain is short and concentrated: concentrate leaves a handful of Chilean and Peruvian ports, and it is smelted in a few dozen plants.
+The devastating storms in Chile caused extreme disruption to copper supply networks, and got me interested in how Earth observation can help measure the impact of events like these on metal supply chains early, and so on metal prices. Copper suits this well, because its supply chain is short and concentrated. Copper concentrate leaves a handful of Chilean and Peruvian ports and is smelted in only a few dozen plants, so ship traffic at the ports and heat signatures from the smelter furnaces can both be measured from space and could act as early price signals.
 
-Commercial services sell this kind of signal (Earth-i's SAVANT index watches smelters, and AIS feeds watch ships). In our case we build a free, open version and test it, with placebos.
+The aim was to build free, open versions of these two signals, ship traffic from IMF PortWatch and furnace heat from Sentinel-2's shortwave infrared, and to test them against official exports, the copper price and real disruptions.
 
-**Ships.** IMF PortWatch turns AIS (the position beacon every large ship carries) into daily port calls and estimated cargo by ship type. It covers 11 copper export ports in Chile and Peru, Grasberg's port in Papua, and 7 placebo ports that ship forestry, salmon, fishmeal and phosphate.
+Via out-of-sample tests, it was found that dry-bulk exports from Peru's copper ports correlate with Peru's official copper exports (0.67 in monthly levels), so ship traffic at these ports can stand in for the copper leaving them. 24 of 30 smelters show a heat signature from space, and the heat of the Chilean smelters leads exports from the Chilean ports by about three months (correlation 0.37). Neither signal could predict next month's copper price out of sample.
 
-**Heat.** A Sentinel-2 pixel is hot when shortwave infrared climbs steeply towards 2.2 μm, which only happens above a few hundred degrees (Murphy et al. 2016):
+In the central Chile storm of July 2026, dry-bulk exports from the central ports fell to zero on the first day and recovered by about 26 July, while the northern ports kept shipping. The copper price rose about 3% over the storm and 4.6% by 4 August, so the ships showed the stop the same day and the price moved within the week. Cloud and snow hid the Caletones smelter from Sentinel-2 for 39 days, but VIIRS, a satellite sensor that detects heat sources daily, caught it still running in the middle of the storm, and Sentinel-1 radar, which sees through cloud, counted the ships waiting at the port. So other Earth-observation sources can still measure heat and shipping when optical imagery cannot.
 
-$$\frac{\rho_{12}}{\rho_{11}} \ge 1.4, \qquad \frac{\rho_{12}}{\rho_{8A}} \ge 1.4, \qquad \rho_{12} \ge 0.15.$$
+This shows these signals can measure disruptions as they happen, rather than forecast the price in steady conditions.
 
 ## What the data say
 

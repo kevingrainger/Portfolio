@@ -1,16 +1,15 @@
 # Po Valley mesoclimate, physics-informed machine learning
-
-**A region-specific model of daily maximum temperature for the Po Valley: a heat-budget equation anchored to every station reading, compared with regression-kriging, a U-Net and a physics-informed network.**
-
 ![Daily maximum temperature at 1 km draped over the terrain, hottest July 2022 day](figures/real/cover_real.png)
 
-## Why I did this
+## Overview
 
-In my work in quantitative climate risk at Wieldmore I became interested in regional climate models: smaller, region-specific models of a mesoclimate, especially for Europe's industrial belts. A region like the Po Valley is small enough to put a PDE mesh and machine learning on directly, and it has two rich sources of data: ERA5 and Copernicus gridded data, and a dense network of weather stations. The interesting question is what you give up when you leave a physically continuous system like ERA5. Once you cut out a region and enforce boundaries, you are at the mercy of the boundary conditions.
+In my work in quantitative climate risk at Wieldmore, I became interested in regional climate models, smaller region-specific models of the mesoclimate. The Po basin produces about 40% of Italy's GDP. It is a manageable enough size to apply a PDE mesh and machine learning techniques to directly, and it has rich sources of data, ERA5-Land, with boxes about 9 km across, and a network of weather stations.
 
-ERA5-Land describes the Po Valley in boxes about 9 km across. Gridded station products such as E-OBS fill the map by interpolating stations, and stop returning the stations in the process. In our case we build daily maximum temperature on a 1 km grid for June to August 2021-2023 under two constraints. Between stations the surface obeys a reduced heat-budget equation, in which each land-cover class couples the air to the ground at its own rate. At stations it equals the observation exactly. A U-Net trained on the thermometers with the heat budget in its loss (a physics-informed network) is the best model on the hottest days.
+The aim was a calibrated 1 km model of daily maximum temperature for the Po Valley, anchored to the network of station readings. A heat-budget equation (a balance of the heat carried by the wind, mixed through the air and exchanged with the ground), anchored to the stations, was compared with a U-Net (a neural network that turns images into images), a physics-informed U-Net, ERA5-Land and standard statistical regression. The models were run on ERA5-Land, MODIS and 38 stations for the summers of 2021-2023.
 
-**Data.** The method was built and tested first on simulated daily fields in the shape of the real products, with a known truth behind them (from "The model" onwards below). It has since been run on the real data: ERA5-Land, MODIS land surface temperature, terrain and land cover from Earth Engine, and the readings of 38 stations, scored at stations held out in 50 km blocks in 2023 (`results_real/`).
+Each model was scored by its root-mean-square error (RMSE) in kelvin (K, where 1 K is a 1 °C difference) at held-out stations. It was found that every regional model has about a sixth less error than ERA5-Land (about 1.60 K against 1.89 K). The regression, the heat-budget model and the physics-informed U-Net are within 0.05 K of each other. A U-Net trained on the stations alone does worse (1.71 K), and adding the heat budget to its training loss, which makes it the physics-informed U-Net, brings it level with the others. Anchored to the stations, the physics-informed U-Net is the best model on the hottest 5% of days (1.60 K against 2.05 K for ERA5-Land).
+
+We trained and anchored the models on real station data, and 38 stations were not enough for an adequate split into training and test stations, so it is very hard to evaluate these models against each other. A denser network of stations, such as those of the regional environmental agencies (ARPA), is needed to separate them.
 
 ## On the real data
 

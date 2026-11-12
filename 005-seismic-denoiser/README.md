@@ -1,18 +1,15 @@
 # Seismic denoiser
-
-**Denoising methods from seismology and random matrix theory, scored on 3,000 noisy recordings from the Southern California Seismic Network by the arrival time and the first motion they preserve.**
-
 ![A buried wave, before and after](figures/cover.png)
 
-## Why I did this
+## Overview
 
-Seismology is built on signal processing, which ties it to my other projects, and earth systems are where my passion in applied mathematics lies. Small earthquakes under Los Angeles are buried in traffic noise. I wanted to see which denoising methods keep what a seismologist needs from a recording: the arrival time, and which way the ground moved first. We score filters, wavelets and stacking from seismology against two methods from random matrix theory, on 3,000 noisy recordings from the Southern California Seismic Network. The first is a PCA template with a Marchenko–Pastur cut-off (the random-matrix cleaning below). That cut-off assumes white, independent noise, and seismic noise is neither. The second is minimum-variance weighting of an array.
+Seismology is built on signal processing, which ties it to many of my other projects, and Earth systems are a big passion of mine. Southern California has about 10,000 earthquakes a year, most of them too small to feel, and under Los Angeles many are buried in traffic and other noise, so California has a wealth of seismic data to work with.
 
-At first the random-matrix method picked 98% of arrivals. This was because every recording in the dataset has its arrival at the same point in the window. When we move the arrival at random, it drops to 60%, barely above doing nothing (56%).
+The aim was to compare denoising methods from geophysics and seismology with some that are more common in other disciplines, and to find which preserved the seismologically relevant features of a recording, the P-wave arrival time and the first motion (whether the ground moves up or down first). Bandpass filters, wavelets and a random-matrix denoiser were scored on 3,000 of the noisiest labelled recordings from the Southern California Seismic Network. I also stacked recordings from a simulated array of sensors with minimum-variance weights, to denoise further and make the signal more coherent.
 
-Wavelets add 3 dB of signal-to-noise but flip the first motion on about one trace in fourteen. This means a cleaner-looking waveform can be worse for picking. A plain bandpass filter is the only method that helps without doing harm.
+Each method was scored with two standard seismological tools, run on the denoised recordings and on the raw recordings for comparison: an STA/LTA picker, which flags the arrival where the energy in a short window jumps relative to a longer one, and a first-motion check. Every recording in the dataset has its arrival at the same point, so the arrival times were first moved at random. The picker then found 56% of arrivals on the raw recordings and 60% after the random-matrix denoiser, barely an improvement, as the denoiser keeps what the recordings have in common, which only helped while the arrivals were lined up. A plain bandpass filter (keeping 1-20 Hz, run forwards and backwards so the arrival is not shifted) raised this to 63% without changing any first motions. Wavelet thresholding picked the most arrivals (68%) and added about 3 dB of signal-to-noise, but flipped the first motion on about one trace in fourteen, so a cleaner-looking waveform can be worse for picking.
 
-For an array of sensors, the best weights are the minimum-variance ones: the weights that give the least noise, given how the noise is correlated between sensors. With a road's noise shared between our sensors, this beats a plain average, but only once that noise covariance is cleaned with random matrix theory (`corrlib`).
+The array study was quite interesting. Minimum-variance weights, which give the least noise for the way the noise is correlated between sensors, are really useful for cancelling noise shared between neighbouring sensors, reaching 13.9 dB of noise reduction against 10.9 dB for a plain average of 32 sensors. The weights need the noise covariance between the sensors, estimated from a stretch of recorded noise. Estimated raw, it takes about 0.8 s of noise before the weights beat a plain average, but cleaned with shrinkage from my correlation library (corrlib), 0.2 s is enough.
 
 | | |
 |:-:|:-:|

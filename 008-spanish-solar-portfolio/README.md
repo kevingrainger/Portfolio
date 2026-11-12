@@ -1,15 +1,16 @@
 # Correlated risk structures in a Spanish solar portfolio
 
-**How correlated the output of 25 Spanish solar regions is, and why taking each site's P95 on its own underprices a fleet's risk: in 2023 the 25 sites behaved like three or four independent ones (on the hourly clear-sky index).**
+## Overview
+
+A fleet of solar plants carries correlated risk. If each site's P95, its output in a bad year, is worked out on its own, the fleet's bad year is underpriced. This is because the sites are spatially correlated. The same cloud and weather events can cover many sites at once, and one site's climate is correlated with another site's climate. This project built a quick framework for measuring that correlated risk. This step has to come before simulated or stochastic weather can be used to price a portfolio's risk.
+
+The aim was to measure the extent of correlation between 25 Spanish PV locations, and to assess its impact on the fleet's output and revenue at OMIE prices. ERA5 data define the correlated risk baseline (through correlations, copulas and similar tools), and ECMWF's physics (IFS) and AI (AIFS) forecasts are then tested as tools to monitor and project this correlated risk structure into the future.
+
+It was found that the correlation between sites falls to 1/e (about 0.37, the usual measure of how far a decaying correlation reaches) over 350 to 670 km, depending on the season. So the 25-site portfolio behaves more like 3 to 4 independent sites, through a lack of climatic diversification. On the worst 5% of days in 2023, the fleet produced 16% less than an independent risk model would suggest. Over 30 years of ERA5, the fleet's 1-in-20 bad month is 10.5% below normal, four times deeper than the 2.5% that independent sites give, and a copula event set (simulated months that keep the correlation between sites) reproduces this. It was also found that forecast errors are far more local than the weather, and in general cancel out over a spatially spread portfolio.
+
+The project reinforces the need to always model the correlated risk structure of a solar fleet, based on shared weather and also on a shared market. I would love to repeat the analysis on downscaled weather, including the impact of correlated market risk.
 
 ![Correlation with Seville by season, and against distance for every site pair](figures/cover.png)
-
-A solar fleet spread across a country should smooth itself out: when it is cloudy in Seville, it may be sunny in Zaragoza. How much smoothing we get depends on one number, the distance over which the weather stays correlated. In our case we build the weather data the way ECMWF's AI forecasting models consume it (an Anemoi dataset), then uses it to measure that distance for 25 Spanish solar regions, season by season.
-
-Our first answer was an artefact. On real data every site seemed almost perfectly correlated with every other. This was because of a daily shape left over by the clear-sky model, which every site shares and which did not show on synthetic data. Once it is removed we see correlation fall to 1/e over about 350 km in winter, 440 km in spring and summer, and 670 km in autumn. This means twenty-five sites diversify like only 3-4 independent ones. Here and below, the effective number of sites is the participation ratio of the correlation matrix's eigenvalues, (Σλ)²/Σλ², and it depends on the data it is measured on: 3-4 on the hourly clear-sky index for 2023 (raw and cleaned, by season), 2.1 on daily output with the season removed, and 1.7 on daily anomalies over the 2026 forecast test period.
-
-We expected summer's local convective clouds to shorten the correlations, but that seasonal pattern does not appear. Summer's correlation drops faster over the first 100 km, then lingers at longer distances.
-
 | | |
 |:-:|:-:|
 | ![Two weeks of data](figures/fig1_two_weeks.png) | ![The shared daily shape](figures/fig0_daily_shape.png) |

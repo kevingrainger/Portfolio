@@ -1,10 +1,15 @@
-# Weather and coffee price correlation
-
+# Weather and coffee price correlation study
 ![Arabica and robusta with the real, Brazil's dryness, Vietnam's heat and dryness and El Niño, 2004-2026](figures/fig8_stacked.png)
 
-## Why I did this
+## Overview
 
-There is a large literature on weather and coffee prices. I started from the Brazilian frost of July 2021, when arabica rose by a third in a week, and from Richard Roll's (1984) finding that orange-juice futures forecast Florida's weather. Frost turned out to be rare, so the project widened: how much do the weather risks of the two main origins, Brazil (arabica) and Vietnam (robusta), move both beans, how do those risks combine, and can a seasonal forecast tell a European importer when to buy forward? Coffee buyers hedge, so this is written from the importer's side.
+In July 2021 a frost in Brazil's coffee belt raised the arabica price by a third in a week. Frost was meant to be the basis of this project, but frost events turned out to be very rare, so the project instead looks at the more common weather risks of the two main coffee origins: drought in Brazil, where arabica is grown, and heat and drought in Vietnam, where robusta is grown.
+
+The aim was to measure the correlation structure between the weather at each origin and the price of each coffee bean, the impact on price of compound events (extreme weather in both countries at once), and whether ECMWF's seasonal forecast can tell a European importer when to buy forward. Prices are World Bank monthly prices for 2004-2026, with the impact of currency fluctuations (the Brazilian real) removed, and ERA5 gives the weather statistics at each origin.
+
+Via extreme value analysis, tail dependence and copulas, it was found that heat in Vietnam is the clearest weather signal. Of the hottest 10% of months in Vietnam, 32% were also top-10% price rises for robusta, and the same share for arabica. Across all months, Vietnam heat has a rank correlation of about 0.17 with each bean once the currency is held fixed. It moves robusta in the same month and leads arabica by about five months, so a hit to robusta knocks on to arabica. In the 16 separate months when Brazil and Vietnam were both hit by extreme weather at once, both beans rose about 3.5% on average in the month. The two bean prices also spike together. When one bean has a top-10% month, the other does too about half the time, and this share has risen since 2013.
+
+This shows the potential of forecast information for buying decisions and price hedging, for example with options, although with about 70 quarters of data the forecast-driven buying calls could not be shown to beat climatology. It also shows that hedging between Brazil and Vietnam is not always the answer, because of compound weather events and the correlation between the two bean prices, as an impact on robusta can knock on to arabica. I would like to size a global hedge for joint weather risk, rather than for the average correlation between the beans.
 
 ## Data
 

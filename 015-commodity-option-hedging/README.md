@@ -1,10 +1,15 @@
-# Hedging Italian wheat through Russia's 2010 export ban: producer and miller
-
+# Hedging European wheat through Russia's 2010 export ban: a buyer's perspective
 ![Wheat in euros per tonne through 2010, with the hedge window, the heatwave, the export ban and every strike](figures/fig5_wheat_2010.png)
 
-## Why I did this
+## Overview
 
-In commodities the hedger who matters most is often the producer: a farm that knows roughly how much it will harvest but not what it will be paid. The standard tools are futures, puts and a handful of option structures, and a producer has to choose between them months before the price is known. I wanted to test those choices against one real shock, set up the way a producer would have set them up beforehand, and then see in hindsight what each would have paid. The options are priced with the same Black (1976) model used in the Asian option pricer (014).
+During my time as a quantitative analyst I worked on many projects and dealt with many clients looking to hedge their commodity exposure, often for budget stability. This is a simple project testing how well wheat hedges held up through a real shock, Russia's 2010 heatwave and grain export ban, from the perspective of a wheat buyer. European wheat rose 39%, from €136 a tonne on 3 May to €189 on 31 August.
+
+The aim was to test the effectiveness of eight hedging strategies for a European wheat miller that must buy wheat on 31 August, each set up on 3 May: no hedge, buying futures for all or half of the volume, buying a call option, a zero-cost collar (a call paid for by selling a put), a call spread, a three-way structure, and layering the purchases over the summer. Prices are CBOT wheat futures converted to euros, standing in for Euronext milling wheat, and the options are priced with Black's (1976) formula for options on futures, at the volatility of the 60 days before 3 May (31% a year).
+
+In hindsight, buying futures was best for the miller, saving €53 a tonne (28% of the cost), with the collar and the call close behind (€43-46). The cheaper structures, the call spread and the three-way, cap the protection at a 15% rise to save on premium, so in a 39% spike they saved only €14. The hedges were also judged as the miller would have seen them on 3 May. Using Monte Carlo simulation, the price was modelled as a driftless lognormal random walk at the same volatility, and each hedge was scored by the average of its worst 5% of outcomes (the expected shortfall). On this measure too, buying futures (€136 a tonne) and the collar (€143) protected best, and staying unhedged was the most dangerous (€195). For a buyer, a price spike is the risk to be covered, so the hedges that fix or cap the purchase price protect best, while structures that limit the protection to save premium fail in exactly the large shocks that matter.
+
+This shock was unusual, a sudden 39% rise driven by weather and policy in another country, which the model gave only about a 3% chance as seen from May. I would like to repeat the test across other shocks, such as the 2018 northern European drought and the 2022 invasion of Ukraine, and to see how the best hedge depends on how much of its purchase a buyer hedges, how far in advance it hedges, and how much premium it can afford.
 
 ## The shock
 

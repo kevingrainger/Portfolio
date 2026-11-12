@@ -1,16 +1,17 @@
-# Coral reef tipping points
-
+# Coral reef lattice model
 ![The reef through a heatwave and back](figures/cover.gif)
 
-## Why I asked this
+## Overview
 
-Numerical simulation was one of my favourite modules at Trinity, and one of the models we built there was the Potts model: a grid of cells, each in one of a few states, each pulled towards the state of its neighbours. I have always been interested in ecology, and in how ecosystems collapse, and the parallel between a lattice of spins and a reef of coral patches seemed too obvious to leave alone. A patch of coral is healthy, bleached, dead or overgrown, and what happens to it depends on the water temperature and on what is growing next to it.
+Lattice models (Ising and Potts models) were of big interest to me in college, as was the topic of mathematical ecology. This project is an attempt to represent a coral reef as a Potts model, a grid of cells, each pulled towards the state of its neighbours via nearest-neighbour interaction. A patch with healthy neighbours is more likely to stay healthy, and a patch with bleached neighbours is more likely to bleach. In the global bleaching event of 2023-25, about 84% of the world's reef area had heat stress high enough to bleach coral, and an earlier event at Scott Reef in Western Australia in 2016 gave me bleaching surveys to study. The best-known reef models, such as that of [Mumby, Hastings & Edwards (2007)](https://doi.org/10.1038/nature06252), are mean-field, where every patch of reef feels one uniform field, given by the health of the reef as a whole.
 
-The best-known reef models (Mumby, Hastings & Edwards 2007) are mean-field: every patch feels the average of the whole reef. From physics we know that mean-field models exaggerate how sudden and how permanent a change of state is, because they ignore the local survivors that can reseed their surroundings. The aims of this project were:
+The aim was to rebuild my undergraduate Potts model in the form of a lattice reef, with patches of healthy coral, bleached coral, bare rock and seaweed, and to investigate how the reach of the nearest-neighbour interaction changes the way a reef recovers, compared with the mean-field models in standard use. From physics we know that mean-field models exaggerate tipping points, and I felt that nearest-neighbour coupling would better reflect how real reefs recover. The model was then fitted to the 2016 bleaching event at Scott Reef.
 
-1. rebuild my undergraduate Potts model of a reef, fast enough to run thousands of times,
-2. change how far the interactions reach, from four neighbours to the whole reef, and see whether the reef tips and stays tipped,
-3. fit it to a real bleaching event, Scott Reef in Western Australia in 2016, and say how much heat its corals could take.
+Via stochastic simulation, it was found that the reef has hysteresis (warmed and then cooled back, it returns along a lower path than it went out on) at every interaction range. Once heat kills enough coral, seaweed grows over the dead coral and blocks new coral from settling, so the coral only returns once the water is cooled well below the temperature where it was lost. In the mean-field reef the gap between the warming and cooling paths is about 60% wider than in the nearest-neighbour reef, where each patch feels only its four nearest neighbours. Cooled back to the starting temperature, the mean-field reef stays degraded at 0.49 coral cover, while the nearest-neighbour reef recovers to about 0.9.
+
+Real corals differ in how much heat they can take, so each patch of the model reef has its own heat tolerance, drawn at random and smoothed so that neighbouring colonies are alike. The model was fitted to 65 surveys of Scott Reef from April 2016 by simulation-based inference. 8,000 simulated reefs were run through the 2015-16 heatwave and surveyed the same way as the real reef, and a neural network learned which parameters produce which survey. The fit estimates the corals' mean heat tolerance, its spread across the reef, how steeply corals respond once past their tolerance, and the noise. Two different reefs fit the surveys equally well. In the sensitive reef the corals start to feel heat stress at about 4.5 degree heating weeks (a measure of the heat built up over the last 12 weeks), and in the tolerant reef at about 12.7, but they respond more steeply once past it. The surveys were taken at 16.5 degree heating weeks, far beyond both, when both reefs had bleached about 85% of their coral, so they cannot tell the two apart. There seems to be an interplay between the stress threshold and the severity of the reaction past it, which would need further study.
+
+This model was built for fun, and it could be improved a lot. Access to better coral bleaching data, better data assimilation, a more precise loss function for tuning the parameters and a closer match to the biological processes at play would make for a much more interesting simulation. Real reefs, for example, recover slowly from coral larvae carried in from other reefs, which this model leaves out.
 
 ## The model
 

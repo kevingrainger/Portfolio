@@ -1,16 +1,17 @@
-# Sahel desertification as a lattice model
-
+# Sahel desertification: lattice model
 ![Vegetation cover as rainfall falls and rises again, for three strengths of facilitation](figures/fig1_hysteresis.png)
 
-## Why I asked this
+## Overview
 
-The Sahel has been a fixation of mine since I first learned about it as a child, when I did a school science project on it with a chicken incubator and root fungi. This project is also a spin-off of the coral reef model (003). Looked at from above, a dryland is another lattice: patches of shrub and bare ground, each affected by what is growing next to it.
+I have always found the desertification process interesting. After reading a few papers on desertification and on spread models, I found it was quite similar to previous projects I had done, and that it suited the GIS skills I have learned over the last year. This project is a recreation of the facilitation model of [Kéfi et al. (2007)](https://doi.org/10.1038/nature06111), and the code is a spin-off of my coral reef lattice, in which bare soil cells recover faster next to plant cells.
 
-In the droughts of the 1970s and 80s the Sahel lost much of its vegetation. Rain partly came back from the 1990s, and so did the green, but not everywhere. The main aims of this project were to:
+The aim was to mimic the desertification dynamics seen in real satellite images and NDVI (a satellite measure of greenness). We examined the lattice's tipping points and how its behaviour correlates with rainfall, and compared it with theories that ignore space. The lattice was then driven with real rain and compared, using a loss function, against satellite greenness at two Sahel sites and then at 223 sites from Senegal to Chad.
 
-1. rebuild the Kéfi et al. (2007) facilitation model and find out whether it tips, and stays tipped, as rainfall falls and then recovers,
-2. compare the lattice with the simpler theories that ignore space,
-3. drive it with real rainfall at two Sahel sites with opposite histories, and compare it with what satellites saw.
+Via stochastic simulation, it was found that with strong facilitation, recovering from desert takes much more rain than the collapse did. It was also found that the size of the vegetation patches falls before the overall cover does. The largest patch first holds 90% of the vegetation and then only 6%, while the cover is still near a half, so the patch-size distribution proved to be a good early warning of collapse, well before it happens.
+
+Rain alone does not explain the behaviour of the real sites. Gourma's greenness tracks its rain and Fakara's does not as strongly. Given this, a study across the whole Sahel took the rainfall signal out of each site's greenness trend and looked for other factors that correlate with what is left, such as cropland, livestock, population and soil. Land recovery tracks both rainfall and land use, among other factors, so precipitation cannot be looked at in isolation. With seed rain added (each year a few seeds arrive on the lattice from outside it), the lattice was tested against satellite records from 1982-2021. Its cover correlates with the real greenness about as well as rainfall alone does, and slightly better from year to year. A tipping point would show as land that does not recover when the rain returns, and the satellite record cannot separate this from the effect of the rain itself.
+
+A more successful simulation would include land use and its intensity over time, and would test prevention methods such as rotating grazing against simulated droughts.
 
 ## The model
 

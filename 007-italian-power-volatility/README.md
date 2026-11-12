@@ -1,18 +1,17 @@
-# Weather and the Italian power price
-
-**A 2026 study (Guerzoni, Riso & Zoia) found extreme weather to be the main driver of Italian power-price volatility. This project tests that on the real Italy North prices of 2018–2026, once gas is taken out. We find the opposite sign: months with more extreme days are calmer, and even a perfect forecast of them would cut the forecast loss by under 1%.**
-
+# Correlation study between weather and the Italian power price
 ![Summer 2026 day by day: power, gas, power relative to gas and temperature, days above 28 °C shaded](figures/fig10_daily_2026.png)
 
-## Why I did this
+## Overview
 
-This project came out of my training at work, where I recreated some of the standard papers in the field. I took it a little further in my own time.
+This project came out of my training at work, where I recreated some of the standard papers in the field, and I have taken it further in my own time. As is well known, gas plants set the Italian power price in most hours, so the price mostly follows Dutch TTF gas. This project aims to strip the gas signal out of the Italian power price, first by modelling power relative to gas. It is a recreation of the GARCH-MIDAS analysis (a volatility model in which a monthly variable, here extreme weather, shifts the daily volatility) of Guerzoni, Riso & Zoia (2026), who found extreme weather to be a significant driver of Italian power-price volatility, here on real Italy North prices for 2018-2026.
 
-Observed weather explains volatility after it has happened, but a hedger needs to know before. In our case we build a three-stage version: what drives the price, what drives the volatility, and how much a weather forecast could add. It was first built and checked on simulated data with planted relationships (below), then run on the real series:
-- day-ahead prices for the Italy North zone (Energy-Charts, CC BY 4.0)
-- Italian load, wind and solar
-- an eight-city ERA5 temperature
-- Dutch TTF gas
+The aim was to measure what drives the price relative to gas, what drives its volatility, and how much ECMWF's seasonal weather forecast can add.
+
+Via GARCH-MIDAS, it was found that the monthly count of extreme-weather days is significant (p ≈ 1.5 × 10⁻⁷), but with the opposite sign to the 2026 study, so months with more extreme days have calmer prices relative to gas. This is because in heatwaves gas plants set the price in every hour, so power simply follows gas, while in mild, sunny months solar sets the price for part of the day and the price swings most. Growing solar in the Italian grid may be starting to offset the effect of cooling demand on hot days. Even knowing each month's count of extreme days in advance improves the volatility forecast by only 0.7%, measured by its forecast error.
+
+In a covariate analysis of daily prices, it was found that demand, renewable production, heat and the day of the week are the main predictors of the power price relative to gas, as is commonly understood. Together they explain 47% of the daily swings out of sample, and in summer 2026 power ran about 11% higher relative to gas on days above 28 °C.
+
+ECMWF's seasonal forecast added nothing over a normal season when used to predict the next three months, as the weather's signal in Italian power is day to day and a three-month average washes it out. It would be very interesting to take this further with the AI ensemble forecasts and stochastic event sets now available. Using weather to inform energy trading is already common practice, and there has never been more potential for it.
 
 ### Taking gas out first
 
